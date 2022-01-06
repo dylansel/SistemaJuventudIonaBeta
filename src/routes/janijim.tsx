@@ -1,5 +1,6 @@
 import { Outlet, useSearchParams } from "react-router-dom";
 import QueryNavLink from "../components/Links/QueryNavLink";
+import { Colors } from "../constants/colors";
 import { getJanijim } from "../services/janijim";
 
 export default function Janijim() {
@@ -40,7 +41,7 @@ export default function Janijim() {
                                     return {
                                         display: "block",
                                         margin: "1rem 0",
-                                        color: isActive ? "red" : ""
+                                        color: isActive ? Colors.primary : Colors.secondary
                                     };
                                 }}
                                 to={`/janijim/${janij.ID}`}
