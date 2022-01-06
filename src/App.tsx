@@ -18,7 +18,8 @@ function App() {
           }}
         >
           <Link to="/janijim">Janijim</Link> |{" "}
-          <Link to="/familias">Familias</Link>
+          <Link to="/familias">Familias</Link> |{" "}
+          <Link to="/groups">Grupos</Link> |{" "}
         </nav>
         <Outlet />
 
