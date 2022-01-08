@@ -4,6 +4,7 @@ import {
     Routes,
     Route
 } from "react-router-dom";
+import Dashboard from './dashboard';
 import Janijim from './janijim';
 import Familias from './familias';
 import Groups from './groups';
@@ -14,6 +15,10 @@ const MainRoutes = () => {
     return <BrowserRouter>
         <Routes>
             <Route path="/" element={<App />}>
+                <Route
+                    index
+                    element={<Dashboard />}
+                />
                 <Route path="janijim" element={<Janijim />}>
                     <Route
                         index

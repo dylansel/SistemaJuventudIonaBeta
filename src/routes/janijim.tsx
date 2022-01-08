@@ -8,7 +8,7 @@ export default function Janijim() {
     let [searchParams, setSearchParams] = useSearchParams();
 
     return (
-        <div style={{ display: "flex" }}>
+        <div className="janijim" style={{ display: "flex" }}>
             <nav
                 style={{
                     borderRight: "solid 1px",
@@ -41,7 +41,7 @@ export default function Janijim() {
                                     return {
                                         display: "block",
                                         margin: "1rem 0",
-                                        color: isActive ? Colors.primary : Colors.secondary
+                                        color: isActive ? Colors.primary : Colors.primary
                                     };
                                 }}
                                 to={`/janijim/${janij.ID}`}
