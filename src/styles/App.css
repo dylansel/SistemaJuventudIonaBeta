@@ -4,6 +4,16 @@
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+#root {
+  padding-top: 15rem;
+}
+
+@media (max-width: 768px) {
+  #root {
+    padding-top: 10rem;
+  }
+}
+
 /*----------------NAVBAR---------------*/
 .navbar-custom {
   background-color: #DD5041;
@@ -63,15 +73,6 @@
 }
 
 /*-------------------INDEX---------------*/
-.main-container {
-  padding-top: 15rem;
-}
-
-@media (max-width: 768px) {
-  .main-container {
-    padding-top: 10rem;
-  }
-}
 
 .dashboard {
   background-color: #F7E3E1;
@@ -147,6 +148,12 @@
 }
 
 /*--------JANIJIM-------*/
-.janijim{
-  padding-top: 10rem;
+.actions button {
+  margin-bottom: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.table-content {
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.301);
+  overflow-x: auto;
 }

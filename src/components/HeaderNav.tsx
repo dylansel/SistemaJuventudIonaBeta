@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from '../assets/logo/logo-solo.png';
 
 function HeaderNav(props: any) {
@@ -15,7 +15,7 @@ function HeaderNav(props: any) {
                 <div className="navbar-nav me-md-5">
                     <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Janijim
+                            Datos
                         </a>
                         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <Link className="dropdown-item" to="/janijim">Janijim</Link>
