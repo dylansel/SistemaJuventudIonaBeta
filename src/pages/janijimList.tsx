@@ -31,7 +31,7 @@ export default function JanijimLista() {
 
         <main>
             <div className="filters d-flex justify-content-end mx-5 mb-3">
-                <button onClick={handleAdd} type="button" className="btn btn-danger" data-toggle="modal" data-target="#modaljanij">
+                <button onClick={handleAdd} type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modaljanij">
                     Agregar Janij
                 </button>
                 <Modal title={title} modalName="modaljanij" id={janijId} />
@@ -55,19 +55,19 @@ export default function JanijimLista() {
                                 <td scope="col">{janij.leadersCourse ? "Si" : "No"}</td>
                                 <td scope="col">
                                     <span className="actions">
-                                        <button onClick={() => handleEdit(janij.ID)} type="button" className="btn btn-danger" data-toggle="modal" data-target="#modaljanij" ><i className=" fas fa-edit"></i></button>
-                                        <button type='button' className="btn btn-danger" data-toggle="modal" data-target="#modalDelete" ><i className="fas fa-trash"></i></button></span>
+                                        <button onClick={() => handleEdit(janij.ID)} type="button" className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modaljanij" ><i className=" fas fa-edit"></i></button>
+                                        <button type='button' className="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete" ><i className="fas fa-trash"></i></button></span>
                                     <div className="modal fade" id='modalDelete' role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div className="modal-dialog" role="document">
                                             <div className="modal-content">
                                                 <div className="modal-header">
                                                     <h5 className="modal-title" id="modaljanij">Está seguro que desea eliminar?</h5>
-                                                    <button type="button" className="btn-close" data-dismiss="modal" aria-label="Close">
+                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                                     </button>
                                                 </div>
                                                 <div className="modal-footer">
-                                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                                    <button type="button" className="btn btn-danger" data-dismiss="modal" >Eliminar</button>
+                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="button" className="btn btn-danger" data-bs-dismiss="modal" >Eliminar</button>
                                                 </div>
                                             </div>
                                         </div>
