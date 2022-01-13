@@ -45,7 +45,6 @@ export default function Janijim() {
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         {janijim.map(janij => (
                             <tr>
@@ -61,14 +60,12 @@ export default function Janijim() {
                         )}
                     </tbody>
                 </table> :
-
                     <div className="text-center">
                         <h2>Cargando Lista de Janijim...</h2>
                         <div className="spinner-border text-danger mx-auto" role="status">
                             <span className="sr-only">Cargando</span>
                         </div>
                     </div>
-
                 }
             </div>
         </main>
