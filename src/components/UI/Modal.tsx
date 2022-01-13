@@ -31,26 +31,25 @@ function Modal(props: any) {
                     <div className="modal-body">
                         <form action="">
                             <div className="form-group">
-                                <label htmlFor="nombre">Nombre:</label>
-                                <input autoComplete="on" className="mb-3 form-control" type="text" id="apellido" />
+                                <label htmlFor="name">Nombre:</label>
+                                <input autoComplete="on" className="mb-3 form-control" type="text" name="name" id="name" />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="apellido">Apellido:</label>
-                                <input className="mb-3 form-control" type="text" id="apellido" />
+                                <label htmlFor="familySurname">Apellido:</label>
+                                <input className="mb-3 form-control" type="text" name="familySurname" id="familySurname" />
                             </div>
-                            {loaded && console.log()}
                             <div className="form-group">
-                                <label htmlFor="groups">Grupo:</label><br />
-                                <select defaultValue={'Empty'} className="form-select form-control w-100 d-inline mb-3" id="groups">
-                                    {viewData && viewData["groups"].map((group: any) => (
+                                <label htmlFor="group">Grupo:</label><br />
+                                <select defaultValue={'Empty'} className="form-select form-control w-100 d-inline mb-3" name="group" id="group">
+                                    {loaded && viewData && viewData["groups"].map((group: any) => (
                                         <option value={group.id}>{(group.name) && group.name}</option>
                                     )
                                     )}
                                 </select>
                             </div>
                             <div className="form-group">
-                                <input className="form-check-input" type="checkbox" value="" id="curso-check" />
-                                <label className="form-check-label mx-1" htmlFor="curso-check">
+                                <input className="form-check-input" type="checkbox" value="" name="leadersCourse" id="leadersCourse" />
+                                <label className="form-check-label mx-1" htmlFor="leadersCourse">
                                     Curso de Madrijim
                                 </label>
                             </div>
