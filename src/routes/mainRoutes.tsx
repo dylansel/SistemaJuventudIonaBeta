@@ -4,7 +4,7 @@ import {
     Routes,
     Route
 } from "react-router-dom";
-import Janijim from '../pages/Janijim';
+import Janijim from '../pages/janijim';
 import Families from '../pages/Families';
 import Groups from '../pages/Groups';
 import Janij from '../pages/Janij';
