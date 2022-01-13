@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import logo from '../assets/logo/logo-solo.png';
+import logo from '../../assets/logo/logo-solo.png';
 
 function HeaderNav(props: any) {
     return (
@@ -14,7 +14,7 @@ function HeaderNav(props: any) {
             <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div className="navbar-nav me-md-5">
                     <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Datos
                         </a>
                         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -24,7 +24,7 @@ function HeaderNav(props: any) {
                         </ul>
                     </li>
                     <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Actividades
                         </a>
                         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -34,7 +34,7 @@ function HeaderNav(props: any) {
                         </ul>
                     </li>
                     <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Asistencia
                         </a>
                         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">

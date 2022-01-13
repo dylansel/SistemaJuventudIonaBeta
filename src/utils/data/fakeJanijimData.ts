@@ -6,13 +6,17 @@ export const janijim: JanijDTO[] = [
         name: "Ariel",
         familySurname: "Dautowitz",
         leadersCourse: false,
-        groupName: "Melajim"
+        groupName: "Melajim",
+        groupId: 1,
+        familyId: 1
     },
     {
         ID: 2,
         name: "Dylan",
         familySurname: "Mermelstein",
         leadersCourse: true,
-        groupName: "Mezukan"
+        groupName: "Mezukan",
+        groupId: 20,
+        familyId: 40
     },
 ];

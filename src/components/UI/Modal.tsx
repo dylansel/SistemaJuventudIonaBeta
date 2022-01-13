@@ -1,9 +1,15 @@
-import React from "react"
-import { getJanijim } from "../services/janijim";
+import React, { useState, useEffect } from "react"
+import { getGroups } from "../../services/groupService";
 
 function Modal(props: any) {
-    let janijim = getJanijim()
-
+    const groups = ["metukim","otros.."]
+    /*const [groups, setGroups] = useState<any[]>([])
+    useEffect(() => {
+        async function fetchData() {
+            setGroups(await getGroups())
+        }
+        fetchData()
+    },[]);*/
     return (
         <div className="modal fade" id={props.modalName} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div className="modal-dialog" role="document">
@@ -27,8 +33,8 @@ function Modal(props: any) {
                                 <label htmlFor="groups">Grupo:</label>
                                 <select className="form-select w-50 d-inline mx-2 mb-3" id="groups">
                                     <option selected></option>
-                                    {janijim.map(() => (
-                                        <option value="">{props.groups}</option>
+                                    {groups.map(group => (
+                                        <option value={group}>{group}</option>
                                     )
                                     )}
                                 </select>

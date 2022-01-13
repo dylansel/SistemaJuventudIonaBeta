@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/App.css';
-import { Link, Outlet } from "react-router-dom";
-import HeaderNav from './components/HeaderNav';
+import { Outlet } from "react-router-dom";
+import HeaderNav from './components/UI/HeaderNav';
 
 function App() {
   return (
@@ -9,10 +9,8 @@ function App() {
       <header>
         <HeaderNav/>
       </header>
-      
       <Outlet />
     </>
-
   );
 }
 

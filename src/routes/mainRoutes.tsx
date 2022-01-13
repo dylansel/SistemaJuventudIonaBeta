@@ -4,13 +4,12 @@ import {
     Routes,
     Route
 } from "react-router-dom";
-import Dashboard from '../pages/dashboard';
-import Janijim from '../pages/janijim';
-import JanijimList from '../pages/janijimList';
-import Familias from '../pages/familias';
-import Groups from '../pages/groups';
-import Janij from '../pages/janij';
-import NotFound from '../pages/notFound'
+import Janijim from '../pages/Janijim';
+import Families from '../pages/Families';
+import Groups from '../pages/Groups';
+import Janij from '../pages/Janij';
+import NotFound from '../pages/NotFound'
+import Dashboard from '../pages/Dashboard';
 
 const MainRoutes = () => {
     return <BrowserRouter>
@@ -20,7 +19,7 @@ const MainRoutes = () => {
                     index
                     element={<Dashboard />}
                 />
-                <Route path="janijim" element={<JanijimList />}>
+                <Route path="janijim" element={<Janijim />}>
                     <Route
                         index
                         element={
@@ -31,7 +30,7 @@ const MainRoutes = () => {
                     />
                     <Route path=":ID" element={<Janij />} />
                 </Route>
-                <Route path="familias" element={<Familias />} />
+                <Route path="familias" element={<Families />} />
                 <Route path="groups" element={<Groups />} />
                 <Route path="*" element={<NotFound />} />
             </Route>

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { getJanij, deleteJanij } from '../services/janijim';
+import { getJanij, deleteJanij } from '../services/janijService';
 import JanijDTO from '../interfaces/JanijDTO'
 
 export default function Janij() {
