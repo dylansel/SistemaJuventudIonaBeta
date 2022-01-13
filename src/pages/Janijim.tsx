@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Modal from "../components/UI/Modal";
-import { getJanijim } from '../services/janijService';
+import { getAllJanijim } from '../services/janijService';
 
 export default function Janijim() {
     const [title, setTitle] = useState("")
@@ -8,10 +8,10 @@ export default function Janijim() {
     const [janijim, setJanijim] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
     const handleAdd = () => {
-        setTitle("Agregar")
+        setTitle("Agregar Janij")
     }
     const handleEdit = (id: number) => {
-        setTitle("Editar")
+        setTitle("Editar Janij")
         setJanijId(id)
     }
     const refresh = () => {
@@ -19,7 +19,7 @@ export default function Janijim() {
     }
     async function fetchData() {
         setLoaded(false)
-        setJanijim(await getJanijim())
+        setJanijim(await getAllJanijim())
         setLoaded(true)
     }
     useEffect(() => {
@@ -46,8 +46,8 @@ export default function Janijim() {
                         </tr>
                     </thead>
                     <tbody>
-                        {janijim.map(janij => (
-                            <tr>
+                        {janijim.map(janij => ( 
+                            <tr key={janij.ID}>
                                 <td>{`${janij.name} ${janij.familySurname}`}</td>
                                 <td>{janij.groupName}</td>
                                 <td>

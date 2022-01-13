@@ -1,23 +1,38 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { getJanij, deleteJanij } from '../services/janijService';
+import { getJanijById, deleteJanij } from '../services/janijService';
 import JanijDTO from '../interfaces/JanijDTO'
+import { useEffect, useState } from 'react';
 
 export default function Janij() {
     let navigate = useNavigate();
     let params = useParams()
     let janijId: string = params.ID || '';
+    const [loaded, setLoaded] = useState(false)
+    const [janij, setJanij] = useState<JanijDTO>()
 
-    let janij: JanijDTO = getJanij(parseInt(janijId));
+    async function fetchData() {
+        setLoaded(false)
+        setJanij(await getJanijById(parseInt(janijId)))
+        setLoaded(true)
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, []);
+
+    if(!loaded){
+        return <main><p>Cargando</p></main>
+    }
     return (
         <main style={{ padding: "1rem" }}>
-            <h2>{janij.name} {janij.familySurname}</h2>
-            <p>Curso de madrijim : {janij.leadersCourse ? "Sí" : "No"}</p>
-            <p>Grupo: {janij.groupName}</p>
+            <h2>{janij && janij.name} {janij && janij.familySurname}</h2>
+            <p>Curso de madrijim : {janij && janij.leadersCourse ? "Sí" : "No"}</p>
+            <p>Grupo: {janij && janij.groupName}</p>
             <p>
                 <button
                     className='btn btn-danger'
                     onClick={() => {
-                        deleteJanij(janij.ID);
+                        deleteJanij(janij ? janij.ID : -1);
                         navigate("/janijim");
                     }}
                 >
