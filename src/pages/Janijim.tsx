@@ -58,19 +58,32 @@ export default function Janijim() {
         toggleDeleteModal()
     }
     const postRequest = async () => {
-        const janijToAdd = {
-            groupId: addFields.groupId,
-            name: addFields.name,
-            leadersCourse: addFields.leadersCourse,
-            familyId: 0
+        //TODO : Validate non-empty inputs
+        const nameField = addFields.name.split(" ")
+        for (let i = 0; i < nameField.length; i++) {
+            nameField[i] = nameField[i].charAt(0).toUpperCase() + nameField[i].slice(1);
         }
+        const name = nameField.join(" ")
+        let familyId
         if (addFields.familySurname === "" && addFields.familyId !== 0) {
-            janijToAdd.familyId = addFields.familyId
+            familyId = addFields.familyId
         }
         else {
-            addFamily(addFields.familySurname)
+            const surnameField = addFields.familySurname.split(" ")
+            for (let i = 0; i < surnameField.length; i++) {
+                surnameField[i] = surnameField[i].charAt(0).toUpperCase() + surnameField[i].slice(1);
+            }
+            const surname = surnameField.join(" ")
+            console.log(surname)
+            addFamily(surname)
             const families: any = await getAllFamilies()
-            janijToAdd.familyId = families.at(-1).id
+            familyId = families.at(-1).id
+        }
+        const janijToAdd = {
+            groupId: addFields.groupId,
+            name,
+            leadersCourse: addFields.leadersCourse,
+            familyId
         }
         console.log(janijToAdd)
         addJanij(janijToAdd)
