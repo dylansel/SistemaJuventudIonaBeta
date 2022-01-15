@@ -37,7 +37,6 @@ export default function Janijim() {
             [nameToFill]: e.value,
             [nameToErase]: ""
         }))
-        console.log(addFields);
     }
     const handleChange = (e: any) => {
         let { name, value } = e.target
@@ -50,7 +49,6 @@ export default function Janijim() {
             ...prevState,
             [name]: value
         }))
-        console.log(addFields);
 
     }
     const toggleAddModal = () => setAddModal(!addModal)
@@ -79,7 +77,6 @@ export default function Janijim() {
         }
         else {
             const surname = capitalizeAllWords(addFields.familySurname)
-            console.log(surname)
             addFamily(surname)
             const families: any = await getAllFamilies()
             familyId = families.at(-1).id
@@ -90,14 +87,12 @@ export default function Janijim() {
             leadersCourse: addFields.leadersCourse,
             familyId
         }
-        console.log(janijToAdd)
-        //addJanij(janijToAdd)
+        addJanij(janijToAdd)
         toggleAddModal()
         setAddFields(initialFieldsState)
         refresh()
     }
     const deleteRequest = (id: number) => {
-        console.log(id)
         deleteJanij(id)
         toggleDeleteModal()
         refresh()
