@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { getJanijById, deleteJanij } from '../services/janijService';
-import JanijDTO from '../interfaces/JanijDTO'
+import JanijDTO from '../dtos/JanijDTO'
 import { useEffect, useState } from 'react';
 
 export default function Janij() {

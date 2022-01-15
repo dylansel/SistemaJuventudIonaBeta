@@ -30,7 +30,7 @@ const MainRoutes = () => {
                     />
                     <Route path=":ID" element={<Janij />} />
                 </Route>
-                <Route path="familias" element={<Families />} />
+                <Route path="families" element={<Families />} />
                 <Route path="groups" element={<Groups />} />
                 <Route path="*" element={<NotFound />} />
             </Route>

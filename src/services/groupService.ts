@@ -1,6 +1,6 @@
 import { BACKEND_URL } from '../constants/globals';
 import axios from 'axios';
-import GroupDTO from '../interfaces/GroupDTO';
+import GroupDTO from '../dtos/GroupDTO';
 
 export async function getAllGroups(): Promise<GroupDTO[]> {
     try {

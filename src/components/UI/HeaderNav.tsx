@@ -19,7 +19,7 @@ function HeaderNav(props: any) {
                         </a>
                         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <Link className="dropdown-item" to="/janijim">Janijim</Link>
-                            <Link className="dropdown-item" to="/familias">Familias</Link>
+                            <Link className="dropdown-item" to="/families" hidden={true}>Familias</Link>
                             <Link className="dropdown-item" to="/groups">Grupos</Link>
                         </ul>
                     </li>

@@ -1,6 +1,6 @@
 import { BACKEND_URL } from '../constants/globals';
 import axios from 'axios';
-import AreaDTO from '../interfaces/AreaDTO';
+import AreaDTO from '../dtos/AreaDTO';
 
 export async function getAllAreas(): Promise<AreaDTO[]> {
     try {

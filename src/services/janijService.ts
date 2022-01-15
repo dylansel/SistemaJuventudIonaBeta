@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { BACKEND_URL } from '../constants/globals';
-import JanijDTO from '../interfaces/JanijDTO';
-import JanijRequestDTO from '../interfaces/JanijRequestDTO';
+import JanijDTO from '../dtos/JanijDTO';
+import JanijRequestDTO from '../dtos/JanijRequestDTO';
 
 export async function getAllJanijim(): Promise<JanijDTO[]> {
     try {

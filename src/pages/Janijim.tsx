@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal } from 'reactstrap';
-import AddBody from "../components/UI/AddBody";
-import DeleteBody from '../components/UI/DeleteBody';
+import AddJanijBody from "../components/UI/Modals/AddJanijBody";
+import DeleteBody from '../components/UI/Modals/DeleteBody';
+import { addFamily, getAllFamilies } from '../services/familyService';
 import { addJanij, deleteJanij } from '../services/janijService';
 import { getAllJanijim } from '../services/janijService';
 
@@ -10,29 +11,43 @@ export default function Janijim() {
     const [loaded, setLoaded] = useState(false)
     const [addModal, setAddModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
+    //const [familyOption, setFamilyOption] = useState('existingFamily')
     const [itemSelected, setItemSelected] = useState({
         id: 0,
         name: ""
     })
-    const [addField, setAddField] = useState({
-        familyId: 1,
+    const [addFields, setAddFields] = useState({
+        name: '',
         groupId: 1,
         leadersCourse: false,
-        name: ''
+        familyId: 1,
+        familySurname: ''
     })
-
+    /*const handleFamilyOption = (e: any) => {
+        setFamilyOption(e.target.value)
+    }*/
+    const changeFamily = (e: any) => {
+        const nameToFill = isNaN(e.value) ? "familySurname" : "familyId"
+        const nameToErase = !isNaN(e.value) ? "familySurname" : "familyId"
+        setAddFields(prevState => ({
+            ...prevState,
+            [nameToFill]: e.value,
+            [nameToErase]: ""
+        }))
+        console.log(addFields);
+    }
     const handleChange = (e: any) => {
         let { name, value } = e.target
-        if (name === "groupId" || name === "familyId") {
+        if (name === "groupId") {
             value = parseInt(value)
         } else if (name === "leadersCourse") {
             value = e.target.checked
         }
-        setAddField(prevState => ({
+        setAddFields(prevState => ({
             ...prevState,
             [name]: value
         }))
-        console.log(addField);
+        console.log(addFields);
 
     }
     const toggleAddModal = () => setAddModal(!addModal)
@@ -42,8 +57,23 @@ export default function Janijim() {
         setItemSelected(item)
         toggleDeleteModal()
     }
-    const postRequest = () => {
-        addJanij(addField)
+    const postRequest = async () => {
+        const janijToAdd = {
+            groupId: addFields.groupId,
+            name: addFields.name,
+            leadersCourse: addFields.leadersCourse,
+            familyId: 0
+        }
+        if (addFields.familySurname === "" && addFields.familyId !== 0) {
+            janijToAdd.familyId = addFields.familyId
+        }
+        else {
+            addFamily(addFields.familySurname)
+            const families: any = await getAllFamilies()
+            janijToAdd.familyId = families.at(-1).id
+        }
+        console.log(janijToAdd)
+        addJanij(janijToAdd)
         toggleAddModal()
         refresh()
     }
@@ -71,7 +101,7 @@ export default function Janijim() {
             <div className="filters d-flex justify-content-end mx-5 mb-3">
                 <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Janij</Button>
-                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddBody title='Agregar' toggler={toggleAddModal} change={handleChange} function={postRequest} /></Modal>
+                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' toggler={toggleAddModal} /*familyOption={handleFamilyOption}*/ change={handleChange} changeFamily={changeFamily} action={postRequest} /></Modal>
             </div>
             <div className="justify-content-center table-content mx-3 w-95">
 
