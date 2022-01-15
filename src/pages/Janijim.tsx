@@ -78,7 +78,7 @@ export default function Janijim() {
         }
         else {
             const surname = capitalizeAllWords(addFields.familySurname)
-            addFamily(surname)
+            addFamily({surname})
             const families: any = await getAllFamilies()
             familyId = families.at(-1).id
         }
@@ -109,7 +109,6 @@ export default function Janijim() {
     useEffect(() => {
         fetchData()
     }, []);
-
 
     return (
         <main>
@@ -153,7 +152,6 @@ export default function Janijim() {
                 }
             </div>
             <Scroll showBelow={250} />
-
         </main>
     );
 }

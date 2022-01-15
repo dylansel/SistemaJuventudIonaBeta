@@ -33,7 +33,7 @@ export async function addJanij(janijToAdd: JanijRequestDTO) {
     }
 }
 
-export async function updateJanij(id: number, janijToUpdate: JanijDTO) {
+export async function updateJanij(id: number, janijToUpdate: JanijRequestDTO) {
     try {
         const response = await axios.put(`${BACKEND_URL}/janij/update/${id}`,janijToUpdate)
         const data = await response.data

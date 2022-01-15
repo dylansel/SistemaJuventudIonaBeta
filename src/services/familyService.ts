@@ -1,6 +1,7 @@
 import { BACKEND_URL } from '../constants/globals';
 import axios from 'axios';
 import { families } from '../utils/data/fakeFamiliesData';
+import FamilyRequestDTO from '../dtos/FamilyRequestDTO';
 
 export async function getAllFamilies(): Promise<any[]> {
     try {
@@ -12,7 +13,7 @@ export async function getAllFamilies(): Promise<any[]> {
     }
 }
 
-export async function addFamily(familyToAdd: string) {
+export async function addFamily(familyToAdd: FamilyRequestDTO) {
     try {
         //const response = await axios.post(`${BACKEND_URL}/family/add`, familyToAdd)
         // data = await response.data

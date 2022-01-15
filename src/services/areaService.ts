@@ -12,9 +12,9 @@ export async function getAllAreas(): Promise<AreaDTO[]> {
     }
 }
 
-export async function getAreaById(ID: number): Promise<AreaDTO> {
+export async function getAreaById(id: number): Promise<AreaDTO> {
     try {
-        const response = await axios(`${BACKEND_URL}/area/get/${ID}`)
+        const response = await axios(`${BACKEND_URL}/area/get/${id}`)
         const data = await response.data
         return data as AreaDTO
     } catch (error: any) {
@@ -32,9 +32,9 @@ export async function addArea(areaToAdd: AreaDTO) {
     }
 }
 
-export async function updateArea(ID: number, areaToUpdate: AreaDTO) {
+export async function updateArea(id: number, areaToUpdate: AreaDTO) {
     try {
-        const response = await axios.put(`${BACKEND_URL}/area/update/${ID}`,areaToUpdate)
+        const response = await axios.put(`${BACKEND_URL}/area/update/${id}`,areaToUpdate)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -42,9 +42,9 @@ export async function updateArea(ID: number, areaToUpdate: AreaDTO) {
     }
 }
 
-export async function deleteArea(ID: number) {
+export async function deleteArea(id: number) {
     try {
-        const response = await axios.delete(`${BACKEND_URL}/area/delete/${ID}`)
+        const response = await axios.delete(`${BACKEND_URL}/area/delete/${id}`)
         const data = await response.data
         return data
     } catch (error: any) {
