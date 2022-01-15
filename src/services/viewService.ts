@@ -2,7 +2,6 @@ import { getAllFamilies } from './familyService';
 import { getAllGroups } from './groupService';
 import { getJanijById } from './janijService';
 
-
 export async function getAddJanijData(): Promise<any> {
     try {
         const groups = await getAllGroups()
@@ -16,12 +15,14 @@ export async function getAddJanijData(): Promise<any> {
     }
 }
 
-export async function getEditJanijData(ID: number): Promise<any> {
+export async function getEditJanijData(id: number): Promise<any> {
     try {
         const groups = await getAllGroups()
-        const janijData = await getJanijById(ID)
+        const families= await getAllFamilies()
+        const janijData = await getJanijById(id)
         return {
             groups,
+            families,
             janijData
         }
     } catch (error: any) {

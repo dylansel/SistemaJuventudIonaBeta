@@ -1,4 +1,4 @@
-import FamilyDTO from "../dtos/FamilyDTO";
+import FamilyDTO from "../../dtos/FamilyDTO";
 
 export const families: FamilyDTO[] = [{
     id: 1,

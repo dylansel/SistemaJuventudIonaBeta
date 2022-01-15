@@ -1,6 +1,6 @@
 import { BACKEND_URL } from '../constants/globals';
 import axios from 'axios';
-import { families } from '../utils/fakeFamiliesData';
+import { families } from '../utils/data/fakeFamiliesData';
 
 export async function getAllFamilies(): Promise<any[]> {
     try {

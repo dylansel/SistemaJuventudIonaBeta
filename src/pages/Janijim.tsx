@@ -5,10 +5,12 @@ import DeleteBody from '../components/UI/Modals/DeleteBody';
 import { addFamily, getAllFamilies } from '../services/familyService';
 import { addJanij, deleteJanij } from '../services/janijService';
 import { getAllJanijim } from '../services/janijService';
+import { capitalizeAllWords, isEmptyOrSpaces } from '../utils/misc/strings';
 
 export default function Janijim() {
     const [janijim, setJanijim] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
+    const [addError, setAddError] = useState(false)
     const [addModal, setAddModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
     //const [familyOption, setFamilyOption] = useState('existingFamily')
@@ -16,13 +18,14 @@ export default function Janijim() {
         id: 0,
         name: ""
     })
-    const [addFields, setAddFields] = useState({
+    const initialFieldsState = {
         name: '',
         groupId: 1,
         leadersCourse: false,
-        familyId: 1,
+        familyId: -1,
         familySurname: ''
-    })
+    }
+    const [addFields, setAddFields] = useState(initialFieldsState)
     /*const handleFamilyOption = (e: any) => {
         setFamilyOption(e.target.value)
     }*/
@@ -53,27 +56,29 @@ export default function Janijim() {
     const toggleAddModal = () => setAddModal(!addModal)
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
+    const toggleCancelAddModal = () => {
+        setAddError(false)
+        setAddFields(initialFieldsState)
+        setAddModal(!addModal)
+    }
+
     const handleDelete = (item: any) => {
         setItemSelected(item)
         toggleDeleteModal()
     }
     const postRequest = async () => {
-        //TODO : Validate non-empty inputs
-        const nameField = addFields.name.split(" ")
-        for (let i = 0; i < nameField.length; i++) {
-            nameField[i] = nameField[i].charAt(0).toUpperCase() + nameField[i].slice(1);
+        setAddError(false)
+        if (isEmptyOrSpaces(addFields.name) || (isEmptyOrSpaces(addFields.familySurname) && addFields.familyId === -1)) {
+            setAddError(true)
+            return
         }
-        const name = nameField.join(" ")
+        const name = capitalizeAllWords(addFields.name)
         let familyId
         if (addFields.familySurname === "" && addFields.familyId !== 0) {
             familyId = addFields.familyId
         }
         else {
-            const surnameField = addFields.familySurname.split(" ")
-            for (let i = 0; i < surnameField.length; i++) {
-                surnameField[i] = surnameField[i].charAt(0).toUpperCase() + surnameField[i].slice(1);
-            }
-            const surname = surnameField.join(" ")
+            const surname = capitalizeAllWords(addFields.familySurname)
             console.log(surname)
             addFamily(surname)
             const families: any = await getAllFamilies()
@@ -86,8 +91,9 @@ export default function Janijim() {
             familyId
         }
         console.log(janijToAdd)
-        addJanij(janijToAdd)
+        //addJanij(janijToAdd)
         toggleAddModal()
+        setAddFields(initialFieldsState)
         refresh()
     }
     const deleteRequest = (id: number) => {
@@ -114,7 +120,7 @@ export default function Janijim() {
             <div className="filters d-flex justify-content-end mx-5 mb-3">
                 <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Janij</Button>
-                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' toggler={toggleAddModal} /*familyOption={handleFamilyOption}*/ change={handleChange} changeFamily={changeFamily} action={postRequest} /></Modal>
+                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' error={addError} toggler={toggleCancelAddModal} /*familyOption={handleFamilyOption}*/ change={handleChange} changeFamily={changeFamily} action={postRequest} /></Modal>
             </div>
             <div className="justify-content-center table-content mx-3 w-95">
 

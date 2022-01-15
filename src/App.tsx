@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/App.css';
 import { Outlet } from "react-router-dom";
-import HeaderNav from './components/UI/HeaderNav';
+import HeaderNav from './components/UI/Layout/HeaderNav';
 
 function App() {
   return (

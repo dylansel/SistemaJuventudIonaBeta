@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { getAddJanijData } from "../../../services/viewService";
-import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label } from 'reactstrap';
-//import SearchSelect from "../SearchSelect";
-import CreatableSelectSearch from "../CreatableSelect";
+import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
+//import SearchSelect from "../Selects/SearchSelect";
+import CreatableSelectSearch from "../Selects/CreatableSelect";
 
 function AddJanijBody(props: any) {
     const [loaded, setLoaded] = useState(false)
@@ -24,6 +24,7 @@ function AddJanijBody(props: any) {
                 {props.title} Janij
             </ModalHeader>
             <ModalBody>
+                {props.error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
                         <Label for="name">
