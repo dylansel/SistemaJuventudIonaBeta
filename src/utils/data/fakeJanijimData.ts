@@ -2,7 +2,7 @@ import JanijDTO from "../../interfaces/JanijDTO";
 
 export const janijim: JanijDTO[] = [
     {
-        ID: 1,
+        id: 1,
         name: "Ariel",
         familySurname: "Dautowitz",
         leadersCourse: false,
@@ -11,7 +11,7 @@ export const janijim: JanijDTO[] = [
         familyId: 1
     },
     {
-        ID: 2,
+        id: 2,
         name: "Dylan",
         familySurname: "Mermelstein",
         leadersCourse: true,

@@ -32,7 +32,7 @@ export default function Janij() {
                 <button
                     className='btn btn-danger'
                     onClick={() => {
-                        deleteJanij(janij ? janij.ID : -1);
+                        deleteJanij(janij ? janij.id : -1);
                         navigate("/janijim");
                     }}
                 >

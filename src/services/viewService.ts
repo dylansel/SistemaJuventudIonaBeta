@@ -1,13 +1,14 @@
-import { BACKEND_URL } from '../constants/globals';
-import axios from 'axios';
 import { getAllGroups } from './groupService';
 import { getJanijById } from './janijService';
+
 
 export async function getAddJanijData(): Promise<any> {
     try {
         const groups = await getAllGroups()
+        //const families= await getAllFamilies()
         return {
             groups,
+           // families
         }
     } catch (error: any) {
         throw error

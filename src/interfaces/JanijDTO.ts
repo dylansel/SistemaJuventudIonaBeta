@@ -1,5 +1,5 @@
 export default interface JanijDTO {
-    ID: number,
+    id: number,
     name: string,
     leadersCourse: boolean,
     familyId: number,

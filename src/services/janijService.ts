@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { BACKEND_URL } from '../constants/globals';
 import JanijDTO from '../interfaces/JanijDTO';
+import JanijRequestDTO from '../interfaces/JanijRequestDTO';
 
 export async function getAllJanijim(): Promise<JanijDTO[]> {
     try {
-        let response = await axios(`${BACKEND_URL}/janij/getAll`)
-        let data = await response.data
+        const response = await axios(`${BACKEND_URL}/janij/getAll`)
+        const data = await response.data
         return data
     } catch (error: any) {
         throw error
@@ -14,18 +15,18 @@ export async function getAllJanijim(): Promise<JanijDTO[]> {
 
 export async function getJanijById(ID: number): Promise<JanijDTO> {
     try {
-        let response = await axios(`${BACKEND_URL}/janij/get/${ID}`)
-        let data = await response.data
+        const response = await axios(`${BACKEND_URL}/janij/get/${ID}`)
+        const data = await response.data
         return data as JanijDTO
     } catch (error: any) {
         throw error
     }
 }
 
-export async function addJanij(janijToAdd: JanijDTO) {
+export async function addJanij(janijToAdd: JanijRequestDTO) {
     try {
-        let response = await axios.post(`${BACKEND_URL}/janij/add`,janijToAdd)
-        let data = await response.data
+        const response = await axios.post(`${BACKEND_URL}/janij/add`,janijToAdd)
+        const data = await response.data
         return data
     } catch (error: any) {
         throw error
@@ -34,8 +35,8 @@ export async function addJanij(janijToAdd: JanijDTO) {
 
 export async function updateJanij(ID: number, janijToUpdate: JanijDTO) {
     try {
-        let response = await axios.put(`${BACKEND_URL}/janij/update/${ID}`,janijToUpdate)
-        let data = await response.data
+        const response = await axios.put(`${BACKEND_URL}/janij/update/${ID}`,janijToUpdate)
+        const data = await response.data
         return data
     } catch (error: any) {
         throw error
@@ -44,8 +45,8 @@ export async function updateJanij(ID: number, janijToUpdate: JanijDTO) {
 
 export async function deleteJanij(ID: number) {
     try {
-        let response = await axios.delete(`${BACKEND_URL}/janij/delete/${ID}`)
-        let data = await response.data
+        const response = await axios.delete(`${BACKEND_URL}/janij/delete/${ID}`)
+        const data = await response.data
         return data
     } catch (error: any) {
         throw error
