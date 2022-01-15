@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal } from 'reactstrap';
+import Scroll from '../components/UI/Layout/Scroll';
 import AddJanijBody from "../components/UI/Modals/AddJanijBody";
 import DeleteBody from '../components/UI/Modals/DeleteBody';
 import { addFamily, getAllFamilies } from '../services/familyService';
@@ -142,7 +143,8 @@ export default function Janijim() {
                         )}
                     </tbody>
                     <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' toggler={toggleDeleteModal} itemSelected={itemSelected} function={deleteRequest} /></Modal>
-                </table> :
+                </table>
+                    :
                     <div className="text-center">
                         <h2>Cargando Lista de Janijim...</h2>
                         <div className="spinner-border text-danger mx-auto my-3" role="status">
@@ -150,6 +152,8 @@ export default function Janijim() {
                     </div>
                 }
             </div>
+            <Scroll showBelow={250} />
+
         </main>
     );
 }

@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <header>
-        <HeaderNav/>
+        <HeaderNav />
       </header>
       <Outlet />
     </>
