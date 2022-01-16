@@ -40,7 +40,7 @@ function AddJanijBody(props: any) {
                     <FormGroup>
                         <Label for="familyId">
                             Apellido
-                        </Label><br />
+                        </Label>
                         {/*<div className="d-flex flex-row justify-content-left">
                             <Label for="familyOption1">
                                 <Input

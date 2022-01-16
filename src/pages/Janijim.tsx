@@ -103,7 +103,7 @@ export default function Janijim() {
     }
     async function fetchData() {
         setLoaded(false)
-        setJanijim(await getAllJanijim())
+        setJanijim(await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc"))
         setLoaded(true)
     }
     useEffect(() => {

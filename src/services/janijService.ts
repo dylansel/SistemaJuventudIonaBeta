@@ -3,9 +3,9 @@ import { BACKEND_URL } from '../constants/globals';
 import JanijDTO from '../dtos/JanijDTO';
 import JanijRequestDTO from '../dtos/JanijRequestDTO';
 
-export async function getAllJanijim(): Promise<JanijDTO[]> {
+export async function getAllJanijim(orderBy?: string): Promise<JanijDTO[]> {
     try {
-        const response = await axios(`${BACKEND_URL}/janij/getAll`)
+        const response = await axios(`${BACKEND_URL}/janij/getAll?${orderBy}`)
         const data = await response.data
         return data
     } catch (error: any) {
