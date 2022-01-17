@@ -26,8 +26,8 @@
 }
 
 .navbar-collapse {
-  font-size: 30px;
-  justify-content: start;
+  font-size: 1.7rem;
+  justify-content: space-between;
 }
 
 .nav-item {

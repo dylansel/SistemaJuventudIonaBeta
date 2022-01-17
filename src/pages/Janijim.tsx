@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal } from 'reactstrap';
+import { Button, Modal, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import AddJanijBody from "../components/UI/Modals/AddJanijBody";
 import DeleteBody from '../components/UI/Modals/DeleteBody';
@@ -12,9 +12,9 @@ export default function Janijim() {
     const [janijim, setJanijim] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
     const [addError, setAddError] = useState(false)
+    const [isSaving, setIsSaving] = useState(false)
     const [addModal, setAddModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
-    //const [familyOption, setFamilyOption] = useState('existingFamily')
     const [itemSelected, setItemSelected] = useState({
         id: 0,
         name: ""
@@ -27,9 +27,6 @@ export default function Janijim() {
         familySurname: ''
     }
     const [addFields, setAddFields] = useState(initialFieldsState)
-    /*const handleFamilyOption = (e: any) => {
-        setFamilyOption(e.target.value)
-    }*/
     const changeFamily = (e: any) => {
         const nameToFill = isNaN(e.value) ? "familySurname" : "familyId"
         const nameToErase = !isNaN(e.value) ? "familySurname" : "familyId"
@@ -78,10 +75,9 @@ export default function Janijim() {
         }
         else {
             const surname = capitalizeAllWords(addFields.familySurname)
-            await addFamily({surname})
+            await addFamily({ surname, discount: 0 })
             const families: any = await getAllFamilies()
             familyId = families.at(-1).id
-            console.log(familyId)
         }
         const janijToAdd = {
             groupId: addFields.groupId,
@@ -89,9 +85,10 @@ export default function Janijim() {
             leadersCourse: addFields.leadersCourse,
             familyId
         }
-        console.log(janijToAdd)
-        toggleAddModal()
+        setIsSaving(true)
         await addJanij(janijToAdd)
+        toggleAddModal()
+        setIsSaving(false)
         setAddFields(initialFieldsState)
         refresh()
     }
@@ -117,9 +114,9 @@ export default function Janijim() {
             <div className="filters d-flex justify-content-end mx-5 mb-3">
                 <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Janij</Button>
-                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' error={addError} toggler={toggleCancelAddModal} /*familyOption={handleFamilyOption}*/ change={handleChange} changeFamily={changeFamily} action={postRequest} /></Modal>
+                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' error={addError} toggler={toggleCancelAddModal} change={handleChange} changeFamily={changeFamily} action={postRequest} isSaving={isSaving} /></Modal>
             </div>
-            <div className="justify-content-center table-content mx-3 w-95">
+            <div className="justify-content-center table-content mx-3">
 
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
@@ -148,8 +145,7 @@ export default function Janijim() {
                     :
                     <div className="text-center">
                         <h2>Cargando Lista de Janijim...</h2>
-                        <div className="spinner-border text-danger mx-auto my-3" role="status">
-                        </div>
+                        <Spinner animation="border" className='text-danger my-2' variant="light" />
                     </div>
                 }
             </div>

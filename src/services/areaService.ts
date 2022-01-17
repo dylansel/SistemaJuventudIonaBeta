@@ -2,9 +2,9 @@ import { BACKEND_URL } from '../constants/globals';
 import axios from 'axios';
 import AreaDTO from '../dtos/AreaDTO';
 
-export async function getAllAreas(): Promise<AreaDTO[]> {
+export async function getAllAreas(orderBy?: string): Promise<AreaDTO[]> {
     try {
-        const response = await axios(`${BACKEND_URL}/area/getAll`)
+        const response = await axios(`${BACKEND_URL}/area/getAll?${orderBy}`)
         const data = await response.data
         return data
     } catch (error: any) {

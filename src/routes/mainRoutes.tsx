@@ -19,17 +19,7 @@ const MainRoutes = () => {
                     index
                     element={<Dashboard />}
                 />
-                <Route path="janijim" element={<Janijim />}>
-                    <Route
-                        index
-                        element={
-                            <main style={{ padding: "1rem" }}>
-                                <p>Elegí un janij</p>
-                            </main>
-                        }
-                    />
-                    <Route path=":ID" element={<Janij />} />
-                </Route>
+                <Route path="janijim" element={<Janijim />}/>
                 <Route path="areas" element={<Areas />} />
                 <Route path="groups" element={<Groups />} />
                 <Route path="*" element={<NotFound />} />

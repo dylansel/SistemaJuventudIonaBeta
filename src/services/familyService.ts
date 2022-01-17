@@ -28,7 +28,6 @@ export async function getAllFamiliesWithChildren(orderBy?: string): Promise<any[
     }
 }
 
-
 export async function getFamilyById(id: number): Promise<any[]> {
     try {
         const response = await axios(`${BACKEND_URL}/family/get/${id}`)
