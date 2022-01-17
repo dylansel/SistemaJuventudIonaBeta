@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import Janijim from '../pages/Janijim';
 import Groups from '../pages/Groups';
-import Janij from '../pages/Janij';
 import NotFound from '../pages/NotFound'
 import Dashboard from '../pages/Dashboard';
 import Areas from '../pages/Areas';

@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
-import AddJanijBody from "../components/UI/Modals/AddJanijBody";
+import AddJanijBody from "../components/UI/Modals/Janijim/AddJanijBody";
 import DeleteBody from '../components/UI/Modals/DeleteBody';
 import { addFamily, getAllFamilies } from '../services/familyService';
-import { addJanij, deleteJanij } from '../services/janijService';
+import { addJanij, deleteJanij, updateJanij } from '../services/janijService';
 import { getAllJanijim } from '../services/janijService';
 import { capitalizeAllWords, isEmptyOrSpaces } from '../utils/misc/strings';
+import EditJanijBody from '../components/UI/Modals/Janijim/EditJanijBody';
 
 export default function Janijim() {
     const [janijim, setJanijim] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
     const [addError, setAddError] = useState(false)
+    const [editError, setEditError] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
+    const [isEditing, setIsEditing] = useState(false)
     const [addModal, setAddModal] = useState(false)
+    const [editModal, setEditModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
     const [itemSelected, setItemSelected] = useState({
         id: 0,
@@ -27,7 +31,9 @@ export default function Janijim() {
         familySurname: ''
     }
     const [addFields, setAddFields] = useState(initialFieldsState)
-    const changeFamily = (e: any) => {
+    const [editFields, setEditFields] = useState(initialFieldsState)
+
+    const addChangeFamily = (e: any) => {
         const nameToFill = isNaN(e.value) ? "familySurname" : "familyId"
         const nameToErase = !isNaN(e.value) ? "familySurname" : "familyId"
         setAddFields(prevState => ({
@@ -36,7 +42,16 @@ export default function Janijim() {
             [nameToErase]: ""
         }))
     }
-    const handleChange = (e: any) => {
+    const editChangeFamily = (e: any) => {
+        const nameToFill = isNaN(e.value) ? "familySurname" : "familyId"
+        const nameToErase = !isNaN(e.value) ? "familySurname" : "familyId"
+        setEditFields(prevState => ({
+            ...prevState,
+            [nameToFill]: e.value,
+            [nameToErase]: ""
+        }))
+    }
+    const addHandleChange = (e: any) => {
         let { name, value } = e.target
         if (name === "groupId") {
             value = parseInt(value)
@@ -49,7 +64,23 @@ export default function Janijim() {
         }))
 
     }
+    const editHandleChange = (e: any) => {
+        let { name, value } = e.target
+        if (name === "groupId") {
+            value = parseInt(value)
+        } else if (name === "leadersCourse") {
+            value = e.target.checked
+        }
+        setEditFields(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
     const toggleAddModal = () => setAddModal(!addModal)
+    const toggleEditModal = (item?: any) => {
+        setItemSelected(item)
+        setEditModal(!editModal)
+    }
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
     const toggleCancelAddModal = () => {
@@ -57,7 +88,11 @@ export default function Janijim() {
         setAddFields(initialFieldsState)
         setAddModal(!addModal)
     }
-
+    const toggleCancelEditModal = () => {
+        setEditError(false)
+        setEditFields(initialFieldsState)
+        setEditModal(!editModal)
+    }
     const handleDelete = (item: any) => {
         setItemSelected(item)
         toggleDeleteModal()
@@ -92,6 +127,37 @@ export default function Janijim() {
         setAddFields(initialFieldsState)
         refresh()
     }
+    const updateRequest = async () => {
+        setEditError(false)
+        if (isEmptyOrSpaces(editFields.name) || (isEmptyOrSpaces(editFields.familySurname) && editFields.familyId === -1)) {
+            setEditError(true)
+            return
+        }
+        const name = capitalizeAllWords(editFields.name)
+        let familyId
+        if (editFields.familySurname === "" && editFields.familyId !== 0) {
+            familyId = editFields.familyId
+        }
+        else {
+            const surname = capitalizeAllWords(editFields.familySurname)
+            await addFamily({ surname, discount: 0 })
+            const families: any = await getAllFamilies()
+            familyId = families.at(-1).id
+        }
+        const janijToEdit = {
+            groupId: editFields.groupId,
+            name,
+            leadersCourse: editFields.leadersCourse,
+            familyId
+        }
+        setIsEditing(true)
+        console.log(itemSelected.id)
+        //await updateJanij(itemSelected.id, janijToEdit)
+        toggleEditModal()
+        setIsEditing(false)
+        setEditFields(initialFieldsState)
+        refresh()
+    }
     const deleteRequest = (id: number) => {
         deleteJanij(id)
         toggleDeleteModal()
@@ -114,7 +180,8 @@ export default function Janijim() {
             <div className="filters d-flex justify-content-end mx-5 mb-3">
                 <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Janij</Button>
-                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' error={addError} toggler={toggleCancelAddModal} change={handleChange} changeFamily={changeFamily} action={postRequest} isSaving={isSaving} /></Modal>
+                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' error={addError} toggler={toggleCancelAddModal} change={addHandleChange} changeFamily={addChangeFamily} action={postRequest} isSaving={isSaving} /></Modal>
+                <Modal isOpen={editModal} toggle={toggleEditModal} ><EditJanijBody title='Editar' error={editError} toggler={toggleCancelEditModal} item={itemSelected} change={editHandleChange} changeFamily={editChangeFamily} action={updateRequest} isEditing={isEditing} /></Modal>
             </div>
             <div className="justify-content-center table-content mx-3">
 
@@ -133,7 +200,7 @@ export default function Janijim() {
                                 <td>{janij.groupName}</td>
                                 <td>
                                     <span className="actions">
-                                        <button type="button" className="btn btn-danger" ><i className=" fas fa-edit"></i></button>
+                                        <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: janij.id })}><i className=" fas fa-edit"></i></button>
                                         <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.familySurname}` })} ><i className="fas fa-trash"></i></button></span>
                                 </td>
                             </tr>

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react"
-import { getAddJanijData } from "../../../services/viewService";
+import { getAddGroupData } from "../../../../services/viewService";
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import CreatableSelectSearch from "../Selects/CreatableSelect";
 
-function AddJanijBody(props: any) {
+function AddGroupBody(props: any) {
     const [loaded, setLoaded] = useState(false)
     const [viewData, setViewData] = useState<any>([null])
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getAddJanijData())
+        setViewData(await getAddGroupData())
         setLoaded(true)
     }
 
@@ -19,7 +18,7 @@ function AddJanijBody(props: any) {
     return (
         <>
             <ModalHeader toggle={props.toggler} charcode="close">
-                {props.title} Janij
+                {props.title} Grupo
             </ModalHeader>
             <ModalBody>
                 {props.error && <Alert color="danger">Error! Datos incorrectos</Alert>}
@@ -37,39 +36,31 @@ function AddJanijBody(props: any) {
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="familyId">
-                            Apellido
+                        <Label for="ordinal">
+                            Ordinal
                         </Label>
-                        <CreatableSelectSearch
-                            data={(loaded && viewData && viewData["families"]) ? viewData["families"] : []}
-                            disabled={!(loaded && viewData && viewData["families"]) || props.isSaving}
-                            display="fullFamily"
-                            id="family"
-                            name="family"
-                            className="mb-3"
-                            onChange={props.changeFamily}
-                            placeholder={(loaded && viewData && viewData["families"]) ? "Busca apellido o escribe uno nuevo..." : "Cargando..."}
+                        <Input
+                            id="ordinal"
+                            disabled={props.isSaving}
+                            name="ordinal"
+                            type="number"
+                            onChange={props.change}
+                            autoComplete="off"
                         />
                     </FormGroup>
-                    <Label for="group">Grupo</Label>
+                    <Label for="areaId">Area</Label>
                     <Input
-                        id="group"
-                        name="groupId"
+                        id="areaId"
+                        name="areaId"
                         className="mb-3"
                         type="select"
                         onChange={props.change}
-                        disabled={!(loaded && viewData && viewData["groups"]) || props.isSaving}
+                        disabled={!(loaded && viewData && viewData["areas"]) || props.isSaving}
                     >
-                        {loaded && viewData && viewData["groups"].map((grupo: any) => (
-                            <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
+                        {loaded && viewData && viewData["areas"].map((area: any) => (
+                            <option key={area.id} value={area.id}>{area.name}</option>
                         ))}
                     </Input>
-                    <FormGroup check>
-                        <Input type="checkbox" id="leadersCourse" name="leadersCourse" data-val="true" value="true" onChange={props.change} />
-                        <Label for="leadersCourse" check>
-                            Curso de Madrijim
-                        </Label>
-                    </FormGroup>
                     <ModalFooter>
                         <Button
                             onClick={props.toggler}
@@ -92,4 +83,4 @@ function AddJanijBody(props: any) {
     );
 }
 
-export default AddJanijBody
+export default AddGroupBody

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react"
-import { getAddGroupData } from "../../../services/viewService";
+import { getAddJanijData } from "../../../../services/viewService";
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
+import CreatableSelectSearch from "../../Selects/CreatableSelect";
 
-function AddGroupBody(props: any) {
+function AddAreaBody(props: any) {
     const [loaded, setLoaded] = useState(false)
     const [viewData, setViewData] = useState<any>([null])
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getAddGroupData())
+        setViewData(await getAddJanijData())
         setLoaded(true)
     }
 
@@ -18,7 +19,7 @@ function AddGroupBody(props: any) {
     return (
         <>
             <ModalHeader toggle={props.toggler} charcode="close">
-                {props.title} Grupo
+                {props.title} Shijva
             </ModalHeader>
             <ModalBody>
                 {props.error && <Alert color="danger">Error! Datos incorrectos</Alert>}
@@ -48,19 +49,7 @@ function AddGroupBody(props: any) {
                             autoComplete="off"
                         />
                     </FormGroup>
-                    <Label for="areaId">Area</Label>
-                    <Input
-                        id="areaId"
-                        name="areaId"
-                        className="mb-3"
-                        type="select"
-                        onChange={props.change}
-                        disabled={!(loaded && viewData && viewData["areas"]) || props.isSaving}
-                    >
-                        {loaded && viewData && viewData["areas"].map((area: any) => (
-                            <option key={area.id} value={area.id}>{area.name}</option>
-                        ))}
-                    </Input>
+
                     <ModalFooter>
                         <Button
                             onClick={props.toggler}
@@ -83,4 +72,4 @@ function AddGroupBody(props: any) {
     );
 }
 
-export default AddGroupBody
+export default AddAreaBody

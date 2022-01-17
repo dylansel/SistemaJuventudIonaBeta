@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
-import AddAreaBody from "../components/UI/Modals/AddAreaBody";
+import AddAreaBody from "../components/UI/Modals/Areas/AddAreaBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import { addArea, deleteArea, getAllAreas } from "../services/areaService";
 import { capitalizeAllWords, isEmptyOrSpaces } from "../utils/misc/strings";

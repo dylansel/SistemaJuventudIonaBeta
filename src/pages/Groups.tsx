@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
-import AddGroupBody from "../components/UI/Modals/AddGroupBody";
+import AddGroupBody from "../components/UI/Modals/Groups/AddGroupBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import { addGroup, deleteGroup, getAllGroups } from "../services/groupService";
 import { capitalizeAllWords, isEmptyOrSpaces } from "../utils/misc/strings";
