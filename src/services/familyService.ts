@@ -12,6 +12,23 @@ export async function getAllFamilies(orderBy?: string): Promise<any[]> {
     }
 }
 
+export async function getAllFamiliesWithChildren(orderBy?: string): Promise<any[]> {
+    try {
+        const data = await getAllFamilies(orderBy)
+        data.forEach((family: any) => {
+            let janijimNames = family.surname + " ("
+            for (let i = 0; i < family.janijim.length; i++) {
+                janijimNames += family.janijim[i].name + (i !== family.janijim.length - 1 ? "," : ")")
+            }
+            family["fullFamily"] = janijimNames
+        })
+        return data
+    } catch (error: any) {
+        throw error
+    }
+}
+
+
 export async function getFamilyById(id: number): Promise<any[]> {
     try {
         const response = await axios(`${BACKEND_URL}/family/get/${id}`)

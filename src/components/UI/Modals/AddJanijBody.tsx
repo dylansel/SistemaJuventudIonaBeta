@@ -85,7 +85,7 @@ function AddJanijBody(props: any) {
                         {loaded && viewData && viewData["families"] && /*!existingFamily &&*/
                             <CreatableSelectSearch
                                 data={viewData["families"]}
-                                display="surname"
+                                display="fullFamily"
                                 id="family"
                                 name="family"
                                 className="mb-3"

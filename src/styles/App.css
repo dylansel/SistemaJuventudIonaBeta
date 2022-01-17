@@ -27,7 +27,7 @@
 
 .navbar-collapse {
   font-size: 30px;
-  justify-content: end;
+  justify-content: start;
 }
 
 .nav-item {
@@ -161,5 +161,4 @@
 .btn:active, .btn:focus {
   box-shadow: none;
   outline: none;
-  background-color: #dc3545;
 }

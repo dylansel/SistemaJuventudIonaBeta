@@ -5,11 +5,11 @@ import {
     Route
 } from "react-router-dom";
 import Janijim from '../pages/Janijim';
-import Families from '../pages/Families';
 import Groups from '../pages/Groups';
 import Janij from '../pages/Janij';
 import NotFound from '../pages/NotFound'
 import Dashboard from '../pages/Dashboard';
+import Areas from '../pages/Areas';
 
 const MainRoutes = () => {
     return <BrowserRouter>
@@ -30,7 +30,7 @@ const MainRoutes = () => {
                     />
                     <Route path=":ID" element={<Janij />} />
                 </Route>
-                <Route path="families" element={<Families />} />
+                <Route path="areas" element={<Areas />} />
                 <Route path="groups" element={<Groups />} />
                 <Route path="*" element={<NotFound />} />
             </Route>

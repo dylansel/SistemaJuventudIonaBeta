@@ -19,8 +19,8 @@ function HeaderNav(props: any) {
                         </a>
                         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <Link className="dropdown-item" to="/janijim">Janijim</Link>
-                            <Link className="dropdown-item" to="/families" hidden={true}>Familias</Link>
                             <Link className="dropdown-item" to="/groups">Grupos</Link>
+                            <Link className="dropdown-item" to="/areas">Shijvot</Link>
                         </ul>
                     </li>
                     <li className="nav-item dropdown">
@@ -29,16 +29,17 @@ function HeaderNav(props: any) {
                         </a>
                         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <Link className="dropdown-item" to="">Actividades</Link>
-                            <Link className="dropdown-item" to="">Precios</Link>
-                            <Link className="dropdown-item" to="">Precios Especiales</Link>
+                            <Link className="dropdown-item" to="">Asistencia</Link>
+
                         </ul>
                     </li>
                     <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Asistencia
+                            Pagos
                         </a>
                         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <Link className="dropdown-item" to="">Asistencia</Link>
+                            <Link className="dropdown-item" to="">Precios</Link>
+                            <Link className="dropdown-item" to="">Precios Especiales</Link>
                             <Link className="dropdown-item" to="">Pagos</Link>
                         </ul>
                     </li>

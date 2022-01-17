@@ -78,9 +78,10 @@ export default function Janijim() {
         }
         else {
             const surname = capitalizeAllWords(addFields.familySurname)
-            addFamily({surname})
+            await addFamily({surname})
             const families: any = await getAllFamilies()
             familyId = families.at(-1).id
+            console.log(familyId)
         }
         const janijToAdd = {
             groupId: addFields.groupId,
@@ -88,6 +89,7 @@ export default function Janijim() {
             leadersCourse: addFields.leadersCourse,
             familyId
         }
+        console.log(janijToAdd)
         addJanij(janijToAdd)
         toggleAddModal()
         setAddFields(initialFieldsState)
