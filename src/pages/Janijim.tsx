@@ -90,8 +90,8 @@ export default function Janijim() {
             familyId
         }
         console.log(janijToAdd)
-        addJanij(janijToAdd)
         toggleAddModal()
+        await addJanij(janijToAdd)
         setAddFields(initialFieldsState)
         refresh()
     }
