@@ -1,38 +1,164 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
+#root {
+  padding-top: 12rem;
+}
+
+@media (max-width: 768px) {
+  #root {
+    padding-top: 10rem;
+  }
+}
+
+/*----------------NAVBAR---------------*/
+.navbar-custom {
+  background-color: #DD5041;
+  box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2), 0 5px 15px 0 rgba(37, 44, 97, 0.15);
+}
+
+.navbar-logo {
+  height: 5rem;
+  margin-left: 3rem;
+}
+
+.navbar-collapse {
+  font-size: 1.7rem;
+  justify-content: space-between;
+}
+
+.nav-item {
+  margin: 0 0.5rem;
+}
+
+.nav-link {
+  position: relative;
+  color: #e0dbdb;
+  text-decoration: none;
+  cursor: default;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.nav-link:after {
+  display: none;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.nav-link:hover {
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.nav-link:focus {
+  color: white;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dropdown-menu {
+  background-color: #DD5041;
+  border: none;
+  font-size: 30px;
+}
+
+.dropdown-item {
+  color: white;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+/*-------------------INDEX---------------*/
+
+.dashboard {
+  background-color: #F7E3E1;
+  padding: 25px;
+  border-radius: 5px;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 1);
+}
+
+.fa-thumbtack {
+  transform: rotate(30deg);
+}
+
+.input-field input {
+  width: 80%;
+  height: 100%;
+  outline: none;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  font-size: 20px;
+  padding-left: 15px;
+}
+
+.input-field button {
+  width: 35px;
+  height: 100%;
+  border: none;
+  color: #DD5041;
+  background-color: white;
+  margin-left: 5px;
+  font-size: 20px;
+  outline: none;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.todo-list {
+  padding-left: 0;
+}
+
+.todo-list li {
+  position: relative;
+  list-style: none;
+  height: 45px;
+  line-height: 45px;
+  margin-bottom: 8px;
+  background: white;
+  border-radius: 3px;
+  padding: 0 15px;
+}
+
+.todo-list li span {
+  position: absolute;
+  right: 0;
+  width: 45px;
+  background-color: #DD5041;
+  color: white;
+  text-align: center;
+}
+
+.dashboard-footer button {
+  padding: 6px 10px;
+  border-radius: 3px;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-weight: 400;
+  font-size: 16px;
+  margin-left: 5px;
+  background: #DD5041;
+  cursor: pointer;
+  user-select: none;
+}
+
+/*--------JANIJIM-------*/
+.actions button {
+  margin-bottom: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.table-content {
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.301);
+  overflow-x: auto;
+}
+
+.btn:active, .btn:focus {
+  box-shadow: none;
+  outline: none;
 }
