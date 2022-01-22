@@ -152,15 +152,10 @@ export default function Janijim() {
         }
         setIsEditing(true)
         console.log(itemSelected.id)
-        //await updateJanij(itemSelected.id, janijToEdit)
+        await updateJanij(itemSelected.id, janijToEdit)
         toggleEditModal()
         setIsEditing(false)
         setEditFields(initialFieldsState)
-        refresh()
-    }
-    const deleteRequest = (id: number) => {
-        deleteJanij(id)
-        toggleDeleteModal()
         refresh()
     }
     const refresh = () => {
@@ -207,7 +202,7 @@ export default function Janijim() {
                         )
                         )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' toggler={toggleDeleteModal} itemSelected={itemSelected} function={deleteRequest} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} function={deleteJanij} /></Modal>
                 </table>
                     :
                     <div className="text-center">
