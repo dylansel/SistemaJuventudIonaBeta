@@ -34,7 +34,7 @@ export default function Areas() {
     }
     async function fetchData() {
         setLoaded(false)
-        setAreas(await getAllAreas())
+        setAreas(await getAllAreas("sort=ordinal,asc"))
         setLoaded(true)
     }
     useEffect(() => {
