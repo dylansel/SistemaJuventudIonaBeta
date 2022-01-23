@@ -2,8 +2,8 @@ import React from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 function DeleteBody(props: any) {
-    const deleteRequest = (id: number) => {
-        props.function(id)
+    const deleteRequest = async (id: number) => {
+        await props.function(id)
         props.toggle()
         props.refresh()
     }
@@ -22,7 +22,7 @@ function DeleteBody(props: any) {
                 </Button>
                 <Button
                     color="danger"
-                    onClick={()=>deleteRequest(props.item.id)}
+                    onClick={() => deleteRequest(props.item.id)}
                 >
                     {props.title.split(' ')[0]}
                 </Button>
