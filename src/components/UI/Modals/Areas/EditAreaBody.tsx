@@ -60,20 +60,19 @@ function EditAreaBody(props: any) {
             setError(true)
             return
         }
+        setIsUpdating(true)
         const name = capitalizeAllWords(fields.name)
         const areaToUpdate = {
             name,
             ordinal: fields.ordinal,
         }
         if (JSON.stringify(areaToUpdate) != JSON.stringify(notEditedFields)) {
-            setIsUpdating(true)
             await updateArea(props.item.id, areaToUpdate)
-            setIsUpdating(false)
         }
+        setIsUpdating(false)
         props.toggle()
         setFields(initialFieldsState)
         props.refresh()
-
     }
 
     return (
