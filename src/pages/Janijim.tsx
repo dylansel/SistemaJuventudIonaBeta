@@ -28,12 +28,6 @@ export default function Janijim() {
         setItemSelected(item)
         toggleDeleteModal()
     }
-    
-    const deleteRequest = (id: number) => {
-        deleteJanij(id)
-        toggleDeleteModal()
-        refresh()
-    }
     const refresh = () => {
         fetchData()
     }
@@ -78,7 +72,7 @@ export default function Janijim() {
                         )
                         )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' toggler={toggleDeleteModal} itemSelected={itemSelected} function={deleteRequest} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} function={deleteJanij} /></Modal>
                 </table>
                     :
                     <div className="text-center">
