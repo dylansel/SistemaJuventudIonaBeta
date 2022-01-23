@@ -2,27 +2,99 @@ import React, { useState, useEffect } from "react"
 import { getAddJanijData } from "../../../../services/viewService";
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import CreatableSelectSearch from "../../Selects/CreatableSelect";
+import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
+import { addFamily, getAllFamilies } from '../../../../services/familyService';
+import { addJanij } from '../../../../services/janijService';
 
 function AddJanijBody(props: any) {
+
+    const initialFieldsState = {
+        name: '',
+        groupId: 1,
+        leadersCourse: false,
+        familyId: -1,
+        familySurname: ''
+    }
+    const [fields, setFields] = useState(initialFieldsState)
     const [loaded, setLoaded] = useState(false)
+    const [error, setError] = useState(false)
+    const [isAdding, setIsAdding] = useState(false)
     const [viewData, setViewData] = useState<any>([null])
     async function fetchData() {
         setLoaded(false)
         setViewData(await getAddJanijData())
         setLoaded(true)
     }
+    const addChangeFamily = (e: any) => {
+        const nameToFill = isNaN(e.value) ? "familySurname" : "familyId"
+        const nameToErase = !isNaN(e.value) ? "familySurname" : "familyId"
+        setFields(prevState => ({
+            ...prevState,
+            [nameToFill]: e.value,
+            [nameToErase]: ""
+        }))
+    }
+    const addHandleChange = (e: any) => {
+        let { name, value } = e.target
+        if (name === "groupId") {
+            value = parseInt(value)
+        } else if (name === "leadersCourse") {
+            value = e.target.checked
+        }
+        setFields(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
 
+    }
+
+    const postRequest = async () => {
+        setError(false)
+        if (isEmptyOrSpaces(fields.name) || (isEmptyOrSpaces(fields.familySurname) && fields.familyId === -1)) {
+            setError(true)
+            return
+        }
+        const name = capitalizeAllWords(fields.name)
+        let familyId
+        if (fields.familySurname === "" && fields.familyId !== 0) {
+            familyId = fields.familyId
+        }
+        else {
+            const surname = capitalizeAllWords(fields.familySurname)
+            await addFamily({ surname, discount: 0 })
+            const families: any = await getAllFamilies()
+            familyId = families.at(-1).id
+        }
+        const janijToAdd = {
+            groupId: fields.groupId,
+            name,
+            leadersCourse: fields.leadersCourse,
+            familyId
+        }
+        setIsAdding(true)
+        await addJanij(janijToAdd)
+        props.toggle()
+        setIsAdding(false)
+        setFields(initialFieldsState)
+        props.refresh()
+    }
+
+    const toggleCancelAddModal = () => {
+        setError(false)
+        setFields(initialFieldsState)
+        props.toggle()
+    }
     useEffect(() => {
         fetchData()
     }, []);
 
     return (
         <>
-            <ModalHeader toggle={props.toggler} charcode="close">
+            <ModalHeader toggle={toggleCancelAddModal} charcode="close">
                 {props.title} Janij
             </ModalHeader>
             <ModalBody>
-                {props.error && <Alert color="danger">Error! Datos incorrectos</Alert>}
+                {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
                         <Label for="name">
@@ -30,9 +102,9 @@ function AddJanijBody(props: any) {
                         </Label>
                         <Input
                             id="name"
-                            disabled={props.isSaving}
+                            disabled={isAdding}
                             name="name"
-                            onChange={props.change}
+                            onChange={addHandleChange}
                             autoComplete="off"
                         />
                     </FormGroup>
@@ -42,12 +114,12 @@ function AddJanijBody(props: any) {
                         </Label>
                         <CreatableSelectSearch
                             data={(loaded && viewData && viewData["families"]) ? viewData["families"] : []}
-                            disabled={!(loaded && viewData && viewData["families"]) || props.isSaving}
+                            disabled={!(loaded && viewData && viewData["families"]) || isAdding}
                             display="fullFamily"
                             id="family"
                             name="family"
                             className="mb-3"
-                            onChange={props.changeFamily}
+                            onChange={addChangeFamily}
                             placeholder={(loaded && viewData && viewData["families"]) ? "Busca apellido o escribe uno nuevo..." : "Cargando..."}
                         />
                     </FormGroup>
@@ -57,32 +129,32 @@ function AddJanijBody(props: any) {
                         name="groupId"
                         className="mb-3"
                         type="select"
-                        onChange={props.change}
-                        disabled={!(loaded && viewData && viewData["groups"]) || props.isSaving}
+                        onChange={addHandleChange}
+                        disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
                     >
                         {loaded && viewData && viewData["groups"].map((grupo: any) => (
                             <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
                         ))}
                     </Input>
                     <FormGroup check>
-                        <Input type="checkbox" id="leadersCourse" name="leadersCourse" data-val="true" value="true" onChange={props.change} />
+                        <Input type="checkbox" id="leadersCourse" name="leadersCourse" data-val="true" value="true" onChange={addHandleChange} />
                         <Label for="leadersCourse" check>
                             Curso de Madrijim
                         </Label>
                     </FormGroup>
                     <ModalFooter>
                         <Button
-                            onClick={props.toggler}
-                            disabled={props.isSaving}
+                            onClick={toggleCancelAddModal}
+                            disabled={isAdding}
                         >
                             Cancelar
                         </Button>
                         <Button
-                            color={props.isSaving ? "success" : "danger"}
-                            disabled={props.isSaving}
-                            onClick={props.action}
+                            color={isAdding ? "success" : "danger"}
+                            disabled={isAdding}
+                            onClick={postRequest}
                         >
-                            {props.isSaving ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
+                            {isAdding ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
                         </Button>
                     </ModalFooter>
                 </Form>
