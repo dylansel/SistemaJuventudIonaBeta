@@ -17,6 +17,7 @@ function AddGroupBody(props: any) {
     const [fields, setFields] = useState(initialFieldsState)
 
     const handleChange = (e: any) => {
+        setError(false)
         let { name, value } = e.target
         if (name === "ordinal" || name === "areaId") {
             value = parseInt(value)

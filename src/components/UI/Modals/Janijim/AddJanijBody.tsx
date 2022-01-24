@@ -35,6 +35,7 @@ function AddJanijBody(props: any) {
         }))
     }
     const addHandleChange = (e: any) => {
+        setError(false)
         let { name, value } = e.target
         if (name === "groupId") {
             value = parseInt(value)
