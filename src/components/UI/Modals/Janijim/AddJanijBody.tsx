@@ -123,19 +123,21 @@ function AddJanijBody(props: any) {
                             placeholder={(loaded && viewData && viewData["families"]) ? "Busca apellido o escribe uno nuevo..." : "Cargando..."}
                         />
                     </FormGroup>
-                    <Label for="group">Grupo</Label>
-                    <Input
-                        id="group"
-                        name="groupId"
-                        className="mb-3"
-                        type="select"
-                        onChange={addHandleChange}
-                        disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
-                    >
-                        {loaded && viewData && viewData["groups"].map((grupo: any) => (
-                            <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
-                        ))}
-                    </Input>
+                    <FormGroup>
+                        <Label for="group">Grupo</Label>
+                        <Input
+                            id="group"
+                            name="groupId"
+                            className="mb-3"
+                            type="select"
+                            onChange={addHandleChange}
+                            disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
+                        >
+                            {loaded && viewData && viewData["groups"].map((grupo: any) => (
+                                <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
+                            ))}
+                        </Input>
+                    </FormGroup>
                     <FormGroup check>
                         <Input type="checkbox" id="leadersCourse" name="leadersCourse" data-val="true" value="true" onChange={addHandleChange} />
                         <Label for="leadersCourse" check>
