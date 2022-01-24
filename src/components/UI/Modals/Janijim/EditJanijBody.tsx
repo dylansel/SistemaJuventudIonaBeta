@@ -147,20 +147,22 @@ function EditJanijBody(props: any) {
                             value={viewData["janijData"] && fields.familyId}
                         />
                     </FormGroup>
-                    <Label for="group">Grupo</Label>
-                    <Input
-                        id="group"
-                        name="groupId"
-                        className="mb-3"
-                        type="select"
-                        onChange={editHandleChange}
-                        disabled={!(loaded && viewData && viewData["groups"]) || isUpdating || !firstLoad}
-                        value={viewData["janijData"] && fields.groupId}
-                    >
-                        {loaded && viewData && viewData["groups"].map((grupo: any) => (
-                            <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
-                        ))}
-                    </Input>
+                    <FormGroup>
+                        <Label for="group">Grupo</Label>
+                        <Input
+                            id="group"
+                            name="groupId"
+                            className="mb-3"
+                            type="select"
+                            onChange={editHandleChange}
+                            disabled={!(loaded && viewData && viewData["groups"]) || isUpdating || !firstLoad}
+                            value={viewData["janijData"] && fields.groupId}
+                        >
+                            {loaded && viewData && viewData["groups"].map((grupo: any) => (
+                                <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
+                            ))}
+                        </Input>
+                    </FormGroup>
                     <FormGroup check>
                         <Input type="checkbox" id="leadersCourse" name="leadersCourse" data-val="true" value="true" onChange={editHandleChange} checked={viewData["janijData"] && fields.leadersCourse} />
                         <Label for="leadersCourse" check>
