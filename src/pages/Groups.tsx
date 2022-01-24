@@ -9,85 +9,44 @@ import { capitalizeAllWords, isEmptyOrSpaces } from "../utils/misc/strings";
 export default function Groups() {
     const [groups, setGroups] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
-    const [addError, setAddError] = useState(false)
-    const [isSaving, setIsSaving] = useState(false)
     const [addModal, setAddModal] = useState(false)
+    const [editModal, setEditModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
     const [itemSelected, setItemSelected] = useState({
         id: 0,
         name: ""
     })
-    const initialFieldsState = {
-        name: "",
-        ordinal: 0,
-        areaId: 0,
-    }
-    const [addFields, setAddFields] = useState(initialFieldsState)
 
-    const handleChange = (e: any) => {
-        let { name, value } = e.target
-        if (name === "ordinal" || name === "areaId") {
-            value = parseInt(value)
-        }
-        setAddFields(prevState => ({
-            ...prevState,
-            [name]: value
-        }))
 
-    }
     const toggleAddModal = () => setAddModal(!addModal)
+    const toggleEditModal = (item?: any) => {
+        setItemSelected(item)
+        setEditModal(!editModal)
+    }
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
-    const toggleCancelAddModal = () => {
-        setAddError(false)
-        setAddFields(initialFieldsState)
-        setAddModal(!addModal)
-    }
     const handleDelete = (item: any) => {
         setItemSelected(item)
         toggleDeleteModal()
     }
-    const postRequest = async () => {
-        setAddError(false)
-        if (isEmptyOrSpaces(addFields.name) || addFields.ordinal === 0 || addFields.areaId === 0) {
-            setAddError(true)
-            return
-        }
-        const name = capitalizeAllWords(addFields.name)
-        const groupToAdd = {
-            name,
-            areaId: addFields.areaId,
-            ordinal: addFields.ordinal,
-        }
-        setIsSaving(true)
-        await addGroup(groupToAdd)
-        toggleAddModal()
-        setIsSaving(false)
-        setAddFields(initialFieldsState)
-        refresh()
-    }
-    const deleteRequest = (id: number) => {
-        deleteGroup(id)
-        toggleDeleteModal()
-        refresh()
-    }
+
     const refresh = () => {
         fetchData()
     }
     async function fetchData() {
         setLoaded(false)
-        setGroups(await getAllGroups())
+        setGroups(await getAllGroups("sort=ordinal,asc"))
         setLoaded(true)
     }
     useEffect(() => {
-        fetchData()
+        refresh()
     }, []);
     return (
         <main>
             <div className="filters d-flex justify-content-end mx-5 mb-3">
                 <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Grupo</Button>
-                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddGroupBody title='Agregar' error={addError} toggler={toggleCancelAddModal} change={handleChange} action={postRequest} isSaving={isSaving} /></Modal>
+                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddGroupBody title='Agregar' refresh={refresh} toggle={toggleAddModal} /></Modal>
             </div>
             <div className="justify-content-center table-content mx-3">
 
@@ -113,7 +72,7 @@ export default function Groups() {
                         )
                         )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Grupo' toggler={toggleDeleteModal} itemSelected={itemSelected} function={deleteRequest} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Grupo' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} function={deleteGroup}/></Modal>
                 </table>
                     :
                     <div className="text-center">
