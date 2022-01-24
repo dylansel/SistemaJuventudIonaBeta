@@ -38,6 +38,7 @@ function EditAreaBody(props: any) {
     }
 
     const handleChange = (e: any) => {
+        setError(false)
         let { name, value } = e.target
         if (name === "ordinal") {
             value = parseInt(value)

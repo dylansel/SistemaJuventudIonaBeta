@@ -14,6 +14,7 @@ function AddAreaBody(props: any) {
     const [fields, setFields] = useState(initialFieldsState)
 
     const handleChange = (e: any) => {
+        setError(false)
         let { name, value } = e.target
         if (name === "ordinal") {
             value = parseInt(value)

@@ -59,6 +59,7 @@ function EditJanijBody(props: any) {
     }
 
     const editHandleChange = (e: any) => {
+        setError(false)
         let { name, value } = e.target
         if (name === "groupId") {
             value = parseInt(value)
