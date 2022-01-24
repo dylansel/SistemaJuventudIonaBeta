@@ -3,8 +3,8 @@ import { Button, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
 import AddGroupBody from "../components/UI/Modals/Groups/AddGroupBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
-import { addGroup, deleteGroup, getAllGroups } from "../services/groupService";
-import { capitalizeAllWords, isEmptyOrSpaces } from "../utils/misc/strings";
+import { deleteGroup, getAllGroups } from "../services/groupService";
+import EditGroupBody from "../components/UI/Modals/Groups/EditGroupBody";
 
 export default function Groups() {
     const [groups, setGroups] = useState<any[]>([])
@@ -47,6 +47,8 @@ export default function Groups() {
                 <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Grupo</Button>
                 <Modal isOpen={addModal} toggle={toggleAddModal} ><AddGroupBody title='Agregar' refresh={refresh} toggle={toggleAddModal} /></Modal>
+                <Modal isOpen={editModal} toggle={toggleEditModal} ><EditGroupBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
+
             </div>
             <div className="justify-content-center table-content mx-3">
 
@@ -65,7 +67,7 @@ export default function Groups() {
                                 <td>{group.areaName}</td>
                                 <td>
                                     <span className="actions">
-                                        <button type="button" className="btn btn-danger" ><i className=" fas fa-edit"></i></button>
+                                        <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: group.id })}><i className=" fas fa-edit"></i></button>
                                         <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: group.id, name: group.name })} ><i className="fas fa-trash"></i></button></span>
                                 </td>
                             </tr>

@@ -1,20 +1,44 @@
-import React, { useState, useEffect } from "react"
-import { getAddGroupData } from "../../../../services/viewService";
+import React, { useEffect, useState } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { addGroup } from "../../../../services/groupService";
+import { updateGroup } from "../../../../services/groupService";
+import { getEditGroupData } from "../../../../services/viewService";
 
-function AddGroupBody(props: any) {
+function EditGroupBody(props: any) {
     const [loaded, setLoaded] = useState(false)
+    const [notEditedFields, setNotEditedFields] = useState<any>()
+    const [firstLoad, setFirstLoad] = useState(false)
+    const [viewData, setViewData] = useState<any>(null)
     const [error, setError] = useState(false)
-    const [isAdding, setIsAdding] = useState(false)
+    const [isUpdating, setIsUpdating] = useState(false)
 
-    const initialFieldsState = {
+    async function fetchData() {
+        setLoaded(false)
+        setViewData(await getEditGroupData(props.item.id))
+        setLoaded(true)
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, []);
+
+    let initialFieldsState = {
         name: "",
         ordinal: 0,
         areaId: 0,
     }
     const [fields, setFields] = useState(initialFieldsState)
+
+    if (loaded && !firstLoad) {
+        initialFieldsState = {
+            name: viewData["groupData"].name,
+            ordinal: viewData["groupData"].ordinal,
+            areaId: viewData["groupData"].areaId
+        }
+        setNotEditedFields(initialFieldsState)
+        setFields(initialFieldsState)
+        setFirstLoad(true)
+    }
 
     const handleChange = (e: any) => {
         let { name, value } = e.target
@@ -33,32 +57,23 @@ function AddGroupBody(props: any) {
         props.toggle()
     }
 
-    const [viewData, setViewData] = useState<any>([null])
-    async function fetchData() {
-        setLoaded(false)
-        setViewData(await getAddGroupData())
-        setLoaded(true)
-    }
-
-    useEffect(() => {
-        fetchData()
-    }, []);
-
-    const postRequest = async () => {
+    const editRequest = async () => {
         setError(false)
         if (isEmptyOrSpaces(fields.name) || fields.ordinal === 0 || fields.areaId === 0) {
             setError(true)
             return
         }
+        setIsUpdating(true)
         const name = capitalizeAllWords(fields.name)
-        const groupToAdd = {
+        const groupToUpdate = {
             name,
             areaId: fields.areaId,
             ordinal: fields.ordinal,
         }
-        setIsAdding(true)
-        await addGroup(groupToAdd)
-        setIsAdding(false)
+        if (JSON.stringify(groupToUpdate) != JSON.stringify(notEditedFields)) {
+            await updateGroup(props.item.id, groupToUpdate)
+        }
+        setIsUpdating(false)
         props.toggle()
         setFields(initialFieldsState)
         props.refresh()
@@ -78,10 +93,11 @@ function AddGroupBody(props: any) {
                         </Label>
                         <Input
                             id="name"
-                            disabled={isAdding}
+                            disabled={isUpdating || !firstLoad}
                             name="name"
                             onChange={handleChange}
                             autoComplete="off"
+                            value={loaded && viewData && viewData["groupData"] && fields.name}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -90,11 +106,12 @@ function AddGroupBody(props: any) {
                         </Label>
                         <Input
                             id="ordinal"
-                            disabled={isAdding}
+                            disabled={isUpdating || !firstLoad}
                             name="ordinal"
                             type="number"
                             onChange={handleChange}
                             autoComplete="off"
+                            value={loaded && viewData && viewData["groupData"] && fields.ordinal}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -105,26 +122,29 @@ function AddGroupBody(props: any) {
                             className="mb-3"
                             type="select"
                             onChange={handleChange}
-                            disabled={!(loaded && viewData && viewData["areas"]) || isAdding}
+                            disabled={!(loaded && viewData && viewData["areas"]) || isUpdating}
+                            value={viewData && viewData["areas"] && fields.areaId}
+
                         >
                             {loaded && viewData && viewData["areas"].map((area: any) => (
                                 <option key={area.id} value={area.id}>{area.name}</option>
                             ))}
+
                         </Input>
                     </FormGroup>
                     <ModalFooter>
                         <Button
                             onClick={handleCancel}
-                            disabled={isAdding}
+                            disabled={isUpdating}
                         >
                             Cancelar
                         </Button>
                         <Button
-                            color={isAdding ? "success" : "danger"}
-                            disabled={isAdding}
-                            onClick={postRequest}
+                            color={isUpdating ? "warning" : "danger"}
+                            disabled={isUpdating}
+                            onClick={editRequest}
                         >
-                            {isAdding ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
+                            {isUpdating ? <div>Editando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
                         </Button>
                     </ModalFooter>
                 </Form>
@@ -134,4 +154,4 @@ function AddGroupBody(props: any) {
     );
 }
 
-export default AddGroupBody
+export default EditGroupBody
