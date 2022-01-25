@@ -117,6 +117,7 @@ function AddJanijBody(props: any) {
                             data={(loaded && viewData && viewData["families"]) ? viewData["families"] : []}
                             disabled={!(loaded && viewData && viewData["families"]) || isAdding}
                             display="fullFamily"
+                            label="Crear Familia:"
                             id="family"
                             name="family"
                             className="mb-3"
