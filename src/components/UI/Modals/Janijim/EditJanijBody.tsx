@@ -94,7 +94,7 @@ function EditJanijBody(props: any) {
             const surname = capitalizeAllWords(fields.familySurname)
             await addFamily({ surname, discount: 0 })
             const families: any = await getAllFamilies()
-            familyId = families.at(-1).id
+            familyId = families[families.length - 1].id
         }
         const janijToEdit = {
             groupId: fields.groupId,
