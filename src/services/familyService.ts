@@ -16,11 +16,15 @@ export async function getAllFamiliesWithChildren(orderBy?: string): Promise<any[
     try {
         const data = await getAllFamilies(orderBy)
         data.forEach((family: any) => {
-            let janijimNames = family.surname + " ("
-            for (let i = 0; i < family.janijim.length; i++) {
-                janijimNames += family.janijim[i].name + (i !== family.janijim.length - 1 ? "," : ")")
+            let fullFamily = family.surname + " ("
+            if (family.janijim.length > 0) {
+                for (let i = 0; i < family.janijim.length; i++) {
+                    fullFamily += family.janijim[i].name + (i !== family.janijim.length - 1 ? "," : ")")
+                }
+                family["fullFamily"] = fullFamily
+            } else {
+                family["fullFamily"] = fullFamily + "sin hijos)"
             }
-            family["fullFamily"] = janijimNames
         })
         return data
     } catch (error: any) {
