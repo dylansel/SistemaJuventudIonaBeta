@@ -1,6 +1,6 @@
 import { getAllAreas } from './areaService';
 import { getAllFamiliesWithChildren } from './familyService';
-import { getAllGroups } from './groupService';
+import { getAllGroups, getGroupById } from './groupService';
 import { getJanijById } from './janijService';
 
 export async function getAddJanijData(): Promise<any> {
@@ -36,6 +36,19 @@ export async function getAddGroupData(): Promise<any> {
         const areas = await getAllAreas()
         return {
             areas
+        }
+    } catch (error: any) {
+        throw error
+    }
+}
+
+export async function getEditGroupData(id: number): Promise<any> {
+    try {
+        const areas = await getAllAreas()
+        const groupData = await getGroupById(id)
+        return {
+            areas,
+            groupData
         }
     } catch (error: any) {
         throw error

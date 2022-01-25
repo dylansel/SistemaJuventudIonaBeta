@@ -1,25 +1,46 @@
-import React, { useState, useEffect } from "react"
-import { getAddGroupData } from "../../../../services/viewService";
+import React, { useEffect, useState } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { addGroup } from "../../../../services/groupService";
+import { getAreaById, updateArea } from "../../../../services/areaService";
 
-function AddGroupBody(props: any) {
+function EditAreaBody(props: any) {
     const [loaded, setLoaded] = useState(false)
+    const [notEditedFields, setNotEditedFields] = useState<any>()
+    const [firstLoad, setFirstLoad] = useState(false)
+    const [viewData, setViewData] = useState<any>(null)
     const [error, setError] = useState(false)
-    const [isAdding, setIsAdding] = useState(false)
+    const [isUpdating, setIsUpdating] = useState(false)
 
-    const initialFieldsState = {
+    async function fetchData() {
+        setLoaded(false)
+        setViewData(await getAreaById(props.item.id))
+        setLoaded(true)
+    }
+
+    useEffect(() => {
+        fetchData()
+    }, []);
+
+    let initialFieldsState = {
         name: "",
         ordinal: 0,
-        areaId: 0,
     }
     const [fields, setFields] = useState(initialFieldsState)
+
+    if (loaded && !firstLoad) {
+        initialFieldsState = {
+            name: viewData.name,
+            ordinal: viewData.ordinal,
+        }
+        setNotEditedFields(initialFieldsState)
+        setFields(initialFieldsState)
+        setFirstLoad(true)
+    }
 
     const handleChange = (e: any) => {
         setError(false)
         let { name, value } = e.target
-        if (name === "ordinal" || name === "areaId") {
+        if (name === "ordinal") {
             value = parseInt(value)
         }
         setFields(prevState => ({
@@ -34,32 +55,22 @@ function AddGroupBody(props: any) {
         props.toggle()
     }
 
-    const [viewData, setViewData] = useState<any>([null])
-    async function fetchData() {
-        setLoaded(false)
-        setViewData(await getAddGroupData())
-        setLoaded(true)
-    }
-
-    useEffect(() => {
-        fetchData()
-    }, []);
-
-    const postRequest = async () => {
+    const editRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal === 0 || fields.areaId === 0) {
+        if (isEmptyOrSpaces(fields.name) || fields.ordinal === 0) {
             setError(true)
             return
         }
+        setIsUpdating(true)
         const name = capitalizeAllWords(fields.name)
-        const groupToAdd = {
+        const areaToUpdate = {
             name,
-            areaId: fields.areaId,
             ordinal: fields.ordinal,
         }
-        setIsAdding(true)
-        await addGroup(groupToAdd)
-        setIsAdding(false)
+        if (JSON.stringify(areaToUpdate) != JSON.stringify(notEditedFields)) {
+            await updateArea(props.item.id, areaToUpdate)
+        }
+        setIsUpdating(false)
         props.toggle()
         setFields(initialFieldsState)
         props.refresh()
@@ -68,7 +79,7 @@ function AddGroupBody(props: any) {
     return (
         <>
             <ModalHeader toggle={props.toggle} charcode="close">
-                {props.title} Grupo
+                {props.title} Shijva
             </ModalHeader>
             <ModalBody>
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
@@ -79,10 +90,11 @@ function AddGroupBody(props: any) {
                         </Label>
                         <Input
                             id="name"
-                            disabled={isAdding}
+                            disabled={isUpdating || !firstLoad}
                             name="name"
                             onChange={handleChange}
                             autoComplete="off"
+                            value={loaded && viewData && fields.name}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -91,41 +103,28 @@ function AddGroupBody(props: any) {
                         </Label>
                         <Input
                             id="ordinal"
-                            disabled={isAdding}
+                            disabled={isUpdating || !firstLoad}
                             name="ordinal"
                             type="number"
                             onChange={handleChange}
                             autoComplete="off"
+                            value={loaded && viewData && fields.ordinal}
                         />
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="areaId">Area</Label>
-                        <Input
-                            id="areaId"
-                            name="areaId"
-                            className="mb-3"
-                            type="select"
-                            onChange={handleChange}
-                            disabled={!(loaded && viewData && viewData["areas"]) || isAdding}
-                        >
-                            {loaded && viewData && viewData["areas"].map((area: any) => (
-                                <option key={area.id} value={area.id}>{area.name}</option>
-                            ))}
-                        </Input>
-                    </FormGroup>
+
                     <ModalFooter>
                         <Button
                             onClick={handleCancel}
-                            disabled={isAdding}
+                            disabled={isUpdating}
                         >
                             Cancelar
                         </Button>
                         <Button
-                            color={isAdding ? "success" : "danger"}
-                            disabled={isAdding}
-                            onClick={postRequest}
+                            color={isUpdating ? "warning" : "danger"}
+                            disabled={isUpdating}
+                            onClick={editRequest}
                         >
-                            {isAdding ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
+                            {isUpdating ? <div>Editando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
                         </Button>
                     </ModalFooter>
                 </Form>
@@ -135,4 +134,4 @@ function AddGroupBody(props: any) {
     );
 }
 
-export default AddGroupBody
+export default EditAreaBody

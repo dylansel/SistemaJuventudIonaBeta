@@ -1,28 +1,63 @@
-import React, { useState, useEffect } from "react"
-import { getAddJanijData } from "../../../../services/viewService";
+import React, { useState } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import CreatableSelectSearch from "../../Selects/CreatableSelect";
+import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
+import { addArea } from "../../../../services/areaService";
 
 function AddAreaBody(props: any) {
-    const [loaded, setLoaded] = useState(false)
-    const [viewData, setViewData] = useState<any>([null])
-    async function fetchData() {
-        setLoaded(false)
-        setViewData(await getAddJanijData())
-        setLoaded(true)
+    const [error, setError] = useState(false)
+    const [isAdding, setIsAdding] = useState(false)
+
+    const initialFieldsState = {
+        name: "",
+        ordinal: 0,
+    }
+    const [fields, setFields] = useState(initialFieldsState)
+
+    const handleChange = (e: any) => {
+        setError(false)
+        let { name, value } = e.target
+        if (name === "ordinal") {
+            value = parseInt(value)
+        }
+        setFields(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+
     }
 
-    useEffect(() => {
-        fetchData()
-    }, []);
+    const handleCancel = () => {
+        setError(false)
+        setFields(initialFieldsState)
+        props.toggle()
+    }
+
+    const postRequest = async () => {
+        setError(false)
+        if (isEmptyOrSpaces(fields.name) || fields.ordinal === 0) {
+            setError(true)
+            return
+        }
+        const name = capitalizeAllWords(fields.name)
+        const areaToAdd = {
+            name,
+            ordinal: fields.ordinal,
+        }
+        setIsAdding(true)
+        await addArea(areaToAdd)
+        setIsAdding(false)
+        props.toggle()
+        setFields(initialFieldsState)
+        props.refresh()
+    }
 
     return (
         <>
-            <ModalHeader toggle={props.toggler} charcode="close">
+            <ModalHeader toggle={props.toggle} charcode="close">
                 {props.title} Shijva
             </ModalHeader>
             <ModalBody>
-                {props.error && <Alert color="danger">Error! Datos incorrectos</Alert>}
+                {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
                         <Label for="name">
@@ -30,9 +65,9 @@ function AddAreaBody(props: any) {
                         </Label>
                         <Input
                             id="name"
-                            disabled={props.isSaving}
+                            disabled={isAdding}
                             name="name"
-                            onChange={props.change}
+                            onChange={handleChange}
                             autoComplete="off"
                         />
                     </FormGroup>
@@ -42,27 +77,27 @@ function AddAreaBody(props: any) {
                         </Label>
                         <Input
                             id="ordinal"
-                            disabled={props.isSaving}
+                            disabled={isAdding}
                             name="ordinal"
                             type="number"
-                            onChange={props.change}
+                            onChange={handleChange}
                             autoComplete="off"
                         />
                     </FormGroup>
 
                     <ModalFooter>
                         <Button
-                            onClick={props.toggler}
-                            disabled={props.isSaving}
+                            onClick={handleCancel}
+                            disabled={isAdding}
                         >
                             Cancelar
                         </Button>
                         <Button
-                            color={props.isSaving ? "success" : "danger"}
-                            disabled={props.isSaving}
-                            onClick={props.action}
+                            color={isAdding ? "success" : "danger"}
+                            disabled={isAdding}
+                            onClick={postRequest}
                         >
-                            {props.isSaving ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
+                            {isAdding ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
                         </Button>
                     </ModalFooter>
                 </Form>
