@@ -107,7 +107,7 @@ function AddJanijBody(props: any) {
                             name="name"
                             onChange={addHandleChange}
                             autoComplete="off"
-                            placeholder={(!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding) ? "Cargando..." : ""}
+                            placeholder={(!(loaded && viewData && viewData["families"] && viewData["groups"])) ? "Cargando..." : ""}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -136,7 +136,7 @@ function AddJanijBody(props: any) {
                             onChange={addHandleChange}
                             disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
                         >
-                            {(!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding) &&
+                            {(!(loaded && viewData && viewData["families"] && viewData["groups"])) &&
                                 <option disabled selected>Cargando...</option>
                             }
 
