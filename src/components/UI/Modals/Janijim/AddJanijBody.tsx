@@ -55,6 +55,7 @@ function AddJanijBody(props: any) {
             setError(true)
             return
         }
+        setIsAdding(true)
         const name = capitalizeAllWords(fields.name)
         let familyId
         if (fields.familySurname === "" && fields.familyId !== 0) {
@@ -72,7 +73,6 @@ function AddJanijBody(props: any) {
             leadersCourse: fields.leadersCourse,
             familyId
         }
-        setIsAdding(true)
         await addJanij(janijToAdd)
         props.toggle()
         setIsAdding(false)
