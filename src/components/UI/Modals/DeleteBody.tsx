@@ -1,10 +1,14 @@
-import React from "react"
-import { Button, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import React, { useState } from "react"
+import { Button, ModalHeader, ModalBody, ModalFooter, Spinner } from 'reactstrap';
 
 function DeleteBody(props: any) {
+    const [isDeleting, setIsDeleting] = useState(false)
+
     const deleteRequest = async (id: number) => {
+        setIsDeleting(true)
         await props.function(id)
         props.toggle()
+        setIsDeleting(false)
         props.refresh()
     }
 
@@ -24,7 +28,7 @@ function DeleteBody(props: any) {
                     color="danger"
                     onClick={() => deleteRequest(props.item.id)}
                 >
-                    {props.title.split(' ')[0]}
+                    {isDeleting ? <div>Eliminando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title.split(' ')[0]}
                 </Button>
             </ModalFooter>
         </>

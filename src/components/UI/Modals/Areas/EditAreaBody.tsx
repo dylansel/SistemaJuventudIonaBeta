@@ -94,7 +94,8 @@ function EditAreaBody(props: any) {
                             name="name"
                             onChange={handleChange}
                             autoComplete="off"
-                            value={loaded && viewData && fields.name}
+                            placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
+                            value={loaded && viewData && firstLoad ? fields.name : "Cargando..."}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -108,7 +109,8 @@ function EditAreaBody(props: any) {
                             type="number"
                             onChange={handleChange}
                             autoComplete="off"
-                            value={loaded && viewData && fields.ordinal}
+                            placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
+                            value={loaded && viewData && firstLoad ? fields.ordinal : "Cargando..."}
                         />
                     </FormGroup>
 
@@ -121,7 +123,7 @@ function EditAreaBody(props: any) {
                         </Button>
                         <Button
                             color={isUpdating ? "warning" : "danger"}
-                            disabled={isUpdating}
+                            disabled={isUpdating || !firstLoad}
                             onClick={editRequest}
                         >
                             {isUpdating ? <div>Editando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
