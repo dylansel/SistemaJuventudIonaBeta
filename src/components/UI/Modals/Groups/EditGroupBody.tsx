@@ -99,7 +99,7 @@ function EditGroupBody(props: any) {
                             disabled={!(loaded && viewData && viewData["areas"] && viewData["groupData"]) || isUpdating || !firstLoad}
                             autoComplete="off"
                             placeholder={(!(loaded && viewData && viewData["areas"] && viewData["groupData"]) || !firstLoad) ? "Cargando..." : ""}
-                            value={loaded && viewData && viewData["areas"] && viewData["groupData"] && fields.name}
+                            value={loaded && viewData && viewData["areas"] && viewData["groupData"] && firstLoad ? fields.name : "Cargando..."}
                         />
                     </FormGroup>
                     <FormGroup>
