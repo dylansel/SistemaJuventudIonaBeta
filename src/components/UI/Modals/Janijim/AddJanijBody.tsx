@@ -103,10 +103,11 @@ function AddJanijBody(props: any) {
                         </Label>
                         <Input
                             id="name"
-                            disabled={isAdding}
+                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding}
                             name="name"
                             onChange={addHandleChange}
                             autoComplete="off"
+                            placeholder={(!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding) ? "Cargando..." : ""}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -135,13 +136,25 @@ function AddJanijBody(props: any) {
                             onChange={addHandleChange}
                             disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
                         >
+                            {(!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding) &&
+                                <option disabled selected>Cargando...</option>
+                            }
+
                             {loaded && viewData && viewData["groups"].map((grupo: any) => (
                                 <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
                             ))}
                         </Input>
                     </FormGroup>
                     <FormGroup check>
-                        <Input type="checkbox" id="leadersCourse" name="leadersCourse" data-val="true" value="true" onChange={addHandleChange} />
+                        <Input
+                            type="checkbox"
+                            id="leadersCourse"
+                            name="leadersCourse"
+                            disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
+                            data-val="true"
+                            value="true"
+                            onChange={addHandleChange}
+                        />
                         <Label for="leadersCourse" check>
                             Curso de Madrijim
                         </Label>
@@ -155,7 +168,7 @@ function AddJanijBody(props: any) {
                         </Button>
                         <Button
                             color={isAdding ? "success" : "danger"}
-                            disabled={isAdding}
+                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding}
                             onClick={postRequest}
                         >
                             {isAdding ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}

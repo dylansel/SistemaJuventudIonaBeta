@@ -28,6 +28,7 @@ function CreatableSelectSearch(props: any) {
         <CreatableSelect
             filterOption={customFilterOption}
             formatCreateLabel={formatCreateLabel}
+            isDisabled={props.disabled}
             onChange={props.onChange}
             options={getOptions(props.data)}
             placeholder={props.placeholder}
