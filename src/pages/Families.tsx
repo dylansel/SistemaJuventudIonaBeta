@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal, Spinner } from "reactstrap";
+import { Button, Card, CardBody, Collapse, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import EditFamilyBody from "../components/UI/Modals/Families/EditFamilyBody";
+import JanijDTO from "../dtos/JanijDTO";
 import { getAllFamilies, deleteFamily } from "../services/familyService";
-
 
 function Families() {
 
@@ -16,6 +16,8 @@ function Families() {
         id: 0,
         name: ""
     })
+
+    document.getElementsByClassName('collapse-btn')
 
     const toggleEditModal = (item?: any) => {
         setItemSelected(item)
@@ -58,7 +60,17 @@ function Families() {
                     <tbody>
                         {families.map(family => (
                             <tr key={family.id}>
-                                <td>{family.surname}</td>
+                                <td className="w-50">
+                                    <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}>{family.surname}</button>
+
+                                    <div className="collapse" id={`collapse${family.id}`}>
+                                        <div className="card card-body">
+                                            {family.janijim.map((janij: JanijDTO) => (
+                                                <p>{janij.name} {` (${janij.groupName})`} </p>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </td>
                                 <td>
                                     <span className="actions">
                                         <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: family.id })}><i className=" fas fa-edit"></i></button>
