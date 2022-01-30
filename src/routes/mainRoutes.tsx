@@ -9,6 +9,7 @@ import Groups from '../pages/Groups';
 import NotFound from '../pages/NotFound'
 import Dashboard from '../pages/Dashboard';
 import Areas from '../pages/Areas';
+import Families from '../pages/Families';
 
 const MainRoutes = () => {
     return <BrowserRouter>
@@ -21,6 +22,7 @@ const MainRoutes = () => {
                 <Route path="janijim" element={<Janijim />}/>
                 <Route path="areas" element={<Areas />} />
                 <Route path="groups" element={<Groups />} />
+                <Route path="families" element={<Families />} />
                 <Route path="*" element={<NotFound />} />
             </Route>
         </Routes>
