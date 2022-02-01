@@ -50,7 +50,7 @@ export default function Janijim() {
     return (
         <main>
             <div className="filters d-flex mx-4 align-items-center justify-content-end">
-                <FormGroup>
+                <FormGroup className="viewFilter">
                     <Input
                         id="viewFilter"
                         name="viewFilter"
