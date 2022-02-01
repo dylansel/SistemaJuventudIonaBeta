@@ -3,7 +3,7 @@ import { Button, FormGroup, Input, Label, Modal, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import AddJanijBody from "../components/UI/Modals/Janijim/AddJanijBody";
 import DeleteBody from '../components/UI/Modals/DeleteBody';
-import { deleteJanij, getAllJanijim } from '../services/janijService';
+import { deleteJanij, getAllJanijim, switchActiveJanij } from '../services/janijService';
 import EditJanijBody from '../components/UI/Modals/Janijim/EditJanijBody';
 import JanijDTO from '../dtos/JanijDTO';
 
@@ -15,7 +15,8 @@ export default function Janijim() {
     const [deleteModal, setDeleteModal] = useState(false)
     const [itemSelected, setItemSelected] = useState({
         id: 0,
-        name: ""
+        name: "",
+        active: false
     })
 
     const toggleAddModal = () => setAddModal(!addModal)
@@ -95,13 +96,13 @@ export default function Janijim() {
                                         <td>
                                             <span className="actions">
                                                 <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: janij.id })}><i className=" fas fa-edit"></i></button>
-                                                <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.familySurname}` })} ><i className="fas fa-trash"></i></button></span>
+                                                <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.familySurname}`, active: janij.active })} ><i className="fas fa-trash"></i></button></span>
                                         </td>
                                     </tr>
                                 )
                                 )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} function={deleteJanij} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteJanij} switchActive={switchActiveJanij} /></Modal>
                 </table>
                     :
                     <div className="text-center">
