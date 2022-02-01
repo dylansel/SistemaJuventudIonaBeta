@@ -37,7 +37,6 @@ function DeleteBody(props: any) {
                             color="danger"
                             onClick={() => deleteRequest(props.item.id)}
                             disabled={isDeleting || isSwitchingActive}
-
                         >
                             {isDeleting ? <div>Eliminando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title.split(' ')[0]}
                         </Button>
@@ -45,19 +44,17 @@ function DeleteBody(props: any) {
                     <div className="col-6">
                         <div>
                             <Button
-                                onClick={() => switchRequest(props.item.id, props.item.active)}
-                                color="danger"
-                                disabled={isDeleting || isSwitchingActive}
-
-                            >
-                                {isSwitchingActive ? <div> {"   "}<Spinner animation="border" variant="light" size="sm" /></div> : (isPreviouslyActive ? "Desactivar" : "Activar")}
-
-                            </Button>{"   "}
-                            <Button
                                 onClick={props.toggle}
                                 disabled={isDeleting || isSwitchingActive}
                             >
                                 Cancelar
+                            </Button>{"   "}
+                            <Button
+                                onClick={() => switchRequest(props.item.id, props.item.active)}
+                                color="danger"
+                                disabled={isDeleting || isSwitchingActive}
+                            >
+                                {isSwitchingActive ? <div> {"   "}<Spinner animation="border" variant="light" size="sm" /></div> : (isPreviouslyActive ? "Desactivar" : "Activar")}
                             </Button>
                         </div>
                     </div>
