@@ -87,9 +87,7 @@ export default function Janijim() {
                     <tbody>
                         {
                             janijim
-                                .filter((janij: JanijDTO) => {
-                                    return (!(tableFilter === 'Inactivos' && janij.active))
-                                })
+                                .filter((janij: JanijDTO) => (!((tableFilter === 'Inactivos' && janij.active) || (tableFilter === 'Activos' && !janij.active))))
                                 .map(janij => (
                                     <tr key={janij.id}>
                                         <td>{`${janij.name} ${janij.familySurname}`}</td>
