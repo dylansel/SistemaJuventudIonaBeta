@@ -36,7 +36,8 @@ function DeleteBody(props: any) {
             </ModalHeader>
             <ModalBody>
                 <p>Puede eliminar o {isPreviouslyActive ? "desactivar" : "activar"} a {props.item.name}</p>
-                <p>Para eliminar definitivamente ingrese debajo "<b>{props.item.name}</b>" \n <span className="text-danger">Esta acción no se puede deshacer.</span></p>
+                <p>Para eliminar ingrese "<b>{props.item.name}</b>"</p>
+                <p><span className="text-danger">Esta acción no se puede deshacer.</span></p>
                 <Input
                     id="name"
                     name="name"
@@ -56,13 +57,14 @@ function DeleteBody(props: any) {
                         </Button>
                     </div>
                     <div className="col-6">
-                        <div>
+                        <div className="d-flex justify-content-end">
                             <Button
                                 onClick={props.toggle}
                                 disabled={isDeleting || isSwitchingActive}
+                                className="mx-2"
                             >
                                 Cancelar
-                            </Button>{"   "}
+                            </Button>
                             <Button
                                 onClick={() => switchRequest(props.item.id, props.item.active)}
                                 color="danger"
