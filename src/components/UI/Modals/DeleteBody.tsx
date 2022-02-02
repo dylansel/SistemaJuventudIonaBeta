@@ -1,10 +1,17 @@
 import React, { useState } from "react"
-import { Button, ModalHeader, ModalBody, ModalFooter, Spinner } from 'reactstrap';
+import { Button, ModalHeader, ModalBody, ModalFooter, Spinner, Input } from 'reactstrap';
 
 function DeleteBody(props: any) {
     const isPreviouslyActive = props.item.active
     const [isSwitchingActive, setIsSwitchingActive] = useState(false)
+    const [canDelete, setCanDelete] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
+
+    const handleDeleteField = (e: any) => {
+        const { value } = e.target
+        setCanDelete(value === props.item.name ? true : false)
+        console.log(value, canDelete)
+    }
 
     const switchRequest = async (id: number, active: boolean) => {
         setIsSwitchingActive(true)
@@ -28,7 +35,14 @@ function DeleteBody(props: any) {
                 {props.title}
             </ModalHeader>
             <ModalBody>
-                <p>Está seguro que desea eliminar a {props.item.name}?</p>
+                <p>Puede eliminar o {isPreviouslyActive ? "desactivar" : "activar"} a {props.item.name}</p>
+                <p>Para eliminar definitivamente ingrese debajo "<b>{props.item.name}</b>" \n <span className="text-danger">Esta acción no se puede deshacer.</span></p>
+                <Input
+                    id="name"
+                    name="name"
+                    onChange={handleDeleteField}
+                    autoComplete="off"
+                />
             </ModalBody>
             <ModalFooter>
                 <div className="row col-12">
@@ -36,7 +50,7 @@ function DeleteBody(props: any) {
                         <Button
                             color="danger"
                             onClick={() => deleteRequest(props.item.id)}
-                            disabled={isDeleting || isSwitchingActive}
+                            disabled={isDeleting || isSwitchingActive || !canDelete}
                         >
                             {isDeleting ? <div>Eliminando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title.split(' ')[0]}
                         </Button>

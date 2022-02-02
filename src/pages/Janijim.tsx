@@ -60,6 +60,7 @@ export default function Janijim() {
                         value={tableFilter}
                         disabled={!loaded}
                         width={"20%"}
+                        hidden={!loaded}
                     >
                         {loaded && (
                             <>
