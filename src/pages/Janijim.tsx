@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Spinner } from 'reactstrap';
+import { Button, FormGroup, Input, Label, Modal, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import AddJanijBody from "../components/UI/Modals/Janijim/AddJanijBody";
 import DeleteBody from '../components/UI/Modals/DeleteBody';
-import { deleteJanij, getAllJanijim } from '../services/janijService';
+import { deleteJanij, getAllJanijim, switchActiveJanij } from '../services/janijService';
 import EditJanijBody from '../components/UI/Modals/Janijim/EditJanijBody';
+import JanijDTO from '../dtos/JanijDTO';
 
 export default function Janijim() {
     const [janijim, setJanijim] = useState<any[]>([])
@@ -14,9 +15,10 @@ export default function Janijim() {
     const [deleteModal, setDeleteModal] = useState(false)
     const [itemSelected, setItemSelected] = useState({
         id: 0,
-        name: ""
+        name: "",
+        active: false
     })
-    
+
     const toggleAddModal = () => setAddModal(!addModal)
     const toggleEditModal = (item?: any) => {
         setItemSelected(item)
@@ -28,6 +30,12 @@ export default function Janijim() {
         setItemSelected(item)
         toggleDeleteModal()
     }
+
+    const [tableFilter, setTableFilter] = useState("Activos")
+    const handleTableFilter = (e: any) => {
+        setTableFilter(e.target.value)
+    }
+
     const refresh = () => {
         fetchData()
     }
@@ -42,13 +50,33 @@ export default function Janijim() {
 
     return (
         <main>
-            <div className="filters d-flex justify-content-end mx-5 mb-3">
+            <div className="filters d-flex mx-4 align-items-center justify-content-end">
+                <FormGroup className="viewFilter">
+                    <Input
+                        id="viewFilter"
+                        name="viewFilter"
+                        type="select"
+                        onChange={handleTableFilter}
+                        value={tableFilter}
+                        disabled={!loaded}
+                        width={"20%"}
+                        hidden={!loaded}
+                    >
+                        {loaded && (
+                            <>
+                                <option>Activos</option>
+                                <option>Inactivos</option>
+                                <option>Todos</option>
+                            </>)
+                        }
+                    </Input>
+                </FormGroup>
                 <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Janij</Button>
                 <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' toggle={toggleAddModal} refresh={refresh} /></Modal>
                 <Modal isOpen={editModal} toggle={toggleEditModal} ><EditJanijBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
             </div>
-            <div className="justify-content-center table-content mx-3">
+            <div className="justify-content-center table-content mx-3 mt-4">
 
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
@@ -59,20 +87,23 @@ export default function Janijim() {
                         </tr>
                     </thead>
                     <tbody>
-                        {janijim.map(janij => (
-                            <tr key={janij.id}>
-                                <td>{`${janij.name} ${janij.familySurname}`}</td>
-                                <td>{janij.groupName}</td>
-                                <td>
-                                    <span className="actions">
-                                        <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: janij.id })}><i className=" fas fa-edit"></i></button>
-                                        <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.familySurname}` })} ><i className="fas fa-trash"></i></button></span>
-                                </td>
-                            </tr>
-                        )
-                        )}
+                        {
+                            janijim
+                                .filter((janij: JanijDTO) => (!((tableFilter === 'Inactivos' && janij.active) || (tableFilter === 'Activos' && !janij.active))))
+                                .map(janij => (
+                                    <tr key={janij.id}>
+                                        <td>{`${janij.name} ${janij.familySurname}`}</td>
+                                        <td>{janij.groupName}</td>
+                                        <td>
+                                            <span className="actions">
+                                                <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: janij.id })}><i className=" fas fa-edit"></i></button>
+                                                <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.familySurname}`, active: janij.active })} ><i className="fas fa-trash"></i></button></span>
+                                        </td>
+                                    </tr>
+                                )
+                                )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} function={deleteJanij} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteJanij} switchActive={switchActiveJanij} /></Modal>
                 </table>
                     :
                     <div className="text-center">

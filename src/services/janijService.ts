@@ -25,7 +25,7 @@ export async function getJanijById(id: number): Promise<JanijDTO> {
 
 export async function addJanij(janijToAdd: JanijRequestDTO) {
     try {
-        const response = await axios.post(`${BACKEND_URL}/janij/add`,janijToAdd)
+        const response = await axios.post(`${BACKEND_URL}/janij/add`, janijToAdd)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -35,7 +35,17 @@ export async function addJanij(janijToAdd: JanijRequestDTO) {
 
 export async function updateJanij(id: number, janijToUpdate: JanijRequestDTO) {
     try {
-        const response = await axios.put(`${BACKEND_URL}/janij/update/${id}`,janijToUpdate)
+        const response = await axios.put(`${BACKEND_URL}/janij/update/${id}`, janijToUpdate)
+        const data = await response.data
+        return data
+    } catch (error: any) {
+        throw error
+    }
+}
+
+export async function switchActiveJanij(id: number, active: boolean) {
+    try {
+        const response = await axios.put(`${BACKEND_URL}/janij/update/${id}`, { active })
         const data = await response.data
         return data
     } catch (error: any) {
