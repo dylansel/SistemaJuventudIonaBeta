@@ -1,6 +1,7 @@
 import { BACKEND_URL } from '../constants/globals';
 import axios from 'axios';
 import AreaDTO from '../dtos/AreaDTO';
+import AreaRequestDTO from '../dtos/AreaRequestDTO';
 
 export async function getAllAreas(orderBy?: string): Promise<AreaDTO[]> {
     try {
@@ -22,7 +23,7 @@ export async function getAreaById(id: number): Promise<AreaDTO> {
     }
 }
 
-export async function addArea(areaToAdd: AreaDTO) {
+export async function addArea(areaToAdd: AreaRequestDTO) {
     try {
         const response = await axios.post(`${BACKEND_URL}/area/add`,areaToAdd)
         const data = await response.data
@@ -32,7 +33,7 @@ export async function addArea(areaToAdd: AreaDTO) {
     }
 }
 
-export async function updateArea(id: number, areaToUpdate: AreaDTO) {
+export async function updateArea(id: number, areaToUpdate: AreaRequestDTO) {
     try {
         const response = await axios.put(`${BACKEND_URL}/area/update/${id}`,areaToUpdate)
         const data = await response.data

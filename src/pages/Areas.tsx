@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal, Spinner } from "reactstrap";
+import { Button, FormGroup, Input, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
 import AddAreaBody from "../components/UI/Modals/Areas/AddAreaBody";
 import EditAreaBody from "../components/UI/Modals/Areas/EditAreaBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
-import { deleteArea, getAllAreas } from "../services/areaService";
+import AreaDTO from "../dtos/AreaDTO";
+import { deleteArea, getAllAreas, switchActiveArea } from "../services/areaService";
 
 export default function Areas() {
     const [areas, setAreas] = useState<any[]>([])
@@ -14,7 +15,8 @@ export default function Areas() {
     const [deleteModal, setDeleteModal] = useState(false)
     const [itemSelected, setItemSelected] = useState({
         id: 0,
-        name: ""
+        name: "",
+        active: false
     })
 
     const toggleAddModal = () => setAddModal(!addModal)
@@ -27,6 +29,11 @@ export default function Areas() {
     const handleDelete = (item: any) => {
         setItemSelected(item)
         toggleDeleteModal()
+    }
+
+    const [tableFilter, setTableFilter] = useState("Activos")
+    const handleTableFilter = (e: any) => {
+        setTableFilter(e.target.value)
     }
 
     const refresh = () => {
@@ -42,14 +49,33 @@ export default function Areas() {
     }, []);
     return (
         <main>
-            <div className="filters d-flex justify-content-end mx-5 mb-3">
+            <div className="filters d-flex mx-4 align-items-center justify-content-end">
+                <FormGroup className="viewFilter">
+                    <Input
+                        id="viewFilter"
+                        name="viewFilter"
+                        type="select"
+                        onChange={handleTableFilter}
+                        value={tableFilter}
+                        disabled={!loaded}
+                        width={"20%"}
+                        hidden={!loaded}
+                    >
+                        {loaded && (
+                            <>
+                                <option>Activos</option>
+                                <option>Inactivos</option>
+                                <option>Todos</option>
+                            </>)
+                        }
+                    </Input>
+                </FormGroup>
                 <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Shijva</Button>
                 <Modal isOpen={addModal} toggle={toggleAddModal} ><AddAreaBody title='Agregar' refresh={refresh} toggle={toggleAddModal} /></Modal>
                 <Modal isOpen={editModal} toggle={toggleEditModal} ><EditAreaBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
-
             </div>
-            <div className="justify-content-center table-content mx-3">
+            <div className="justify-content-center table-content mx-3 mt-4">
 
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
@@ -59,19 +85,21 @@ export default function Areas() {
                         </tr>
                     </thead>
                     <tbody>
-                        {areas.map(area => (
-                            <tr key={area.id}>
-                                <td>{area.name}</td>
-                                <td>
-                                    <span className="actions">
-                                        <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: area.id })}><i className=" fas fa-edit"></i></button>
-                                        <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: area.id, name: area.name })} ><i className="fas fa-trash"></i></button></span>
-                                </td>
-                            </tr>
-                        )
-                        )}
+                        {areas
+                            .filter((area: AreaDTO) => (!((tableFilter === 'Inactivos' && area.active) || (tableFilter === 'Activos' && !area.active))))
+                            .map(area => (
+                                <tr key={area.id}>
+                                    <td>{area.name}</td>
+                                    <td>
+                                        <span className="actions">
+                                            <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: area.id })}><i className=" fas fa-edit"></i></button>
+                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: area.id, name: area.name, active: area.active })} ><i className="fas fa-trash"></i></button></span>
+                                    </td>
+                                </tr>
+                            )
+                            )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Shijva' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} function={deleteArea} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Shijva' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteArea} switchActive={switchActiveArea} /></Modal>
                 </table>
                     :
                     <div className="text-center">
