@@ -30,7 +30,6 @@ function AddGroupBody(props: any) {
 
     const handleCancel = () => {
         setError(false)
-        setFields(initialFieldsState)
         props.toggle()
     }
 
@@ -61,7 +60,6 @@ function AddGroupBody(props: any) {
         await addGroup(groupToAdd)
         setIsAdding(false)
         props.toggle()
-        setFields(initialFieldsState)
         props.refresh()
     }
 
@@ -79,10 +77,11 @@ function AddGroupBody(props: any) {
                         </Label>
                         <Input
                             id="name"
-                            disabled={isAdding}
+                            disabled={!(loaded && viewData && viewData["areas"]) || isAdding}
                             name="name"
                             onChange={handleChange}
                             autoComplete="off"
+                            placeholder={(!(loaded && viewData && viewData["areas"])) ? "Cargando..." : ""}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -91,11 +90,12 @@ function AddGroupBody(props: any) {
                         </Label>
                         <Input
                             id="ordinal"
-                            disabled={isAdding}
+                            disabled={!(loaded && viewData && viewData["areas"]) || isAdding}
                             name="ordinal"
                             type="number"
                             onChange={handleChange}
                             autoComplete="off"
+                            placeholder={(!(loaded && viewData && viewData["areas"])) ? "Cargando..." : ""}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -108,6 +108,9 @@ function AddGroupBody(props: any) {
                             onChange={handleChange}
                             disabled={!(loaded && viewData && viewData["areas"]) || isAdding}
                         >
+                            {(!(loaded && viewData && viewData["areas"])) &&
+                                <option disabled selected>Cargando...</option>
+                            }
                             {loaded && viewData && viewData["areas"].map((area: any) => (
                                 <option key={area.id} value={area.id}>{area.name}</option>
                             ))}
@@ -122,7 +125,7 @@ function AddGroupBody(props: any) {
                         </Button>
                         <Button
                             color={isAdding ? "success" : "danger"}
-                            disabled={isAdding}
+                            disabled={!(loaded && viewData && viewData["areas"]) || isAdding}
                             onClick={postRequest}
                         >
                             {isAdding ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}

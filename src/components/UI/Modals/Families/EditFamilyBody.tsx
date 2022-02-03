@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { getAreaById, updateArea } from "../../../../services/areaService";
+import { getFamilyById, updateFamily } from "../../../../services/familyService";
 
-function EditAreaBody(props: any) {
+function EditFamilyBody(props: any) {
+
     const [loaded, setLoaded] = useState(false)
     const [notEditedFields, setNotEditedFields] = useState<any>()
     const [firstLoad, setFirstLoad] = useState(false)
@@ -13,7 +14,7 @@ function EditAreaBody(props: any) {
 
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getAreaById(props.item.id))
+        setViewData(await getFamilyById(props.item.id))
         setLoaded(true)
     }
 
@@ -22,15 +23,13 @@ function EditAreaBody(props: any) {
     }, []);
 
     let initialFieldsState = {
-        name: "",
-        ordinal: 0,
+        surname: "",
     }
     const [fields, setFields] = useState(initialFieldsState)
 
     if (loaded && !firstLoad) {
         initialFieldsState = {
-            name: viewData.name,
-            ordinal: viewData.ordinal,
+            surname: viewData.surname,
         }
         setNotEditedFields(initialFieldsState)
         setFields(initialFieldsState)
@@ -56,18 +55,18 @@ function EditAreaBody(props: any) {
 
     const editRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal === 0) {
+        if (isEmptyOrSpaces(fields.surname)) {
             setError(true)
             return
         }
         setIsUpdating(true)
-        const name = capitalizeAllWords(fields.name)
-        const areaToUpdate = {
-            name,
-            ordinal: fields.ordinal,
+        const surname = capitalizeAllWords(fields.surname)
+        const familyToUpdate = {
+            surname,
+            discount: 0,
         }
-        if (JSON.stringify(areaToUpdate) != JSON.stringify(notEditedFields)) {
-            await updateArea(props.item.id, areaToUpdate)
+        if (JSON.stringify(familyToUpdate) != JSON.stringify(notEditedFields)) {
+            await updateFamily(props.item.id, familyToUpdate)
         }
         setIsUpdating(false)
         props.toggle()
@@ -77,41 +76,25 @@ function EditAreaBody(props: any) {
     return (
         <>
             <ModalHeader toggle={props.toggle} charcode="close">
-                {props.title} Shijva
+                {props.title} Familia
             </ModalHeader>
             <ModalBody>
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
-                        <Label for="name">
-                            Nombre
+                        <Label for="surname">
+                            Apellido
                         </Label>
                         <Input
-                            id="name"
+                            id="surname"
                             disabled={isUpdating || !firstLoad}
-                            name="name"
+                            name="surname"
                             onChange={handleChange}
                             autoComplete="off"
                             placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
-                            value={loaded && viewData && firstLoad ? fields.name : "Cargando..."}
+                            value={loaded && viewData && firstLoad ? fields.surname : "Cargando..."}
                         />
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="ordinal">
-                            Ordinal
-                        </Label>
-                        <Input
-                            id="ordinal"
-                            disabled={isUpdating || !firstLoad}
-                            name="ordinal"
-                            type="number"
-                            onChange={handleChange}
-                            autoComplete="off"
-                            placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
-                            value={loaded && viewData && firstLoad ? fields.ordinal : "Cargando..."}
-                        />
-                    </FormGroup>
-
                     <ModalFooter>
                         <Button
                             onClick={handleCancel}
@@ -133,5 +116,4 @@ function EditAreaBody(props: any) {
         </>
     );
 }
-
-export default EditAreaBody
+export default EditFamilyBody

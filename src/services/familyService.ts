@@ -62,6 +62,16 @@ export async function updateFamily(id: number, familyToUpdate: FamilyRequestDTO)
     }
 }
 
+export async function switchActiveFamily(id: number, active: boolean) {
+    try {
+        const response = await axios.put(`${BACKEND_URL}/family/update/${id}`, { active })
+        const data = await response.data
+        return data
+    } catch (error: any) {
+        throw error
+    }
+}
+
 export async function deleteFamily(id: number) {
     try {
         const response = await axios.delete(`${BACKEND_URL}/family/delete/${id}`)
