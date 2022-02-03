@@ -30,7 +30,6 @@ function AddGroupBody(props: any) {
 
     const handleCancel = () => {
         setError(false)
-        setFields(initialFieldsState)
         props.toggle()
     }
 
@@ -61,7 +60,6 @@ function AddGroupBody(props: any) {
         await addGroup(groupToAdd)
         setIsAdding(false)
         props.toggle()
-        setFields(initialFieldsState)
         props.refresh()
     }
 

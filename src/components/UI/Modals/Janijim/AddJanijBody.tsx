@@ -76,13 +76,11 @@ function AddJanijBody(props: any) {
         await addJanij(janijToAdd)
         props.toggle()
         setIsAdding(false)
-        setFields(initialFieldsState)
         props.refresh()
     }
 
     const toggleCancelAddModal = () => {
         setError(false)
-        setFields(initialFieldsState)
         props.toggle()
     }
     useEffect(() => {
