@@ -74,7 +74,6 @@ function EditJanijBody(props: any) {
 
     const toggleCancelEditModal = () => {
         setError(false)
-        setFields(initialFieldsState)
         props.toggle()
     }
 
@@ -107,7 +106,6 @@ function EditJanijBody(props: any) {
         }
         setIsUpdating(false)
         props.toggle()
-        setFields(initialFieldsState)
         props.refresh()
     }
 

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, CardBody, Collapse, Modal, Spinner } from "reactstrap";
+import { Button, Card, CardBody, Collapse, FormGroup, Input, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import EditFamilyBody from "../components/UI/Modals/Families/EditFamilyBody";
+import FamilyDTO from "../dtos/FamilyDTO";
 import JanijDTO from "../dtos/JanijDTO";
-import { getAllFamilies, deleteFamily } from "../services/familyService";
+import { getAllFamilies, deleteFamily, switchActiveFamily } from "../services/familyService";
 
 function Families() {
 
@@ -14,7 +15,8 @@ function Families() {
     const [deleteModal, setDeleteModal] = useState(false)
     const [itemSelected, setItemSelected] = useState({
         id: 0,
-        name: ""
+        name: "",
+        active: false
     })
 
     document.getElementsByClassName('collapse-btn')
@@ -28,6 +30,11 @@ function Families() {
     const handleDelete = (item: any) => {
         setItemSelected(item)
         toggleDeleteModal()
+    }
+
+    const [tableFilter, setTableFilter] = useState("Activos")
+    const handleTableFilter = (e: any) => {
+        setTableFilter(e.target.value)
     }
 
     const refresh = () => {
@@ -44,11 +51,31 @@ function Families() {
 
     return (
         <main>
-            <div className="filters d-flex justify-content-end mx-5 mb-3">
+            <div className="ffilters d-flex mx-4 align-items-center justify-content-end">
+                <FormGroup className="viewFilter">
+                    <Input
+                        id="viewFilter"
+                        name="viewFilter"
+                        type="select"
+                        onChange={handleTableFilter}
+                        value={tableFilter}
+                        disabled={!loaded}
+                        width={"20%"}
+                        hidden={!loaded}
+                    >
+                        {loaded && (
+                            <>
+                                <option>Activos</option>
+                                <option>Inactivos</option>
+                                <option>Todos</option>
+                            </>)
+                        }
+                    </Input>
+                </FormGroup>
                 <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Modal isOpen={editModal} toggle={toggleEditModal} ><EditFamilyBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
             </div>
-            <div className="justify-content-center table-content mx-3">
+            <div className="justify-content-center table-content mx-3 mt-4">
 
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
@@ -58,29 +85,31 @@ function Families() {
                         </tr>
                     </thead>
                     <tbody>
-                        {families.map(family => (
-                            <tr key={family.id}>
-                                <td className="w-50">
-                                    <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}>{family.surname}</button>
+                        {families
+                            .filter((family: FamilyDTO) => (!((tableFilter === 'Inactivos' && family.active) || (tableFilter === 'Activos' && !family.active))))
+                            .map(family => (
+                                <tr key={family.id}>
+                                    <td className="w-50">
+                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}>{family.surname}</button>
 
-                                    <div className="collapse" id={`collapse${family.id}`}>
-                                        <div className="card card-body">
-                                            {family.janijim.map((janij: JanijDTO) => (
-                                                <p>{janij.name} {` (${janij.groupName})`} </p>
-                                            ))}
+                                        <div className="collapse" id={`collapse${family.id}`}>
+                                            <div className="card card-body">
+                                                {family.janijim.map((janij: JanijDTO) => (
+                                                    <p>{janij.name} {` (${janij.groupName})`} </p>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className="actions">
-                                        <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: family.id })}><i className=" fas fa-edit"></i></button>
-                                        <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: family.id, name: family.surname })} ><i className="fas fa-trash"></i></button></span>
-                                </td>
-                            </tr>
-                        )
-                        )}
+                                    </td>
+                                    <td>
+                                        <span className="actions">
+                                            <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: family.id })}><i className=" fas fa-edit"></i></button>
+                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: family.id, name: family.surname, active: family.active })} ><i className="fas fa-trash"></i></button></span>
+                                    </td>
+                                </tr>
+                            )
+                            )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Familia' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} function={deleteFamily} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Familia' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteFamily} switchActive={switchActiveFamily} /></Modal>
                 </table>
                     :
                     <div className="text-center">

@@ -54,7 +54,6 @@ function EditGroupBody(props: any) {
 
     const handleCancel = () => {
         setError(false)
-        setFields(initialFieldsState)
         props.toggle()
     }
 
@@ -76,7 +75,6 @@ function EditGroupBody(props: any) {
         }
         setIsUpdating(false)
         props.toggle()
-        setFields(initialFieldsState)
         props.refresh()
     }
 

@@ -51,7 +51,6 @@ function EditAreaBody(props: any) {
 
     const handleCancel = () => {
         setError(false)
-        setFields(initialFieldsState)
         props.toggle()
     }
 
@@ -72,7 +71,6 @@ function EditAreaBody(props: any) {
         }
         setIsUpdating(false)
         props.toggle()
-        setFields(initialFieldsState)
         props.refresh()
     }
 

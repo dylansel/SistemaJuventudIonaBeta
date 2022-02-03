@@ -50,7 +50,6 @@ function EditFamilyBody(props: any) {
 
     const handleCancel = () => {
         setError(false)
-        setFields(initialFieldsState)
         props.toggle()
     }
 
@@ -71,7 +70,6 @@ function EditFamilyBody(props: any) {
         }
         setIsUpdating(false)
         props.toggle()
-        setFields(initialFieldsState)
         props.refresh()
     }
 

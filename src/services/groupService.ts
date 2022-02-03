@@ -43,6 +43,16 @@ export async function updateGroup(ID: number, groupToUpdate: GroupRequestDTO) {
     }
 }
 
+export async function switchActiveGroup(id: number, active: boolean) {
+    try {
+        const response = await axios.put(`${BACKEND_URL}/group/update/${id}`, { active })
+        const data = await response.data
+        return data
+    } catch (error: any) {
+        throw error
+    }
+}
+
 export async function deleteGroup(ID: number) {
     try {
         const response = await axios.delete(`${BACKEND_URL}/group/delete/${ID}`)
