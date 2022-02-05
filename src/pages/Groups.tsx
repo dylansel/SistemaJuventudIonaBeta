@@ -44,6 +44,9 @@ export default function Groups() {
         setGroups(await getAllGroups("sort=ordinal,asc"))
         setLoaded(true)
     }
+
+    let i = 0
+
     useEffect(() => {
         refresh()
     }, []);
@@ -81,6 +84,7 @@ export default function Groups() {
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
+                            <th scope="col">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Shijva</th>
                             <th scope="col">Acciones</th>
@@ -90,7 +94,8 @@ export default function Groups() {
                         {groups
                             .filter((group: GroupDTO) => (!((tableFilter === 'Inactivos' && group.active) || (tableFilter === 'Activos' && !group.active))))
                             .map(group => (
-                                <tr key={group.id}>
+                                <tr key={group.id} className={!group.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                    <td>{++i}</td>
                                     <td>{group.name}</td>
                                     <td>{group.areaName}</td>
                                     <td>
