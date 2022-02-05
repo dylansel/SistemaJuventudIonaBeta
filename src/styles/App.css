@@ -172,3 +172,7 @@
 .viewFilter {
   margin-bottom: 0 !important;
 }
+
+.rowDisabled{
+  color: #808080
+}
