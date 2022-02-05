@@ -45,6 +45,9 @@ function Families() {
         setFamilies(await getAllFamilies("sort=surname,asc"))
         setLoaded(true)
     }
+
+    let i = 0
+
     useEffect(() => {
         refresh()
     }, []);
@@ -80,6 +83,7 @@ function Families() {
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
+                            <th scope="col">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Acciones</th>
                         </tr>
@@ -88,9 +92,10 @@ function Families() {
                         {families
                             .filter((family: FamilyDTO) => (!((tableFilter === 'Inactivos' && family.active) || (tableFilter === 'Activos' && !family.active))))
                             .map(family => (
-                                <tr key={family.id}>
+                                <tr key={family.id} className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                    <td>{++i}</td>
                                     <td className="w-50">
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}>{family.surname}</button>
+                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}><span className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>{family.surname}</span></button>
 
                                         <div className="collapse" id={`collapse${family.id}`}>
                                             <div className="card card-body">

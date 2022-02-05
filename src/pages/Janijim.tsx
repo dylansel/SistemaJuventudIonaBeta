@@ -44,6 +44,9 @@ export default function Janijim() {
         setJanijim(await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc"))
         setLoaded(true)
     }
+
+    let i = 0
+
     useEffect(() => {
         fetchData()
     }, []);
@@ -81,6 +84,7 @@ export default function Janijim() {
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
+                            <th scope="col">#</th>
                             <th scope="col">Nombre y Apellido</th>
                             <th scope="col">Grupo</th>
                             <th scope="col">Acciones</th>
@@ -91,7 +95,8 @@ export default function Janijim() {
                             janijim
                                 .filter((janij: JanijDTO) => (!((tableFilter === 'Inactivos' && janij.active) || (tableFilter === 'Activos' && !janij.active))))
                                 .map(janij => (
-                                    <tr key={janij.id}>
+                                    <tr key={janij.id} className={!janij.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                        <td>{++i}</td>
                                         <td>{`${janij.name} ${janij.familySurname}`}</td>
                                         <td>{janij.groupName}</td>
                                         <td>
