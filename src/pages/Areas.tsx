@@ -44,6 +44,9 @@ export default function Areas() {
         setAreas(await getAllAreas("sort=ordinal,asc"))
         setLoaded(true)
     }
+
+    let i = 0
+
     useEffect(() => {
         refresh()
     }, []);
@@ -80,6 +83,7 @@ export default function Areas() {
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
+                            <th scope="col">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Acciones</th>
                         </tr>
@@ -88,7 +92,8 @@ export default function Areas() {
                         {areas
                             .filter((area: AreaDTO) => (!((tableFilter === 'Inactivos' && area.active) || (tableFilter === 'Activos' && !area.active))))
                             .map(area => (
-                                <tr key={area.id}>
+                                <tr key={area.id} className={!area.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                    <td>{++i}</td>
                                     <td>{area.name}</td>
                                     <td>
                                         <span className="actions">
