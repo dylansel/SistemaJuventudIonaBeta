@@ -6,11 +6,11 @@ import { getJanijById } from './janijService';
 export async function getAddJanijData(): Promise<any> {
     try {
         const groups = await getAllGroups()
-        const grupsOrdinal = await getAllGroups("sort=ordinal,asc")
+        const groupsOrdinal = await getAllGroups("sort=ordinal,asc")
         const families = await getAllFamiliesWithChildren("sort=surname,asc")
         return {
             groups,
-            grupsOrdinal,
+            groupsOrdinal,
             families
         }
     } catch (error: any) {
