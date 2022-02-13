@@ -1,3 +1,4 @@
+import { withAuthenticationRequired } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
 import { Button, Card, CardBody, Collapse, FormGroup, Input, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
@@ -6,6 +7,7 @@ import EditFamilyBody from "../components/UI/Modals/Families/EditFamilyBody";
 import FamilyDTO from "../dtos/FamilyDTO";
 import JanijDTO from "../dtos/JanijDTO";
 import { getAllFamilies, deleteFamily, switchActiveFamily } from "../services/familyService";
+import Loading from "./Loading";
 
 function Families() {
 
@@ -45,6 +47,9 @@ function Families() {
         setFamilies(await getAllFamilies("sort=surname,asc"))
         setLoaded(true)
     }
+
+    let i = 0
+
     useEffect(() => {
         refresh()
     }, []);
@@ -80,6 +85,7 @@ function Families() {
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
+                            <th scope="col">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Acciones</th>
                         </tr>
@@ -88,9 +94,10 @@ function Families() {
                         {families
                             .filter((family: FamilyDTO) => (!((tableFilter === 'Inactivos' && family.active) || (tableFilter === 'Activos' && !family.active))))
                             .map(family => (
-                                <tr key={family.id}>
+                                <tr key={family.id} className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                    <td>{++i}</td>
                                     <td className="w-50">
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}>{family.surname}</button>
+                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}><span className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>{family.surname}</span></button>
 
                                         <div className="collapse" id={`collapse${family.id}`}>
                                             <div className="card card-body">
@@ -122,4 +129,7 @@ function Families() {
         </main >
     )
 }
-export default Families
+
+export default withAuthenticationRequired(Families, {
+    onRedirecting: () => <Loading />,
+});

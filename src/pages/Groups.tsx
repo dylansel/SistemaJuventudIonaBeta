@@ -6,8 +6,10 @@ import DeleteBody from "../components/UI/Modals/DeleteBody";
 import { deleteGroup, getAllGroups, switchActiveGroup } from "../services/groupService";
 import EditGroupBody from "../components/UI/Modals/Groups/EditGroupBody";
 import GroupDTO from "../dtos/GroupDTO";
+import { withAuthenticationRequired } from "@auth0/auth0-react";
+import Loading from "./Loading";
 
-export default function Groups() {
+function Groups() {
     const [groups, setGroups] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
     const [addModal, setAddModal] = useState(false)
@@ -44,6 +46,9 @@ export default function Groups() {
         setGroups(await getAllGroups("sort=ordinal,asc"))
         setLoaded(true)
     }
+
+    let i = 0
+
     useEffect(() => {
         refresh()
     }, []);
@@ -81,6 +86,7 @@ export default function Groups() {
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
+                            <th scope="col">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Shijva</th>
                             <th scope="col">Acciones</th>
@@ -90,7 +96,8 @@ export default function Groups() {
                         {groups
                             .filter((group: GroupDTO) => (!((tableFilter === 'Inactivos' && group.active) || (tableFilter === 'Activos' && !group.active))))
                             .map(group => (
-                                <tr key={group.id}>
+                                <tr key={group.id} className={!group.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                    <td>{++i}</td>
                                     <td>{group.name}</td>
                                     <td>{group.areaName}</td>
                                     <td>
@@ -115,3 +122,7 @@ export default function Groups() {
         </main>
     );
 }
+
+export default withAuthenticationRequired(Groups, {
+    onRedirecting: () => <Loading />,
+});

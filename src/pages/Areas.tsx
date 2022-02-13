@@ -1,3 +1,4 @@
+import { withAuthenticationRequired } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
 import { Button, FormGroup, Input, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
@@ -6,8 +7,9 @@ import EditAreaBody from "../components/UI/Modals/Areas/EditAreaBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import AreaDTO from "../dtos/AreaDTO";
 import { deleteArea, getAllAreas, switchActiveArea } from "../services/areaService";
+import Loading from "./Loading";
 
-export default function Areas() {
+function Areas() {
     const [areas, setAreas] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
     const [addModal, setAddModal] = useState(false)
@@ -44,6 +46,9 @@ export default function Areas() {
         setAreas(await getAllAreas("sort=ordinal,asc"))
         setLoaded(true)
     }
+
+    let i = 0
+
     useEffect(() => {
         refresh()
     }, []);
@@ -80,6 +85,7 @@ export default function Areas() {
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
+                            <th scope="col">#</th>
                             <th scope="col">Nombre</th>
                             <th scope="col">Acciones</th>
                         </tr>
@@ -88,7 +94,8 @@ export default function Areas() {
                         {areas
                             .filter((area: AreaDTO) => (!((tableFilter === 'Inactivos' && area.active) || (tableFilter === 'Activos' && !area.active))))
                             .map(area => (
-                                <tr key={area.id}>
+                                <tr key={area.id} className={!area.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                    <td>{++i}</td>
                                     <td>{area.name}</td>
                                     <td>
                                         <span className="actions">
@@ -112,3 +119,7 @@ export default function Areas() {
         </main >
     );
 }
+
+export default withAuthenticationRequired(Areas, {
+    onRedirecting: () => <Loading />,
+});

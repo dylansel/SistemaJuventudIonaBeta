@@ -172,3 +172,23 @@
 .viewFilter {
   margin-bottom: 0 !important;
 }
+
+.rowDisabled{
+  color: #808080
+}
+
+.user{
+  color:white;
+  font-size: 1.2rem;
+}
+
+.user img {
+  border-radius: 50%;
+  width: 50px;
+  margin: 0px 15px 0px 10px
+}
+
+.user p {
+  margin-bottom: 0px;
+  font-weight: bold;
+}

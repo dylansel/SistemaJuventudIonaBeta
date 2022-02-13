@@ -2,6 +2,16 @@
 
 Frontend App for Juventud Ioná
 
+### Env file Configuration
+
+Create a *.env* file in the root project folder. This file has to contain the same keys as the *.env.example* file. Fill the keys with the official Juventud Ioná keys provided by the Product Owner. 
+```
+PORT=3000
+REACT_APP_BACKEND_DOMAIN=<the root url where backend is hosted>
+REACT_APP_AUTH0_DOMAIN=<the auth0 client domain>
+REACT_APP_AUTH0_CLIENT_ID=<the auth0 client id>
+```
+
 ## Running
 
 ```console
