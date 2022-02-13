@@ -1,1 +1,0 @@
-export const BACKEND_URL = 'https://juventud-pagos-demo.herokuapp.com' as const

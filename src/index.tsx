@@ -5,16 +5,21 @@ import reportWebVitals from './reportWebVitals';
 import MainRoutes from './routes/mainRoutes';
 import { Auth0Provider } from '@auth0/auth0-react';
 
+const envConfig = {
+  domain: process.env.REACT_APP_AUTH0_DOMAIN!,
+  clientId: process.env.REACT_APP_AUTH0_CLIENT_ID!
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <Auth0Provider
-      domain="dev-jve24r55.us.auth0.com"
-      clientId="QK1l4qzYhR7z6fGHCvo7HcyiTQmGg8K2"
+      domain={envConfig.domain}
+      clientId={envConfig.clientId}
       redirectUri={window.location.origin}
     >
       <MainRoutes />
     </Auth0Provider>
-  </React.StrictMode>,
+  </React.StrictMode >,
   document.getElementById('root')
 );
 
