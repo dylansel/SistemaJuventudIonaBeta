@@ -7,12 +7,14 @@ import logo from '../../../assets/logo/logo-solo.png';
 function HeaderNav(props: any) {
     const { logout } = useAuth0()
     let { isAuthenticated } = useAuth0()
-    isAuthenticated = true // --> Only for testing...
+
+    const [isRedirecting, setIsRedirecting] = useState(false)
 
     const handleLogout = () => {
+        setIsRedirecting(true)
         logout({ returnTo: window.location.origin })
-        setToggle(!toggle)
     }
+
     const [toggle, setToggle] = useState(false)
     const mediaQuery = window.matchMedia('(max-width: 991px)')
     const handleToggle = () => {
@@ -88,7 +90,7 @@ function HeaderNav(props: any) {
                 </Nav>
                 <NavbarText>
                     {isAuthenticated &&
-                        <Link className="dropdown-item" to="" onClick={handleLogout}>Cerrar Sesión</Link>
+                        <Link className="dropdown-item" to="" onClick={handleLogout}>{isRedirecting ? "Cerrando Sesión..." : "Cerrar Sesión"}</Link>
                     }
                 </NavbarText>
             </Collapse>

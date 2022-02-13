@@ -1,11 +1,15 @@
+import { useAuth0 } from '@auth0/auth0-react';
+import { useState } from 'react';
 import { Button, } from 'reactstrap';
 import logo from '../assets/logo/logo-horizontal.png';
 import { Colors } from '../constants/colors';
 
 export default function Login() {
+    const { loginWithRedirect } = useAuth0()
+    const [isRedirecting, setIsRedirecting] = useState(false)
     const handleClick = () => {
-        alert('Redirecting to Auth0...')
-        window.location.href = '/';
+        setIsRedirecting(true)
+        loginWithRedirect()
     }
 
     return (
@@ -17,9 +21,10 @@ export default function Login() {
                 <div className="justify-content-center text-center col-12 col-md-4">
                     <Button
                         onClick={handleClick}
+                        disabled={isRedirecting}
                         style={{ backgroundColor: Colors.primary }}
                     >
-                        Iniciar Sesión
+                        {!isRedirecting ? "Iniciar Sesión" : "Redireccionando..."}
                     </Button>
                 </div>
             </div>
