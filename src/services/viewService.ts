@@ -33,7 +33,7 @@ export async function getEditJanijData(id: number): Promise<any> {
 
 export async function getAddGroupData(): Promise<any> {
     try {
-        const areas = await getAllAreas()
+        const areas = await getAllAreas("sort=ordinal,asc")
         return {
             areas
         }
