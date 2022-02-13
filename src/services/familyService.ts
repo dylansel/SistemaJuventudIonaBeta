@@ -3,7 +3,7 @@ import FamilyRequestDTO from '../dtos/FamilyRequestDTO';
 
 export async function getAllFamilies(orderBy?: string): Promise<any[]> {
     try {
-        const response = await axios(`${process.env.BACKEND_DOMAIN}/family/getAll?${orderBy}`)
+        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/getAll?${orderBy}`)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -33,7 +33,7 @@ export async function getAllFamiliesWithChildren(orderBy?: string): Promise<any[
 
 export async function getFamilyById(id: number): Promise<any[]> {
     try {
-        const response = await axios(`${process.env.BACKEND_DOMAIN}/family/get/${id}`)
+        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/get/${id}`)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -43,7 +43,7 @@ export async function getFamilyById(id: number): Promise<any[]> {
 
 export async function addFamily(familyToAdd: FamilyRequestDTO) {
     try {
-        const response = await axios.post(`${process.env.BACKEND_DOMAIN}/family/add`, familyToAdd)
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/add`, familyToAdd)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -53,7 +53,7 @@ export async function addFamily(familyToAdd: FamilyRequestDTO) {
 
 export async function updateFamily(id: number, familyToUpdate: FamilyRequestDTO) {
     try {
-        const response = await axios.put(`${process.env.BACKEND_DOMAIN}/family/update/${id}`, familyToUpdate)
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/update/${id}`, familyToUpdate)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -63,7 +63,7 @@ export async function updateFamily(id: number, familyToUpdate: FamilyRequestDTO)
 
 export async function switchActiveFamily(id: number, active: boolean) {
     try {
-        const response = await axios.put(`${process.env.BACKEND_DOMAIN}/family/update/${id}`, { active })
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/update/${id}`, { active })
         const data = await response.data
         return data
     } catch (error: any) {
@@ -73,7 +73,7 @@ export async function switchActiveFamily(id: number, active: boolean) {
 
 export async function deleteFamily(id: number) {
     try {
-        const response = await axios.delete(`${process.env.BACKEND_DOMAIN}/family/delete/${id}`)
+        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/delete/${id}`)
         const data = await response.data
         return data
     } catch (error: any) {

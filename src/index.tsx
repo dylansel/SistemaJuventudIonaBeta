@@ -2,25 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/index.css';
 import reportWebVitals from './reportWebVitals';
-import MainRoutes from './routes/mainRoutes';
-import { Auth0Provider } from '@auth0/auth0-react';
-
-const envConfig = {
-  domain: process.env.REACT_APP_AUTH0_DOMAIN!,
-  clientId: process.env.REACT_APP_AUTH0_CLIENT_ID!
-}
+import App from './App';
+import Auth0ProviderWithHistory from './auth/auth0-provider-with-history';
+import { BrowserRouter, Outlet } from 'react-router-dom';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Auth0Provider
-      domain={envConfig.domain}
-      clientId={envConfig.clientId}
-      redirectUri={window.location.origin}
-    >
-      <MainRoutes />
-    </Auth0Provider>
-  </React.StrictMode >,
-  document.getElementById('root')
+  <BrowserRouter>
+    <Auth0ProviderWithHistory>
+      <App />
+      <Outlet/>
+    </Auth0ProviderWithHistory>
+  </BrowserRouter>,
+  document.getElementById('root'),
 );
 
 reportWebVitals();

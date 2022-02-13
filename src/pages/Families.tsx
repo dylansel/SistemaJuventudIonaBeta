@@ -1,3 +1,4 @@
+import { withAuthenticationRequired } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
 import { Button, Card, CardBody, Collapse, FormGroup, Input, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
@@ -6,6 +7,7 @@ import EditFamilyBody from "../components/UI/Modals/Families/EditFamilyBody";
 import FamilyDTO from "../dtos/FamilyDTO";
 import JanijDTO from "../dtos/JanijDTO";
 import { getAllFamilies, deleteFamily, switchActiveFamily } from "../services/familyService";
+import Loading from "./Loading";
 
 function Families() {
 
@@ -127,4 +129,7 @@ function Families() {
         </main >
     )
 }
-export default Families
+
+export default withAuthenticationRequired(Families, {
+    onRedirecting: () => <Loading />,
+});

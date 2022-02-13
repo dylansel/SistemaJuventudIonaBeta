@@ -6,8 +6,10 @@ import DeleteBody from '../components/UI/Modals/DeleteBody';
 import { deleteJanij, getAllJanijim, switchActiveJanij } from '../services/janijService';
 import EditJanijBody from '../components/UI/Modals/Janijim/EditJanijBody';
 import JanijDTO from '../dtos/JanijDTO';
+import Loading from './Loading';
+import { withAuthenticationRequired } from '@auth0/auth0-react';
 
-export default function Janijim() {
+function Janijim() {
     const [janijim, setJanijim] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
     const [addModal, setAddModal] = useState(false)
@@ -121,3 +123,7 @@ export default function Janijim() {
         </main>
     );
 }
+
+export default withAuthenticationRequired(Janijim, {
+    onRedirecting: () => <Loading />,
+});

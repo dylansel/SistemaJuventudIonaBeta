@@ -1,3 +1,4 @@
+import { withAuthenticationRequired } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
 import { Button, FormGroup, Input, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
@@ -6,8 +7,9 @@ import EditAreaBody from "../components/UI/Modals/Areas/EditAreaBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import AreaDTO from "../dtos/AreaDTO";
 import { deleteArea, getAllAreas, switchActiveArea } from "../services/areaService";
+import Loading from "./Loading";
 
-export default function Areas() {
+function Areas() {
     const [areas, setAreas] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
     const [addModal, setAddModal] = useState(false)
@@ -117,3 +119,7 @@ export default function Areas() {
         </main >
     );
 }
+
+export default withAuthenticationRequired(Areas, {
+    onRedirecting: () => <Loading />,
+});
