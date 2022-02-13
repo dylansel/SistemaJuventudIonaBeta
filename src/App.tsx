@@ -1,19 +1,35 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import './styles/App.css';
-import { Outlet } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import { Areas, Groups, Families, Dashboard, Login, NotFound, Janijim, Loading } from "./pages"
 import Navbar from './components/UI/Layout/HeaderNav';
-import NotLoggedIn from './pages/NotLoggedIn';
 
 function App() {
-  const { isAuthenticated } = useAuth0()
+  const { isLoading, isAuthenticated } = useAuth0()
 
+  if (isLoading) {
+    return <Loading />;
+  }
+  
   return (
     <>
-      <Navbar />
-      {
-        isAuthenticated ? <Outlet /> : <NotLoggedIn />
-      }
+      {isAuthenticated && <Navbar />}
+      <div className="container-fluid flex-grow-1">
+        <Routes>
+          <Route path="/">
+            <Route
+              index
+              element={isAuthenticated ? <Dashboard /> : <Login />}
+            />
+            <Route path="janijim" element={<Janijim />} />
+            <Route path="areas" element={<Areas />} />
+            <Route path="groups" element={<Groups />} />
+            <Route path="families" element={<Families />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </div>
     </>
   );
 }

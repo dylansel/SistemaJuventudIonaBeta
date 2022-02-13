@@ -4,7 +4,7 @@ import GroupRequestDTO from '../dtos/GroupRequestDTO';
 
 export async function getAllGroups(orderBy?: string): Promise<GroupDTO[]> {
     try {
-        const response = await axios(`${process.env.BACKEND_DOMAIN}/group/getAll?${orderBy}`)
+        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/getAll?${orderBy}`)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -14,7 +14,7 @@ export async function getAllGroups(orderBy?: string): Promise<GroupDTO[]> {
 
 export async function getGroupById(ID: number): Promise<GroupDTO> {
     try {
-        const response = await axios(`${process.env.BACKEND_DOMAIN}/group/get/${ID}`)
+        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/get/${ID}`)
         const data = await response.data
         return data as GroupDTO
     } catch (error: any) {
@@ -24,7 +24,7 @@ export async function getGroupById(ID: number): Promise<GroupDTO> {
 
 export async function addGroup(groupToAdd: GroupRequestDTO) {
     try {
-        const response = await axios.post(`${process.env.BACKEND_DOMAIN}/group/add`, groupToAdd)
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/add`, groupToAdd)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -34,7 +34,7 @@ export async function addGroup(groupToAdd: GroupRequestDTO) {
 
 export async function updateGroup(ID: number, groupToUpdate: GroupRequestDTO) {
     try {
-        const response = await axios.put(`${process.env.BACKEND_DOMAIN}/group/update/${ID}`, groupToUpdate)
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/update/${ID}`, groupToUpdate)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -44,7 +44,7 @@ export async function updateGroup(ID: number, groupToUpdate: GroupRequestDTO) {
 
 export async function switchActiveGroup(id: number, active: boolean) {
     try {
-        const response = await axios.put(`${process.env.BACKEND_DOMAIN}/group/update/${id}`, { active })
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/update/${id}`, { active })
         const data = await response.data
         return data
     } catch (error: any) {
@@ -54,7 +54,7 @@ export async function switchActiveGroup(id: number, active: boolean) {
 
 export async function deleteGroup(ID: number) {
     try {
-        const response = await axios.delete(`${process.env.BACKEND_DOMAIN}/group/delete/${ID}`)
+        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/delete/${ID}`)
         const data = await response.data
         return data
     } catch (error: any) {

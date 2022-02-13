@@ -1,6 +1,8 @@
+import { withAuthenticationRequired } from '@auth0/auth0-react';
 import logo from '../assets/logo/logo-horizontal.png';
+import Loading from './Loading';
 
-export default function Dashboard() {
+function Dashboard() {
     return (
         <main>
             <div className="main-container row justify-content-xl-around mx-5">
@@ -28,3 +30,7 @@ export default function Dashboard() {
         </main>
     );
 }
+
+export default withAuthenticationRequired(Dashboard, {
+    onRedirecting: () => <Loading />,
+});

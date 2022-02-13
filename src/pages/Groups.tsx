@@ -6,8 +6,10 @@ import DeleteBody from "../components/UI/Modals/DeleteBody";
 import { deleteGroup, getAllGroups, switchActiveGroup } from "../services/groupService";
 import EditGroupBody from "../components/UI/Modals/Groups/EditGroupBody";
 import GroupDTO from "../dtos/GroupDTO";
+import { withAuthenticationRequired } from "@auth0/auth0-react";
+import Loading from "./Loading";
 
-export default function Groups() {
+function Groups() {
     const [groups, setGroups] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
     const [addModal, setAddModal] = useState(false)
@@ -120,3 +122,7 @@ export default function Groups() {
         </main>
     );
 }
+
+export default withAuthenticationRequired(Groups, {
+    onRedirecting: () => <Loading />,
+});
