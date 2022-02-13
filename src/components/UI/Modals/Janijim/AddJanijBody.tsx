@@ -132,13 +132,13 @@ function AddJanijBody(props: any) {
                             className="mb-3"
                             type="select"
                             onChange={addHandleChange}
-                            disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
+                            disabled={!(loaded && viewData && viewData["grupsOrdinal"]) || isAdding}
                         >
-                            {(!(loaded && viewData && viewData["families"] && viewData["groups"])) &&
+                            {(!(loaded && viewData && viewData["families"] && viewData["grupsOrdinal"])) &&
                                 <option disabled selected>Cargando...</option>
                             }
 
-                            {loaded && viewData && viewData["groups"].map((grupo: any) => (
+                            {loaded && viewData && viewData["grupsOrdinal"].map((grupo: any) => (
                                 <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
                             ))}
                         </Input>
