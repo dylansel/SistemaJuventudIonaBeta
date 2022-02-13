@@ -1,4 +1,4 @@
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0, User } from '@auth0/auth0-react';
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Collapse, DropdownMenu, DropdownToggle, Nav, Navbar, NavbarText, NavbarToggler, UncontrolledDropdown, } from 'reactstrap';
@@ -6,7 +6,7 @@ import logo from '../../../assets/logo/logo-solo.png';
 
 function HeaderNav(props: any) {
     const { logout } = useAuth0()
-    let { isAuthenticated } = useAuth0()
+    const { isAuthenticated, user } = useAuth0<User>()
 
     const [isRedirecting, setIsRedirecting] = useState(false)
 
@@ -89,9 +89,17 @@ function HeaderNav(props: any) {
                             </DropdownMenu>
                         </UncontrolledDropdown>
                     </Nav>
-                    <NavbarText>
+                    <NavbarText >
                         {isAuthenticated &&
-                            <Link className="dropdown-item" to="" onClick={handleLogout}>{isRedirecting ? "Cerrando Sesión..." : "Cerrar Sesión"}</Link>
+                            <div className="user d-flex text-white mt-3 mt-md-0">
+                                <div>
+                                    <img alt="Profile" src={user?.picture} />
+                                </div>
+                                <div className='d-flex flex-row justify-content-center align-items-center text-center'>
+                                    <p>{user?.name?.split(' ')[0]}</p>
+                                    <Link className="dropdown-item user" to="" onClick={handleLogout}>{isRedirecting ? "Cerrando Sesión..." : "Cerrar Sesión"}</Link>
+                                </div>
+                            </div>
                         }
                     </NavbarText>
                 </Collapse>
