@@ -1,14 +1,17 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Collapse, DropdownMenu, DropdownToggle, Nav, Navbar, NavbarText, NavbarToggler, UncontrolledDropdown, } from 'reactstrap';
 import logo from '../../../assets/logo/logo-solo.png';
 
 function HeaderNav(props: any) {
+    const { logout } = useAuth0()
+    let { isAuthenticated } = useAuth0()
+    isAuthenticated = true // --> Only for testing...
+
     const handleLogout = () => {
-        alert('Cerraste Sesión...')
+        logout({ returnTo: window.location.origin })
         setToggle(!toggle)
-        localStorage.clear();
-        window.location.href = '/login';
     }
     const [toggle, setToggle] = useState(false)
     const mediaQuery = window.matchMedia('(max-width: 991px)')
@@ -84,7 +87,9 @@ function HeaderNav(props: any) {
                     </UncontrolledDropdown>
                 </Nav>
                 <NavbarText>
-                    <Link className="dropdown-item" to="" onClick={handleLogout}>Cerrar Sesión</Link>
+                    {isAuthenticated &&
+                        <Link className="dropdown-item" to="" onClick={handleLogout}>Cerrar Sesión</Link>
+                    }
                 </NavbarText>
             </Collapse>
         </Navbar>
