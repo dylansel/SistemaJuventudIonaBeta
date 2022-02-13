@@ -6,8 +6,7 @@ import HeaderNav from './components/UI/Layout/HeaderNav';
 import NotLoggedIn from './pages/NotLoggedIn';
 
 function App() {
-  let { isAuthenticated } = useAuth0()
-  isAuthenticated = true // --> Only for testing...
+  const { isAuthenticated } = useAuth0()
 
   return (
     <>
