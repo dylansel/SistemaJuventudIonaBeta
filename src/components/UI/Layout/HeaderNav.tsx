@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Collapse, DropdownMenu, DropdownToggle, Nav, Navbar, NavbarText, NavbarToggler, UncontrolledDropdown, } from 'reactstrap';
 import logo from '../../../assets/logo/logo-solo.png';
 
-
 function HeaderNav(props: any) {
-    let navigate = useNavigate();
     const handleLogout = () => {
         alert('Cerraste Sesión...')
         setToggle(!toggle)
-        navigate('/')
+        localStorage.clear();
+        window.location.href = '/login';
     }
     const [toggle, setToggle] = useState(false)
     const mediaQuery = window.matchMedia('(max-width: 991px)')
