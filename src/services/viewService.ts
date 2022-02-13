@@ -5,12 +5,10 @@ import { getJanijById } from './janijService';
 
 export async function getAddJanijData(): Promise<any> {
     try {
-        const groups = await getAllGroups()
-        const groupsOrdinal = await getAllGroups("sort=ordinal,asc")
+        const groups = await getAllGroups("sort=ordinal,asc")
         const families = await getAllFamiliesWithChildren("sort=surname,asc")
         return {
             groups,
-            groupsOrdinal,
             families
         }
     } catch (error: any) {
