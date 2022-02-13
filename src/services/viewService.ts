@@ -18,7 +18,7 @@ export async function getAddJanijData(): Promise<any> {
 
 export async function getEditJanijData(id: number): Promise<any> {
     try {
-        const groups = await getAllGroups()
+        const groups = await getAllGroups("sort=ordinal,asc")
         const families = await getAllFamiliesWithChildren("sort=surname,asc")
         const janijData = await getJanijById(id)
         return {
@@ -44,7 +44,7 @@ export async function getAddGroupData(): Promise<any> {
 
 export async function getEditGroupData(id: number): Promise<any> {
     try {
-        const areas = await getAllAreas()
+        const areas = await getAllAreas("sort=ordinal,asc")
         const groupData = await getGroupById(id)
         return {
             areas,
