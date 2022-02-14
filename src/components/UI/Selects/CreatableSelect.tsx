@@ -13,6 +13,8 @@ function CreatableSelectSearch(props: any) {
             )
         );
     };
+    const formatCreateLabel = (inputValue: string) => `${props.label} "${inputValue}"`;
+
     const getOptions = (data: any) => {
         return data.map((row: any) => {
             return {
@@ -21,9 +23,12 @@ function CreatableSelectSearch(props: any) {
             }
         })
     }
+
     return (<>
         <CreatableSelect
             filterOption={customFilterOption}
+            formatCreateLabel={formatCreateLabel}
+            isDisabled={props.disabled}
             onChange={props.onChange}
             options={getOptions(props.data)}
             placeholder={props.placeholder}

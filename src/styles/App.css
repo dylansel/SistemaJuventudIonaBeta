@@ -18,16 +18,12 @@
 .navbar-custom {
   background-color: #DD5041;
   box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2), 0 5px 15px 0 rgba(37, 44, 97, 0.15);
+  font-size: 1.7rem;
 }
 
 .navbar-logo {
   height: 5rem;
   margin-left: 3rem;
-}
-
-.navbar-collapse {
-  font-size: 1.7rem;
-  justify-content: space-between;
 }
 
 .nav-item {
@@ -61,6 +57,16 @@
 }
 
 .dropdown-item {
+  color: #e0dbdb;
+}
+
+.dropdown-item:focus {
+  background-color: #DD5041;
+  color: #e0dbdb;
+}
+
+.dropdown-item:hover {
+  background-color: #DD5041;
   color: white;
 }
 
@@ -147,7 +153,7 @@
   user-select: none;
 }
 
-/*--------JANIJIM-------*/
+/*--------CRUDS-------*/
 .actions button {
   margin-bottom: 0.5rem;
   margin-right: 0.5rem;
@@ -161,4 +167,28 @@
 .btn:active, .btn:focus {
   box-shadow: none;
   outline: none;
+}
+
+.viewFilter {
+  margin-bottom: 0 !important;
+}
+
+.rowDisabled{
+  color: #808080
+}
+
+.user{
+  color:white;
+  font-size: 1.2rem;
+}
+
+.user img {
+  border-radius: 50%;
+  width: 50px;
+  margin: 0px 15px 0px 10px
+}
+
+.user p {
+  margin-bottom: 0px;
+  font-weight: bold;
 }

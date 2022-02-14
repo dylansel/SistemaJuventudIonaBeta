@@ -1,5 +1,6 @@
 export default interface AreaDTO {
-    id?: number,
+    id: number,
+    active: boolean,
     name: string,
     ordinal: number,
 }

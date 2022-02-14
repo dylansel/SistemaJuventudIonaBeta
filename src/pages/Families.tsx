@@ -1,18 +1,18 @@
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
-import { Button, FormGroup, Input, Modal, Spinner } from "reactstrap";
+import { Button, Card, CardBody, Collapse, FormGroup, Input, Modal, Spinner } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
-import AddAreaBody from "../components/UI/Modals/Areas/AddAreaBody";
-import EditAreaBody from "../components/UI/Modals/Areas/EditAreaBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
-import AreaDTO from "../dtos/AreaDTO";
-import { deleteArea, getAllAreas, switchActiveArea } from "../services/areaService";
+import EditFamilyBody from "../components/UI/Modals/Families/EditFamilyBody";
+import FamilyDTO from "../dtos/FamilyDTO";
+import JanijDTO from "../dtos/JanijDTO";
+import { getAllFamilies, deleteFamily, switchActiveFamily } from "../services/familyService";
 import Loading from "./Loading";
 
-function Areas() {
-    const [areas, setAreas] = useState<any[]>([])
+function Families() {
+
+    const [families, setFamilies] = useState<any[]>([])
     const [loaded, setLoaded] = useState(false)
-    const [addModal, setAddModal] = useState(false)
     const [editModal, setEditModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
     const [itemSelected, setItemSelected] = useState({
@@ -21,7 +21,8 @@ function Areas() {
         active: false
     })
 
-    const toggleAddModal = () => setAddModal(!addModal)
+    document.getElementsByClassName('collapse-btn')
+
     const toggleEditModal = (item?: any) => {
         setItemSelected(item)
         setEditModal(!editModal)
@@ -43,7 +44,7 @@ function Areas() {
     }
     async function fetchData() {
         setLoaded(false)
-        setAreas(await getAllAreas("sort=ordinal,asc"))
+        setFamilies(await getAllFamilies("sort=surname,asc"))
         setLoaded(true)
     }
 
@@ -52,9 +53,10 @@ function Areas() {
     useEffect(() => {
         refresh()
     }, []);
+
     return (
         <main>
-            <div className="filters d-flex mx-4 align-items-center justify-content-end">
+            <div className="ffilters d-flex mx-4 align-items-center justify-content-end">
                 <FormGroup className="viewFilter">
                     <Input
                         id="viewFilter"
@@ -76,9 +78,7 @@ function Areas() {
                     </Input>
                 </FormGroup>
                 <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
-                <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Shijva</Button>
-                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddAreaBody title='Agregar' refresh={refresh} toggle={toggleAddModal} /></Modal>
-                <Modal isOpen={editModal} toggle={toggleEditModal} ><EditAreaBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
+                <Modal isOpen={editModal} toggle={toggleEditModal} ><EditFamilyBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
             </div>
             <div className="justify-content-center table-content mx-3 mt-4">
 
@@ -91,35 +91,45 @@ function Areas() {
                         </tr>
                     </thead>
                     <tbody>
-                        {areas
-                            .filter((area: AreaDTO) => (!((tableFilter === 'Inactivos' && area.active) || (tableFilter === 'Activos' && !area.active))))
-                            .map(area => (
-                                <tr key={area.id} className={!area.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                        {families
+                            .filter((family: FamilyDTO) => (!((tableFilter === 'Inactivos' && family.active) || (tableFilter === 'Activos' && !family.active))))
+                            .map(family => (
+                                <tr key={family.id} className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
                                     <td>{++i}</td>
-                                    <td>{area.name}</td>
+                                    <td className="w-50">
+                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}><span className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>{family.surname}</span></button>
+
+                                        <div className="collapse" id={`collapse${family.id}`}>
+                                            <div className="card card-body">
+                                                {family.janijim.map((janij: JanijDTO) => (
+                                                    <p>{janij.name} {` (${janij.groupName})`} </p>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td>
                                         <span className="actions">
-                                            <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: area.id })}><i className=" fas fa-edit"></i></button>
-                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: area.id, name: area.name, active: area.active })} ><i className="fas fa-trash"></i></button></span>
+                                            <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: family.id })}><i className=" fas fa-edit"></i></button>
+                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: family.id, name: family.surname, active: family.active })} ><i className="fas fa-trash"></i></button></span>
                                     </td>
                                 </tr>
                             )
                             )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Shijva' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteArea} switchActive={switchActiveArea} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Familia' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteFamily} switchActive={switchActiveFamily} /></Modal>
                 </table>
                     :
                     <div className="text-center">
-                        <h2>Cargando Lista de Shijvot...</h2>
+                        <h2>Cargando Lista de Familias...</h2>
                         <Spinner animation="border" className='text-danger my-2' variant="light" />
                     </div>
                 }
             </div>
             <Scroll showBelow={250} />
         </main >
-    );
+    )
 }
 
-export default withAuthenticationRequired(Areas, {
+export default withAuthenticationRequired(Families, {
     onRedirecting: () => <Loading />,
 });

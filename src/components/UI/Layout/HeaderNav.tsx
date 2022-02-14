@@ -1,59 +1,110 @@
-import React from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { useAuth0, User } from '@auth0/auth0-react';
+import React, { useState } from 'react';
+import { Link } from "react-router-dom";
+import { Collapse, DropdownMenu, DropdownToggle, Nav, Navbar, NavbarText, NavbarToggler, UncontrolledDropdown, } from 'reactstrap';
 import logo from '../../../assets/logo/logo-solo.png';
 
 function HeaderNav(props: any) {
-    let navigate = useNavigate();
-    const handleLogout = () => {
-        alert('Cerraste Sesión...')
-        navigate('/')
-    }
-    return (
-        <nav className="navbar navbar-expand-lg navbar-custom fixed-top">
-            <Link to="/"><img src={logo} className="navbar-logo" alt="logo-navbar" /></Link>
-            <button className="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div className="navbar-nav me-md-5 justify-content-start">
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Datos
-                        </a>
-                        <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <Link className="dropdown-item" to="/janijim">Janijim</Link>
-                            <Link className="dropdown-item" to="/groups">Grupos</Link>
-                            <Link className="dropdown-item" to="/areas">Shijvot</Link>
-                        </ul>
-                    </li>
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Actividades
-                        </a>
-                        <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <Link className="dropdown-item" to="">Actividades</Link>
-                            <Link className="dropdown-item" to="">Asistencia</Link>
+    const { logout } = useAuth0()
+    const { isAuthenticated, user } = useAuth0<User>()
 
-                        </ul>
-                    </li>
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" href="/#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Pagos
-                        </a>
-                        <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <Link className="dropdown-item" to="">Precios</Link>
-                            <Link className="dropdown-item" to="">Precios Especiales</Link>
-                            <Link className="dropdown-item" to="">Pagos</Link>
-                        </ul>
-                    </li>
-                </div>
-                <div className="mx-5">
-                    <button className="dropdown-item" onClick={handleLogout}>Cerrar Sesión</button>
-                </div>
-            </div>
-        </nav >
+    const [isRedirecting, setIsRedirecting] = useState(false)
+
+    const handleLogout = () => {
+        setIsRedirecting(true)
+        logout({ returnTo: window.location.origin })
+    }
+
+    const [toggle, setToggle] = useState(false)
+    const mediaQuery = window.matchMedia('(max-width: 991px)')
+    const handleToggle = () => {
+        if (mediaQuery.matches) {
+            setToggle(!toggle)
+        }
+    }
+
+    return (
+        <header>
+            <Navbar
+                className='navbar-custom'
+                expand="lg"
+                fixed='top'
+            >
+                <Link to="/"><img src={logo} className="navbar-logo" alt="logo-navbar" /></Link>
+                <NavbarToggler onClick={handleToggle} className='navbar-dark' />
+                <Collapse
+                    navbar
+                    isOpen={toggle}
+                >
+                    <Nav
+                        className="me-auto"
+                        navbar
+                    >
+                        <UncontrolledDropdown
+                            inNavbar
+                            nav
+                        >
+                            <DropdownToggle
+                                caret
+                                nav
+                            >
+                                Datos
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                <Link className="dropdown-item" to="/janijim" onClick={handleToggle}>Janijim</Link>
+                                <Link className="dropdown-item" to="/families" onClick={handleToggle}>Familias</Link>
+                                <Link className="dropdown-item" to="/groups" onClick={handleToggle}>Grupos</Link>
+                                <Link className="dropdown-item" to="/areas" onClick={handleToggle}>Shijvot</Link>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                        <UncontrolledDropdown
+                            inNavbar
+                            nav
+                        >
+                            <DropdownToggle
+                                caret
+                                nav
+                            >
+                                Actividades
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                <Link className="dropdown-item" to="" onClick={handleToggle}>Actividades</Link>
+                                <Link className="dropdown-item" to="" onClick={handleToggle}>Asistencia</Link>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                        <UncontrolledDropdown
+                            inNavbar
+                            nav
+                        >
+                            <DropdownToggle
+                                caret
+                                nav
+                            >
+                                Pagos
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                <Link className="dropdown-item" to="" onClick={handleToggle}>Precios</Link>
+                                <Link className="dropdown-item" to="" onClick={handleToggle}>Precios Especiales</Link>
+                                <Link className="dropdown-item" to="" onClick={handleToggle}>Pagos</Link>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                    </Nav>
+                    <NavbarText >
+                        {isAuthenticated &&
+                            <div className="user d-flex text-white mt-3 mt-md-0">
+                                <div>
+                                    <img alt="Profile" src={user?.picture} />
+                                </div>
+                                <div className='d-flex flex-row justify-content-center align-items-center text-center'>
+                                    <p>{user?.name?.split(' ')[0]}</p>
+                                    <Link className="dropdown-item user" to="" onClick={handleLogout}>{isRedirecting ? "Cerrando Sesión..." : "Cerrar Sesión"}</Link>
+                                </div>
+                            </div>
+                        }
+                    </NavbarText>
+                </Collapse>
+            </Navbar>
+        </header>
     )
 }
 export default HeaderNav

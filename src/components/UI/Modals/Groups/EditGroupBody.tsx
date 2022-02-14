@@ -54,7 +54,6 @@ function EditGroupBody(props: any) {
 
     const handleCancel = () => {
         setError(false)
-        setFields(initialFieldsState)
         props.toggle()
     }
 
@@ -76,7 +75,6 @@ function EditGroupBody(props: any) {
         }
         setIsUpdating(false)
         props.toggle()
-        setFields(initialFieldsState)
         props.refresh()
     }
 
@@ -94,11 +92,12 @@ function EditGroupBody(props: any) {
                         </Label>
                         <Input
                             id="name"
-                            disabled={isUpdating || !firstLoad}
                             name="name"
                             onChange={handleChange}
+                            disabled={!(loaded && viewData && viewData["areas"] && viewData["groupData"]) || isUpdating || !firstLoad}
                             autoComplete="off"
-                            value={loaded && viewData && viewData["groupData"] && fields.name}
+                            placeholder={(!(loaded && viewData && viewData["areas"] && viewData["groupData"]) || !firstLoad) ? "Cargando..." : ""}
+                            value={loaded && viewData && viewData["areas"] && viewData["groupData"] && firstLoad ? fields.name : "Cargando..."}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -107,11 +106,12 @@ function EditGroupBody(props: any) {
                         </Label>
                         <Input
                             id="ordinal"
-                            disabled={isUpdating || !firstLoad}
                             name="ordinal"
                             type="number"
+                            disabled={!(loaded && viewData && viewData["areas"] && viewData["groupData"]) || isUpdating}
                             onChange={handleChange}
                             autoComplete="off"
+                            placeholder={(!(loaded && viewData && viewData["areas"] && viewData["groupData"])) ? "Cargando..." : ""}
                             value={loaded && viewData && viewData["groupData"] && fields.ordinal}
                         />
                     </FormGroup>
@@ -122,11 +122,15 @@ function EditGroupBody(props: any) {
                             name="areaId"
                             className="mb-3"
                             type="select"
+                            disabled={!(loaded && viewData && viewData["areas"] && viewData["groupData"]) || isUpdating || !firstLoad}
                             onChange={handleChange}
-                            disabled={!(loaded && viewData && viewData["areas"]) || isUpdating}
+                            placeholder={(!(loaded && viewData && viewData["areas"] && viewData["groupData"])) ? "Cargando..." : ""}
                             value={viewData && viewData["areas"] && fields.areaId}
 
                         >
+                            {(!(loaded && viewData && viewData["areas"])) &&
+                                <option disabled selected>Cargando...</option>
+                            }
                             {loaded && viewData && viewData["areas"].map((area: any) => (
                                 <option key={area.id} value={area.id}>{area.name}</option>
                             ))}
@@ -142,7 +146,7 @@ function EditGroupBody(props: any) {
                         </Button>
                         <Button
                             color={isUpdating ? "warning" : "danger"}
-                            disabled={isUpdating}
+                            disabled={!(loaded && viewData && viewData["areas"]) || isUpdating}
                             onClick={editRequest}
                         >
                             {isUpdating ? <div>Editando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}

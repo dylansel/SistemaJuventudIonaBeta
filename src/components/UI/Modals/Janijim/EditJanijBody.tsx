@@ -74,7 +74,6 @@ function EditJanijBody(props: any) {
 
     const toggleCancelEditModal = () => {
         setError(false)
-        setFields(initialFieldsState)
         props.toggle()
     }
 
@@ -105,7 +104,6 @@ function EditJanijBody(props: any) {
         }
         setIsUpdating(false)
         props.toggle()
-        setFields(initialFieldsState)
         props.refresh()
     }
 
@@ -123,10 +121,11 @@ function EditJanijBody(props: any) {
                         </Label>
                         <Input
                             id="name"
-                            disabled={isUpdating || !firstLoad}
+                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"] && viewData["janijData"]) || isUpdating || !firstLoad}
                             name="name"
                             onChange={editHandleChange}
                             autoComplete="off"
+                            placeholder={(!(loaded && viewData && viewData["families"] && viewData["groups"])) ? "Cargando..." : ""}
                             value={viewData["janijData"] && fields.name}
                         />
                     </FormGroup>
@@ -138,6 +137,7 @@ function EditJanijBody(props: any) {
                             data={(loaded && viewData && viewData["families"]) ? viewData["families"] : []}
                             disabled={!(loaded && viewData && viewData["families"]) || isUpdating || !firstLoad}
                             display="fullFamily"
+                            label="Crear Familia:"
                             id="family"
                             name="family"
                             className="mb-3"
@@ -157,13 +157,26 @@ function EditJanijBody(props: any) {
                             disabled={!(loaded && viewData && viewData["groups"]) || isUpdating || !firstLoad}
                             value={viewData["janijData"] && fields.groupId}
                         >
+                            {(!(loaded && viewData && viewData["families"] && viewData["groups"])) &&
+                                <option disabled selected>Cargando...</option>
+                            }
+
                             {loaded && viewData && viewData["groups"].map((grupo: any) => (
                                 <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
                             ))}
                         </Input>
                     </FormGroup>
                     <FormGroup check>
-                        <Input type="checkbox" id="leadersCourse" name="leadersCourse" data-val="true" value="true" onChange={editHandleChange} checked={viewData["janijData"] && fields.leadersCourse} />
+                        <Input
+                            type="checkbox"
+                            id="leadersCourse"
+                            name="leadersCourse"
+                            disabled={!(loaded && viewData && viewData["groups"] && viewData["janijData"]) || isUpdating || !firstLoad}
+                            data-val="true"
+                            value="true"
+                            onChange={editHandleChange}
+                            checked={viewData["janijData"] && fields.leadersCourse}
+                        />
                         <Label for="leadersCourse" check>
                             Curso de Madrijim
                         </Label>
@@ -177,7 +190,7 @@ function EditJanijBody(props: any) {
                         </Button>
                         <Button
                             color={isUpdating ? "warning" : "danger"}
-                            disabled={isUpdating}
+                            disabled={!(loaded && viewData && viewData["groups"] && viewData["janijData"]) || isUpdating || !firstLoad}
                             onClick={updateRequest}
                         >
                             {isUpdating ? <div>Editando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
