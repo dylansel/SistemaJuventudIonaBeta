@@ -62,9 +62,7 @@ function AddJanijBody(props: any) {
         }
         else {
             const surname = capitalizeAllWords(fields.familySurname)
-            await addFamily({ surname, discount: 0 })
-            const families: any = await getAllFamilies()
-            familyId = families.at(-1).id
+            familyId = await addFamily({ surname })
         }
         const janijToAdd = {
             groupId: fields.groupId,
