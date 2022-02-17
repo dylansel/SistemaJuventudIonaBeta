@@ -3,7 +3,7 @@ import { getAddJanijData } from "../../../../services/viewService";
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import CreatableSelectSearch from "../../Selects/CreatableSelect";
 import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { addFamily, getAllFamilies } from '../../../../services/familyService';
+import { addFamily } from '../../../../services/familyService';
 import { addJanij } from '../../../../services/janijService';
 
 function AddJanijBody(props: any) {
@@ -63,9 +63,7 @@ function AddJanijBody(props: any) {
         }
         else {
             const surname = capitalizeAllWords(fields.familySurname)
-            await addFamily({ surname, discount: 0 })
-            const families: any = await getAllFamilies()
-            familyId = families[families.length - 1].id
+            familyId = await addFamily({ surname })
         }
         const janijToAdd = {
             groupId: fields.groupId,
