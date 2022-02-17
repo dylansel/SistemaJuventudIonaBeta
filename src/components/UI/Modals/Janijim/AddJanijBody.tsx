@@ -137,7 +137,7 @@ function AddJanijBody(props: any) {
                                 <option disabled selected>Cargando...</option>
                             }
                             {(loaded) &&
-                            <option key="-1" value="-1" selected>Elija un grupo</option>
+                            <option key="-1" value="-1" selected disabled >Elija un grupo</option>
                             }
                             {loaded && viewData && viewData["groups"].map((grupo: any) => (
                                 <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
