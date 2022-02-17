@@ -10,7 +10,7 @@ function AddJanijBody(props: any) {
 
     const initialFieldsState = {
         name: '',
-        groupId: 1,
+        groupId: -1,
         leadersCourse: false,
         familyId: -1,
         familySurname: ''
@@ -51,8 +51,9 @@ function AddJanijBody(props: any) {
 
     const postRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || (isEmptyOrSpaces(fields.familySurname) && fields.familyId === -1)) {
+        if (isEmptyOrSpaces(fields.name) || (isEmptyOrSpaces(fields.familySurname) && fields.familyId === -1 ) || fields.groupId === -1){
             setError(true)
+            console.log(fields.groupId)
             return
         }
         setIsAdding(true)
@@ -135,7 +136,7 @@ function AddJanijBody(props: any) {
                             {(!(loaded && viewData && viewData["families"] && viewData["groups"])) &&
                                 <option disabled selected>Cargando...</option>
                             }
-
+                            <option key="-1" value="-1" selected >Elegir un grupo</option>
                             {loaded && viewData && viewData["groups"].map((grupo: any) => (
                                 <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
                             ))}
