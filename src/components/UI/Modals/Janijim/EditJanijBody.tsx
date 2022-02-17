@@ -3,7 +3,7 @@ import { getEditJanijData } from "../../../../services/viewService";
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import CreatableSelectSearch from "../../Selects/CreatableSelect";
 import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { addFamily, getAllFamilies } from '../../../../services/familyService';
+import { addFamily } from '../../../../services/familyService';
 import { updateJanij } from '../../../../services/janijService';
 
 function EditJanijBody(props: any) {
