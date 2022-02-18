@@ -53,7 +53,6 @@ function AddJanijBody(props: any) {
         setError(false)
         if (isEmptyOrSpaces(fields.name) || (isEmptyOrSpaces(fields.familySurname) && fields.familyId === -1 ) || fields.groupId === -1){
             setError(true)
-            console.log(fields.groupId)
             return
         }
         setIsAdding(true)
