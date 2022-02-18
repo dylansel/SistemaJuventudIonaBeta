@@ -23,7 +23,7 @@ function EditAreaBody(props: any) {
 
     let initialFieldsState = {
         name: "",
-        ordinal: 0,
+        ordinal: -1,
     }
     const [fields, setFields] = useState(initialFieldsState)
 
@@ -56,7 +56,7 @@ function EditAreaBody(props: any) {
 
     const editRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal === 0) {
+        if (isEmptyOrSpaces(fields.name) || fields.ordinal <= 0) {
             setError(true)
             return
         }

@@ -9,7 +9,7 @@ function AddAreaBody(props: any) {
 
     const initialFieldsState = {
         name: "",
-        ordinal: 0,
+        ordinal: -1,
     }
     const [fields, setFields] = useState(initialFieldsState)
 
@@ -33,7 +33,7 @@ function AddAreaBody(props: any) {
 
     const postRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal === 0) {
+        if (isEmptyOrSpaces(fields.name) || fields.ordinal <= 0) {
             setError(true)
             return
         }

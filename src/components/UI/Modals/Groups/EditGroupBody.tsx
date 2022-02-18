@@ -24,8 +24,8 @@ function EditGroupBody(props: any) {
 
     let initialFieldsState = {
         name: "",
-        ordinal: 0,
-        areaId: 0,
+        ordinal: -1,
+        areaId: -1,
     }
     const [fields, setFields] = useState(initialFieldsState)
 
@@ -59,7 +59,7 @@ function EditGroupBody(props: any) {
 
     const editRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal === 0 || fields.areaId === 0) {
+        if (isEmptyOrSpaces(fields.name) || fields.ordinal <= 0 || fields.areaId === -1) {
             setError(true)
             return
         }
