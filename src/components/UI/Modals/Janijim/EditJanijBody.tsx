@@ -27,7 +27,7 @@ function EditJanijBody(props: any) {
 
     let initialFieldsState = {
         name: '',
-        groupId: 1,
+        groupId: -1,
         leadersCourse: false,
         familyId: -1,
         familySurname: ''
