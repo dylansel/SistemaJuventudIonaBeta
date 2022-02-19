@@ -1,8 +1,16 @@
-import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import logo from '../assets/logo/logo-horizontal.png';
+import { getProfile } from '../services/profileService';
 import Loading from './Loading';
 
 function Dashboard() {
+    const { getAccessTokenSilently } = useAuth0()
+
+    const handleProfile = async() => {
+        const data = await getProfile(getAccessTokenSilently)
+        console.log(data)
+    }
+
     return (
         <main>
             <div className="main-container row justify-content-xl-around mx-5">
@@ -21,8 +29,9 @@ function Dashboard() {
                         <li>Tarea3<span><i className="fas fa-trash"></i></span></li>
                         <li>Tarea4<span><i className="fas fa-trash"></i></span></li>
                     </ul>
-                    <div className="dashboard-footer d-flex justify-content-between mt-4">
+                    <div className="dashboard-footer d-flex justify-content-around mt-4">
                         <button>Limpiar todo</button>
+                        <button onClick={handleProfile}>Profile</button>
                     </div>
                 </div>
 
