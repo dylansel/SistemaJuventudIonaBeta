@@ -1,5 +1,5 @@
 import { withAuthenticationRequired } from '@auth0/auth0-react';
-import Loading from './Loading';
+import Loading from './misc/Loading';
 
 function Activities() {
     return (

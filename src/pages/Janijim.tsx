@@ -6,7 +6,7 @@ import DeleteBody from '../components/UI/Modals/DeleteBody';
 import { deleteJanij, getAllJanijim, switchActiveJanij } from '../services/janijService';
 import EditJanijBody from '../components/UI/Modals/Janijim/EditJanijBody';
 import JanijDTO from '../dtos/JanijDTO';
-import Loading from './Loading';
+import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 
 function Janijim() {

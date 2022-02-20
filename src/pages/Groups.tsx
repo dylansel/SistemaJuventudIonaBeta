@@ -7,7 +7,7 @@ import { deleteGroup, getAllGroups, switchActiveGroup } from "../services/groupS
 import EditGroupBody from "../components/UI/Modals/Groups/EditGroupBody";
 import GroupDTO from "../dtos/GroupDTO";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
-import Loading from "./Loading";
+import Loading from "./misc/Loading";
 
 function Groups() {
     const [groups, setGroups] = useState<any[]>([])

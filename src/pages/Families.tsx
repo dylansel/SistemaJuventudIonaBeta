@@ -7,7 +7,7 @@ import EditFamilyBody from "../components/UI/Modals/Families/EditFamilyBody";
 import FamilyDTO from "../dtos/FamilyDTO";
 import JanijDTO from "../dtos/JanijDTO";
 import { getAllFamilies, deleteFamily, switchActiveFamily } from "../services/familyService";
-import Loading from "./Loading";
+import Loading from "./misc/Loading";
 
 function Families() {
 
