@@ -7,7 +7,7 @@ import EditAreaBody from "../components/UI/Modals/Areas/EditAreaBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import AreaDTO from "../dtos/AreaDTO";
 import { deleteArea, getAllAreas, switchActiveArea } from "../services/areaService";
-import Loading from "./Loading";
+import Loading from "./misc/Loading";
 
 function Areas() {
     const [areas, setAreas] = useState<any[]>([])
