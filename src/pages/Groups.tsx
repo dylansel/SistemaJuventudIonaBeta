@@ -26,6 +26,12 @@ function Groups() {
         setItemSelected(item)
         setEditModal(!editModal)
     }
+
+    const handleActive = async (item: any) => {
+        await switchActiveGroup(item.id, item.active)
+        refresh()
+    }
+
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
     const handleDelete = (item: any) => {
@@ -75,7 +81,7 @@ function Groups() {
                         }
                     </Input>
                 </FormGroup>
-                <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
+                <Button color='danger' title='Actualizar' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Grupo</Button>
                 <Modal isOpen={addModal} toggle={toggleAddModal} ><AddGroupBody title='Agregar' refresh={refresh} toggle={toggleAddModal} /></Modal>
                 <Modal isOpen={editModal} toggle={toggleEditModal} ><EditGroupBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
@@ -101,15 +107,17 @@ function Groups() {
                                     <td>{group.name}</td>
                                     <td>{group.areaName}</td>
                                     <td>
-                                        <span className="actions">
+                                        <span className="actions d-flex">
                                             <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: group.id })}><i className=" fas fa-edit"></i></button>
-                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: group.id, name: group.name, active: group.active })} ><i className="fas fa-trash"></i></button></span>
+                                            <button type="button" title={group.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: group.id, active: !group.active })}><i className={`fas ${group.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
+                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: group.id, name: group.name, active: group.active })} ><i className="fas fa-trash"></i></button>
+                                        </span>
                                     </td>
                                 </tr>
                             )
                             )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Grupo' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteGroup} switchActive={switchActiveGroup} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Grupo' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteGroup} /></Modal>
                 </table>
                     :
                     <div className="text-center">
