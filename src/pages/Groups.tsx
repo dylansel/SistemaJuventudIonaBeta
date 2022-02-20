@@ -108,9 +108,9 @@ function Groups() {
                                     <td>{group.areaName}</td>
                                     <td>
                                         <span className="actions d-flex">
-                                            <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: group.id })}><i className=" fas fa-edit"></i></button>
+                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: group.id })}><i className=" fas fa-edit"></i></button>
                                             <button type="button" title={group.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: group.id, active: !group.active })}><i className={`fas ${group.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
-                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: group.id, name: group.name, active: group.active })} ><i className="fas fa-trash"></i></button>
+                                            <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: group.id, name: group.name, active: group.active })} ><i className="fas fa-trash"></i></button>
                                         </span>
                                     </td>
                                 </tr>
