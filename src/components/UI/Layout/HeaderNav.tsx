@@ -69,7 +69,7 @@ function HeaderNav(props: any) {
                             </DropdownToggle>
                             <DropdownMenu right>
                                 <Link className="dropdown-item" to="/activities" onClick={handleToggle}>Actividades</Link>
-                                <Link className="dropdown-item" to="" onClick={handleToggle}>Asistencia</Link>
+                                <Link className="dropdown-item" to="/attendance" onClick={handleToggle}>Asistencia</Link>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                         <UncontrolledDropdown
@@ -83,9 +83,9 @@ function HeaderNav(props: any) {
                                 Pagos
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <Link className="dropdown-item" to="" onClick={handleToggle}>Pagos</Link>
-                                <Link className="dropdown-item" to="" onClick={handleToggle}>Precios</Link>
-                                <Link className="dropdown-item" to="" onClick={handleToggle}>Becas</Link>
+                                <Link className="dropdown-item" to="/payments" onClick={handleToggle}>Pagos</Link>
+                                <Link className="dropdown-item" to="/prices" onClick={handleToggle}>Precios</Link>
+                                <Link className="dropdown-item" to="/grants" onClick={handleToggle}>Becas</Link>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                         <UncontrolledDropdown
@@ -99,9 +99,9 @@ function HeaderNav(props: any) {
                                 Reportes
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <Link className="dropdown-item" to="" onClick={handleToggle}>Reporte 01</Link>
-                                <Link className="dropdown-item" to="" onClick={handleToggle}>Reporte 02</Link>
-                                <Link className="dropdown-item" to="" onClick={handleToggle}>Reporte 03</Link>
+                                <Link className="dropdown-item" to="#" onClick={handleToggle}>Reporte 01</Link>
+                                <Link className="dropdown-item" to="#" onClick={handleToggle}>Reporte 02</Link>
+                                <Link className="dropdown-item" to="#" onClick={handleToggle}>Reporte 03</Link>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                     </Nav>
@@ -109,7 +109,7 @@ function HeaderNav(props: any) {
                         {isAuthenticated &&
                             <div className="user d-flex text-white mt-3 mt-md-0">
                                 <div>
-                                    <img alt="Profile" src={user?.picture} />
+                                    <img alt="Profile" src={user?.picture} referrerPolicy="no-referrer" />
                                 </div>
                                 <div className='d-flex flex-row justify-content-center align-items-center text-center'>
                                     <p>{user?.name?.split(' ')[0]}</p>
