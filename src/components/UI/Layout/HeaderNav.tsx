@@ -68,7 +68,7 @@ function HeaderNav(props: any) {
                                 Actividades
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <Link className="dropdown-item" to="" onClick={handleToggle}>Actividades</Link>
+                                <Link className="dropdown-item" to="/activities" onClick={handleToggle}>Actividades</Link>
                                 <Link className="dropdown-item" to="" onClick={handleToggle}>Asistencia</Link>
                             </DropdownMenu>
                         </UncontrolledDropdown>

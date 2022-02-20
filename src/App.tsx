@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import './styles/App.css';
 import { Route, Routes } from "react-router-dom";
-import { Areas, Groups, Families, Dashboard, Login, NotFound, Janijim, Loading } from "./pages"
+import { Areas, Groups, Families, Dashboard, Login, NotFound, Janijim, Loading, Activities } from "./pages"
 import Navbar from './components/UI/Layout/HeaderNav';
 
 function App() {
@@ -11,7 +11,7 @@ function App() {
   if (isLoading) {
     return <Loading />;
   }
-  
+
   return (
     <>
       {isAuthenticated && <Navbar />}
@@ -26,6 +26,7 @@ function App() {
             <Route path="areas" element={<Areas />} />
             <Route path="groups" element={<Groups />} />
             <Route path="families" element={<Families />} />
+            <Route path="activities" element={<Activities />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
