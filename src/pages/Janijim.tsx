@@ -26,6 +26,12 @@ function Janijim() {
         setItemSelected(item)
         setEditModal(!editModal)
     }
+
+    const handleActive = async (item: any) => {
+        await switchActiveJanij(item.id, item.active)
+        refresh()
+    }
+
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
     const handleDelete = (item: any) => {
@@ -103,8 +109,10 @@ function Janijim() {
                                         <td>{janij.groupName}</td>
                                         <td>
                                             <span className="actions">
-                                                <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: janij.id })}><i className=" fas fa-edit"></i></button>
-                                                <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.familySurname}`, active: janij.active })} ><i className="fas fa-trash"></i></button></span>
+                                                <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: janij.id })}><i className=" fas fa-edit"></i></button>
+                                                <button type="button" title={janij.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: janij.id, active: !janij.active })}><i className={`fas ${janij.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
+                                                <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.familySurname}`, active: janij.active })} ><i className="fas fa-trash"></i></button>
+                                            </span>
                                         </td>
                                     </tr>
                                 )
