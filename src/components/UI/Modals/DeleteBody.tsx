@@ -7,6 +7,10 @@ function DeleteBody(props: any) {
     const [canDelete, setCanDelete] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
 
+    const handleChange = (e: any) => {
+        e.preventDefault();
+    };
+
     const handleDeleteField = (e: any) => {
         const { value } = e.target
         setCanDelete(value === props.item.name ? true : false)
@@ -43,6 +47,9 @@ function DeleteBody(props: any) {
                     name="name"
                     onChange={handleDeleteField}
                     autoComplete="off"
+                    onCut={handleChange}
+                    onCopy={handleChange}
+                    onPaste={handleChange}
                 />
             </ModalBody>
             <ModalFooter>
