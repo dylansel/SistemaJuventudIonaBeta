@@ -192,3 +192,8 @@
   margin-bottom: 0px;
   font-weight: bold;
 }
+
+.td-attendance {
+  text-align: center;
+  vertical-align: middle;
+}
