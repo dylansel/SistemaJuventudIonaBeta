@@ -83,9 +83,25 @@ function HeaderNav(props: any) {
                                 Pagos
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <Link className="dropdown-item" to="" onClick={handleToggle}>Precios</Link>
-                                <Link className="dropdown-item" to="" onClick={handleToggle}>Precios Especiales</Link>
                                 <Link className="dropdown-item" to="" onClick={handleToggle}>Pagos</Link>
+                                <Link className="dropdown-item" to="" onClick={handleToggle}>Precios</Link>
+                                <Link className="dropdown-item" to="" onClick={handleToggle}>Becas</Link>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
+                        <UncontrolledDropdown
+                            inNavbar
+                            nav
+                        >
+                            <DropdownToggle
+                                caret
+                                nav
+                            >
+                                Reportes
+                            </DropdownToggle>
+                            <DropdownMenu right>
+                                <Link className="dropdown-item" to="" onClick={handleToggle}>Reporte 01</Link>
+                                <Link className="dropdown-item" to="" onClick={handleToggle}>Reporte 02</Link>
+                                <Link className="dropdown-item" to="" onClick={handleToggle}>Reporte 03</Link>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                     </Nav>
