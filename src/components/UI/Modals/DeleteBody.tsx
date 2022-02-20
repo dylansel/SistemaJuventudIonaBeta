@@ -39,7 +39,6 @@ function DeleteBody(props: any) {
                 {props.title}
             </ModalHeader>
             <ModalBody>
-                <p>Puede eliminar o {isPreviouslyActive ? "desactivar" : "activar"} a {props.item.name}</p>
                 <p>Para eliminar ingrese "<b>{props.item.name}</b>"</p>
                 <p><span className="text-danger">Esta acción no se puede deshacer.</span></p>
                 <Input
