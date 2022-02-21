@@ -31,6 +31,11 @@ function AttendanceByActivity() {
     const [groupSelected, setGroupSelected] = useState<number>(-1)
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
 
+    const resetFilters = () => {
+        setAreaSelected(-1)
+        setGroupSelected(-1)
+    }
+
     const handleAreaChange = (e: any) => {
         setAreaSelected(parseInt(e.target.value))
     }
@@ -68,7 +73,7 @@ function AttendanceByActivity() {
                         <button type="button" title='Volver' className="btn btn-danger mx-5" onClick={() => history(-1)}><i className=" fas fa-arrow-left"></i></button>
                         <h4>{loaded && dateToString(activityData?.date!)} </h4>
                     </div>
-                    <div className="d-flex col-12 justify-content-center">
+                    <div className="d-flex col-12 justify-content-center text-center align-items-center">
                         <FormGroup>
                             <Input
                                 id="areaId"
@@ -77,6 +82,7 @@ function AttendanceByActivity() {
                                 type="select"
                                 disabled={!loaded || !areas}
                                 onChange={handleAreaChange}
+                                value={areaSelected}
                             >
                                 {(!(loaded && areas)) &&
                                     <option disabled selected>Cargando...</option>
@@ -96,18 +102,20 @@ function AttendanceByActivity() {
                                 type="select"
                                 disabled={!loaded || !groups || areaSelected === -1}
                                 onChange={handleGroupChange}
+                                value={groupSelected}
                             >
                                 {(!(loaded && groups)) &&
                                     <option disabled selected>Cargando...</option>
                                 }
                                 {(loaded) && <option key="-1" value="-1" selected disabled>Grupo</option>}
                                 {loaded && groups!
-                                    .filter((group: GroupDTO) => (group.areaId === areaSelected || areaSelected === -1))
+                                    .filter((group: GroupDTO) => group.areaId === areaSelected || areaSelected === -1)
                                     .map((group: GroupDTO) => (
                                         <option key={group.id} value={group.id}>{group.name}</option>
                                     ))}
                             </Input>
                         </FormGroup>
+                        <Button onClick={resetFilters} color="danger" title="Reiniciar Filtros">Resetear filtros</Button>
                     </div>
                 </>}
             </div>
@@ -126,7 +134,12 @@ function AttendanceByActivity() {
                             </thead>
                             <tbody>
                                 {janijim
-                                    .filter((janij: JanijDTO) => (janij.active))
+                                    .filter((janij: JanijDTO) => (
+                                        janij.active &&
+                                        (areaSelected === -1) ||
+                                        ((groupSelected === -1 && areas?.find((area: AreaDTO) => area.id === groups?.find((group: GroupDTO) => group.id === janij.groupId)?.areaId)?.id === areaSelected!)) ||
+                                        (groupSelected !== -1 && janij.groupId === groupSelected)
+                                    ))
                                     .map(janij => (
                                         <tr key={janij.id}>
                                             <td>{`${janij.name} ${janij.familySurname}`}</td>
