@@ -135,10 +135,10 @@ function AttendanceByActivity() {
                             <tbody>
                                 {janijim
                                     .filter((janij: JanijDTO) => (
-                                        janij.active &&
-                                        (areaSelected === -1) ||
-                                        ((groupSelected === -1 && areas?.find((area: AreaDTO) => area.id === groups?.find((group: GroupDTO) => group.id === janij.groupId)?.areaId)?.id === areaSelected!)) ||
-                                        (groupSelected !== -1 && janij.groupId === groupSelected)
+                                        janij.active && (
+                                            (areaSelected === -1) ||
+                                            ((groupSelected === -1 && areas?.find((area: AreaDTO) => area.id === groups?.find((group: GroupDTO) => group.id === janij.groupId)?.areaId)?.id === areaSelected!)) ||
+                                            (groupSelected !== -1 && janij.groupId === parseInt(groupSelected.toString())))
                                     ))
                                     .map(janij => (
                                         <tr key={janij.id}>
