@@ -36,20 +36,24 @@ function Attendance() {
             <div className="main-container row justify-content-center text-center">
                 <h3>Asistencias</h3>
                 <h5>Seleccioná la actividad que quieras cargar su asistencia</h5>
+                {loaded && activities.length > 0 && (new Date().toISOString().split('T')[0] === activities[0].date) &&
+                    <div className="justify-content-center table-content mx-3 mt-5 col-8 bg-warning">
+                        <h2>Hoy!</h2>
+                        <span className='d-flex justify-content-center'>
+                            <h4>{dateToString(activities[0].date)}</h4>
+                            <button type="button" title='Cargar Asistencia' className="btn btn-danger mx-3" onClick={() => loadAttendance(activities[0].id)}><i className=" fas fa-arrow-right"></i></button>
+                        </span>
+                    </div>
+                }
                 <div className="justify-content-center table-content mx-3 mt-5 col-8">
 
                     {loaded ? <>
-                        {activities.length > 0 && (new Date().toISOString().split('T')[0] === activities[0].date) && <div>
-                            <p>Actividad de hoy, {dateToString(activities[0].date)} cuesta ${activities[0].individualPrice}</p>
-                        </div>}
                         {
                             activities.length > 0 ?
-
                                 <table className="table table-hover table-responsive">
                                     <thead>
                                         <tr>
                                             <th scope="col">Fecha</th>
-                                            <th scope="col">Precio</th>
                                             <th scope="col">Cargar Asistencia</th>
                                         </tr>
                                     </thead>
@@ -59,7 +63,6 @@ function Attendance() {
                                             .map((activity: ActivityDTO) => (
                                                 <tr key={activity.id}>
                                                     <td className="td-attendance">{dateToString(activity.date)}</td>
-                                                    <td className="td-attendance">${activity.individualPrice}</td>
                                                     <td className="td-attendance">
                                                         <span>
                                                             <button type="button" title='Cargar Asistencia' className="btn btn-danger" onClick={() => loadAttendance(activity.id)}><i className=" fas fa-arrow-right"></i></button>
