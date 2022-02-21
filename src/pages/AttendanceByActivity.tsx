@@ -4,18 +4,24 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import JanijDTO from '../dtos/JanijDTO';
 import { getAllJanijim } from '../services/janijService';
-import { Button, FormGroup, Input, Label, Spinner } from 'reactstrap';
+import { Button, FormGroup, Input, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import { JanijAttendanceRequestDTO } from '../dtos/JanijAttendanceRequestDTO';
 import ActivityDTO from '../dtos/ActivityDTO';
 import { getActivityById } from '../services/activityService';
 import { AttendanceDTO } from '../dtos/AttendanceDTO';
 import { getAttendanceByActivity } from '../services/attendanceService';
-import { dateToString } from '../utils/misc/strings';
+import { dateToEsString } from '../utils/misc/strings';
 import AreaDTO from '../dtos/AreaDTO';
 import { getAllAreas } from '../services/areaService';
 import { getAllGroups } from '../services/groupService';
 import GroupDTO from '../dtos/GroupDTO';
+
+export interface Present {
+    janijId: number,
+    present: boolean,
+    trial: boolean
+}
 
 function AttendanceByActivity() {
     const history = useNavigate();
@@ -29,6 +35,7 @@ function AttendanceByActivity() {
     const [loaded, setLoaded] = useState(false)
     const [areaSelected, setAreaSelected] = useState<number>(-1)
     const [groupSelected, setGroupSelected] = useState<number>(-1)
+    const [presentChecked, setPresentChecked] = useState<Present[]>([])
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
 
     const resetFilters = () => {
@@ -43,6 +50,10 @@ function AttendanceByActivity() {
 
     const handleGroupChange = (e: any) => {
         setGroupSelected(e.target.value)
+    }
+
+    const handlePresent = (id: number) => {
+        
     }
 
     const handleSaveAttendance = () => {
@@ -72,7 +83,7 @@ function AttendanceByActivity() {
                 {loaded && <>
                     <div className="d-flex justify-content-center mb-4">
                         <button type="button" title='Volver' className="btn btn-danger mx-5" onClick={() => history(-1)}><i className=" fas fa-arrow-left"></i></button>
-                        <h4>{loaded && dateToString(activityData?.date!)} </h4>
+                        <h4>{loaded && dateToEsString(activityData?.date!)} </h4>
                     </div>
                     <div className="d-flex col-12 justify-content-center text-center">
                         <FormGroup className='no-margin'>
@@ -145,11 +156,14 @@ function AttendanceByActivity() {
                                             <td>{janij.groupName}</td>
                                             <td>
                                                 <Input
-                                                    type='checkbox' />
+                                                    type='checkbox'
+                                                    onChange={() => handlePresent(janij.id)}
+                                                />
                                             </td>
                                             <td>
                                                 <Input
-                                                    type='checkbox' />
+                                                    type='checkbox'
+                                                />
                                             </td>
                                         </tr>
                                     )

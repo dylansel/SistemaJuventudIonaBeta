@@ -6,10 +6,14 @@ export const capitalizeAllWords = (str: string) => {
     return words.join(" ")
 }
 
-export const isEmptyOrSpaces = (str : string) => {
+export const isEmptyOrSpaces = (str: string) => {
     return (str.length === 0 || !str.trim());
 }
 
-export const dateToString = (date: string) => {
-    return new Date(date.replace(/-/g, '\/')).toLocaleDateString([], { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'})
+export const dateToEsString = (date: string) => {
+    return new Date(date.replace(/-/g, '\/')).toLocaleDateString([], { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })
+}
+
+export const dateToUsString = (date: string) => {
+    return new Date(date.replace(/-/g, '\/')).toLocaleDateString([], { year: 'numeric', month: 'long', day: '2-digit' })
 }

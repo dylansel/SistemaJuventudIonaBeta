@@ -6,7 +6,7 @@ import ActivityDTO from '../dtos/ActivityDTO';
 import { getAllActivities } from '../services/activityService';
 import Loading from './misc/Loading';
 import { useNavigate } from 'react-router-dom';
-import { dateToString } from '../utils/misc/strings';
+import { dateToEsString } from '../utils/misc/strings';
 
 function Attendance() {
     const history = useNavigate();
@@ -40,7 +40,7 @@ function Attendance() {
                     <div className="justify-content-center table-content mx-3 mt-5 col-8 bg-warning">
                         <h2>Hoy!</h2>
                         <span className='d-flex justify-content-center'>
-                            <h4>{dateToString(activities[0].date)}</h4>
+                            <h4>{dateToEsString(activities[0].date)}</h4>
                             <button type="button" title='Cargar Asistencia' className="btn btn-danger mx-3" onClick={() => loadAttendance(activities[0].id)}><i className=" fas fa-arrow-right"></i></button>
                         </span>
                     </div>
@@ -62,7 +62,7 @@ function Attendance() {
                                             //.filter((activity: ActivityDTO) => (!((tableFilter === 'Inactivos' && area.active) || (tableFilter === 'Activos' && !area.active))))
                                             .map((activity: ActivityDTO) => (
                                                 <tr key={activity.id}>
-                                                    <td className="td-attendance">{dateToString(activity.date)}</td>
+                                                    <td className="td-attendance">{dateToEsString(activity.date)}</td>
                                                     <td className="td-attendance">
                                                         <span>
                                                             <button type="button" title='Cargar Asistencia' className="btn btn-danger" onClick={() => loadAttendance(activity.id)}><i className=" fas fa-arrow-right"></i></button>
