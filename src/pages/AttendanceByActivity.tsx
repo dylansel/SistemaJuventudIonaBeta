@@ -6,7 +6,7 @@ import JanijDTO from '../dtos/JanijDTO';
 import { getAllJanijim } from '../services/janijService';
 import { Button, Input, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
-import { JanijAttendanceDTO } from '../dtos/JanijAttendanceDTO';
+import { JanijAttendanceRequestDTO } from '../dtos/JanijAttendanceRequestDTO';
 import ActivityDTO from '../dtos/ActivityDTO';
 import { getActivityById } from '../services/activityService';
 
@@ -17,7 +17,7 @@ function AttendanceByActivity() {
     const [janijim, setJanijim] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
     const [loaded, setLoaded] = useState(false)
-    const [changes, setChanges] = useState<JanijAttendanceDTO[]>([])
+    const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
 
     const handleSaveAttendance = () => {
 
