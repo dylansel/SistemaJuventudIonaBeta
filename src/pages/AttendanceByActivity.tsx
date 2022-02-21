@@ -38,6 +38,7 @@ function AttendanceByActivity() {
 
     const handleAreaChange = (e: any) => {
         setAreaSelected(parseInt(e.target.value))
+        setGroupSelected(-1)
     }
 
     const handleGroupChange = (e: any) => {
@@ -73,12 +74,11 @@ function AttendanceByActivity() {
                         <button type="button" title='Volver' className="btn btn-danger mx-5" onClick={() => history(-1)}><i className=" fas fa-arrow-left"></i></button>
                         <h4>{loaded && dateToString(activityData?.date!)} </h4>
                     </div>
-                    <div className="d-flex col-12 justify-content-center text-center align-items-center">
-                        <FormGroup>
+                    <div className="d-flex col-12 justify-content-center text-center">
+                        <FormGroup className='no-margin'>
                             <Input
                                 id="areaId"
                                 name="areaId"
-                                className="mb-3"
                                 type="select"
                                 disabled={!loaded || !areas}
                                 onChange={handleAreaChange}
@@ -94,11 +94,10 @@ function AttendanceByActivity() {
                                     ))}
                             </Input>
                         </FormGroup>
-                        <FormGroup>
+                        <FormGroup className='no-margin mx-5'>
                             <Input
                                 id="groupId"
                                 name="groupId"
-                                className="mb-3"
                                 type="select"
                                 disabled={!loaded || !groups || areaSelected === -1}
                                 onChange={handleGroupChange}
