@@ -79,7 +79,7 @@ function Activities() {
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Fecha</th>
-                            <th scope="col">Costo Invididual</th>
+                            <th scope="col">Precio Invididual</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
