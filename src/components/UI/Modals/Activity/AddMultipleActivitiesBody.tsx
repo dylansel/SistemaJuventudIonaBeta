@@ -1,27 +1,19 @@
-import React, { useState, useEffect } from "react"
-import { getAddJanijData } from "../../../../services/viewService";
+import React, { useState} from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { addActivity } from '../../../../services/activityService';
+import { isEmptyOrSpaces,formatDateEsToUs } from "../../../../utils/misc/strings";
+import { addMultipleActivities } from '../../../../services/activityService';
 
 function AddMultipleActivitiesBody(props: any) {
 
     const initialFieldsState = {
-        date: '',
-        individualPrice: -1,
+        fromDate:'',
+        toDate:''
 
     }
     const [fields, setFields] = useState(initialFieldsState)
-    const [loaded, setLoaded] = useState(false)
     const [error, setError] = useState(false)
     const [isAdding, setIsAdding] = useState(false)
-    const [viewData, setViewData] = useState<any>([null])
-    async function fetchData() {
-        setLoaded(false)
-        setViewData(await getAddJanijData())
-        setLoaded(true)
-    }
-    
+
     const addHandleChange = (e: any) => {
         setError(false)
         let { name, value } = e.target
@@ -35,17 +27,17 @@ function AddMultipleActivitiesBody(props: any) {
 
     const postRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.date) || fields.individualPrice <= -1 ){
+        if (isEmptyOrSpaces(fields.fromDate) || isEmptyOrSpaces(fields.toDate)){
             setError(true)
             return
         }
         setIsAdding(true)
         const ActivityToAdd = {
-            date: fields.date,
-            individualPrice: fields.individualPrice,
+            fromDate: formatDateEsToUs(fields.fromDate),
+            toDate: formatDateEsToUs(fields.toDate),
             
         }
-        await addActivity(ActivityToAdd)
+        await addMultipleActivities(ActivityToAdd)
         props.toggle()
         setIsAdding(false)
         props.refresh()
@@ -54,46 +46,41 @@ function AddMultipleActivitiesBody(props: any) {
     const toggleCancelAddModal = () => {
         setError(false)
         props.toggle()
-    }
-    useEffect(() => {
-        fetchData()
-    }, []);
+    };
     
     return (
         <>
             <ModalHeader toggle={toggleCancelAddModal} charcode="close">
-                {props.title} Actividad
+                {props.title} Actividades
             </ModalHeader>
             <ModalBody>
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
-                        <Label for="date">
-                            Fecha
+                        <Label for="fromDate">
+                            Fecha Incio
                         </Label>
                         <Input
-                            id="date"
-                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding}
-                            name="date"
+                            id="fromDate"
+                            disabled={isAdding}
+                            name="fromDate"
                             type="date"
                             onChange={addHandleChange}
                             autoComplete="off"
-                            placeholder={(!(loaded && viewData && viewData["families"] && viewData["groups"])) ? "Cargando..." : ""}
+                            
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="individualPrice">
-                            Costo invididual
+                        <Label for="toDate">
+                            Fecha Limite
                         </Label>
                         <Input
-                            id="individualPrice"
-                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding}
-                            name="individualPrice"
-                            type="number"
-                            step="5"
+                            id="toDate"
+                            disabled={ isAdding}
+                            name="toDate"
+                            type="date"
                             onChange={addHandleChange}
                             autoComplete="off"
-                            placeholder={(!(loaded && viewData && viewData["families"] && viewData["groups"])) ? "Cargando..." : ""}
                         />
                     </FormGroup>
                     <ModalFooter>
@@ -105,7 +92,7 @@ function AddMultipleActivitiesBody(props: any) {
                         </Button>
                         <Button
                             color={isAdding ? "success" : "danger"}
-                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding}
+                            disabled={isAdding}
                             onClick={postRequest}
                         >
                             {isAdding ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}

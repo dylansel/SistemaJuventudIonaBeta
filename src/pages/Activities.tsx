@@ -8,6 +8,7 @@ import {deleteActivity, getAllActivities} from '../services/activityService';
 import EditActivityBody from '../components/UI/Modals/Activity/EditActivityBody';
 import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { capitalizeAllWords, isEmptyOrSpaces,formatDateUsToEs } from "../utils/misc/strings";
 
 function Activities() {
     const [activity, setActivity] = useState<any[]>([])
@@ -32,6 +33,7 @@ function Activities() {
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
     const handleDelete = (item: any) => {
+        item.name = formatDateUsToEs(item.name)
         setItemSelected(item)
         toggleDeleteModal()
     }
@@ -68,7 +70,7 @@ function Activities() {
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Actividad</Button>
                 <Button onClick={toggleAddMultipleModal} className="mx-3" color='danger' type='button'>Carga Masiva de Actividades</Button>
                 <Modal isOpen={addModal} toggle={toggleAddModal} ><AddActivityBody title='Agregar' toggle={toggleAddModal} refresh={refresh} /></Modal>
-                <Modal isOpen={addMultipleModal} toggle={toggleAddMultipleModal} ><AddMultipleActivitiesBody title='Agregar multiple' toggle={toggleAddMultipleModal} refresh={refresh} /></Modal>
+                <Modal isOpen={addMultipleModal} toggle={toggleAddMultipleModal} ><AddMultipleActivitiesBody title='Cargar' toggle={toggleAddMultipleModal} refresh={refresh} /></Modal>
                 <Modal isOpen={editModal} toggle={toggleEditModal} ><EditActivityBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
                 
             </div>
@@ -90,7 +92,7 @@ function Activities() {
                                 .map(activity => (
                                     <tr key={activity.id} > {/*(borrar si no se hace) seccion color filtro de suspension */}
                                         <td>{++i}</td>
-                                        <td>{`${activity.date}`}</td>  {/*formatear la fecha en dd/mm/aaaa*/}
+                                        <td>{`${formatDateUsToEs(activity.date)}`}</td>  {/*formatear la fecha en dd/mm/aaaa*/}
                                         <td>{`$${activity.individualPrice}`}</td>
                                         <td>
                                             <span className="actions d-flex">

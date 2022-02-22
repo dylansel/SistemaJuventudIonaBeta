@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { getAddJanijData } from "../../../../services/viewService";
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
+import { isEmptyOrSpaces,formatDateEsToUs } from "../../../../utils/misc/strings";
 import { addActivity } from '../../../../services/activityService';
 
 function AddActivityBody(props: any) {
@@ -39,9 +39,10 @@ function AddActivityBody(props: any) {
             setError(true)
             return
         }
+        console.log(formatDateEsToUs(fields.date))
         setIsAdding(true)
         const ActivityToAdd = {
-            date: fields.date,
+            date: formatDateEsToUs(fields.date),
             individualPrice: fields.individualPrice,
             
         }
