@@ -6,7 +6,7 @@ export const capitalizeAllWords = (str: string) => {
     return words.join(" ")
 }
 
-export const isEmptyOrSpaces = (str: string) => {
+export const isEmptyOrSpaces = (str : string) => {
     return (str.length === 0 || !str.trim());
 }
 
@@ -21,4 +21,9 @@ export const dateToUsString = (date: string) => {
 export const formatDateUsToEs = (date: string) => {
     const dArr = date.split("-");
     return dArr[2] + "/" + dArr[1] + "/" + dArr[0]
+}
+
+export const formatDateEsToUs = (date: string) => {
+    const dArr = date.split("-");
+    return dArr[0] + "-" + dArr[1] + "-" + dArr[2]
 }
