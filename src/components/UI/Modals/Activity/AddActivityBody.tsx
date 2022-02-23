@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react"
 import { getAddJanijData } from "../../../../services/viewService";
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import { isEmptyOrSpaces,formatDateEsToUs } from "../../../../utils/misc/strings";
-import { addActivity } from '../../../../services/activityService';
+import { addActivity, getActivityById } from '../../../../services/activityService';
+import {getSystemVariableBykey} from '../../../../services/systemVariableService'
 
 function AddActivityBody(props: any) {
 
@@ -18,7 +19,7 @@ function AddActivityBody(props: any) {
     const [viewData, setViewData] = useState<any>([null])
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getAddJanijData())
+        setViewData(await getSystemVariableBykey("NORMAL_ACTIVITY_PRICE"))
         setLoaded(true)
     }
     
@@ -35,11 +36,12 @@ function AddActivityBody(props: any) {
 
     const postRequest = async () => {
         setError(false)
+        if(fields.individualPrice = -1){fields.individualPrice = viewData["value"]}
         if (isEmptyOrSpaces(fields.date) || fields.individualPrice <= -1 ){
             setError(true)
             return
         }
-        console.log(formatDateEsToUs(fields.date))
+        
         setIsAdding(true)
         const ActivityToAdd = {
             date: formatDateEsToUs(fields.date),
@@ -74,12 +76,12 @@ function AddActivityBody(props: any) {
                         </Label>
                         <Input
                             id="date"
-                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding}
+                            disabled={!(loaded && viewData["value"]) || isAdding}
                             name="date"
                             type="date"
                             onChange={addHandleChange}
                             autoComplete="off"
-                            placeholder={(!(loaded && viewData && viewData["families"] && viewData["groups"])) ? "Cargando..." : ""}
+                            placeholder={(!(loaded && viewData && viewData["value"])) ? "Cargando..." : ""}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -88,13 +90,14 @@ function AddActivityBody(props: any) {
                         </Label>
                         <Input
                             id="individualPrice"
-                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding}
+                            disabled={!(loaded && viewData["value"]) || isAdding}
                             name="individualPrice"
                             type="number"
                             step="5"
+                            inicial={viewData["value"]}
                             onChange={addHandleChange}
                             autoComplete="off"
-                            placeholder={(!(loaded && viewData && viewData["families"] && viewData["groups"])) ? "Cargando..." : ""}
+                            placeholder={(!(loaded)) ? "Cargando..." : viewData["value"]}
                         />
                     </FormGroup>
                     <ModalFooter>
@@ -106,7 +109,7 @@ function AddActivityBody(props: any) {
                         </Button>
                         <Button
                             color={isAdding ? "success" : "danger"}
-                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding}
+                            disabled={!(loaded) || isAdding}
                             onClick={postRequest}
                         >
                             {isAdding ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
