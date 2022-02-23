@@ -36,12 +36,7 @@ function Activities() {
         item.name = formatDateUsToEs(item.name)
         setItemSelected(item)
         toggleDeleteModal()
-    }
-
-
-
-    /*(borrar si no se hace) seccion filtro de suspension */
-  
+    }  
 
     const refresh = () => {
         fetchData()
@@ -52,19 +47,13 @@ function Activities() {
         setLoaded(true)
     }
 
-    let i = 0
-
     useEffect(() => {
         fetchData()
     }, []);
     
     return (
         <main>
-            <div className="filters d-flex mx-4 align-items-center justify-content-end">
-            
-
-                {/*(borrar si no se hace) seccion filtro de suspension */}
-                  
+            <div className="filters d-flex mx-4 align-items-center justify-content-end">                
 
                 <Button color='danger' title='Actualizar' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Actividad</Button>
@@ -79,7 +68,6 @@ function Activities() {
                 {loaded ? <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
                             <th scope="col">Fecha</th>
                             <th scope="col">Precio Invididual</th>
                             <th scope="col">Acciones</th>
@@ -88,16 +76,13 @@ function Activities() {
                     <tbody>
                         {
                             activity
-                                /*(borrar si no se hace) seccion filtro de suspension */   
                                 .map(activity => (
-                                    <tr key={activity.id} > {/*(borrar si no se hace) seccion color filtro de suspension */}
-                                        <td>{++i}</td>
-                                        <td>{`${formatDateUsToEs(activity.date)}`}</td>  {/*formatear la fecha en dd/mm/aaaa*/}
+                                    <tr key={activity.id} >
+                                        <td>{`${formatDateUsToEs(activity.date)}`}</td>
                                         <td>{`$${activity.individualPrice}`}</td>
                                         <td>
                                             <span className="actions d-flex">
                                                 <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: activity.id })}><i className="fas fa-edit"></i></button>
-                                                {/*(borrar si no se hace) seccion boton de suspension */}
                                                 <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: activity.id, name: `${activity.date}` })} ><i className="fas fa-trash"></i></button>
                                             </span>
                                         </td>
