@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, FormGroup, Input, Label, Modal, Spinner } from 'reactstrap';
+import { Button, Modal, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import AddActivityBody from "../components/UI/Modals/Activity/AddActivityBody";
 import AddMultipleActivitiesBody from "../components/UI/Modals/Activity/AddMultipleActivitiesBody";
@@ -8,7 +8,7 @@ import {deleteActivity, getAllActivities} from '../services/activityService';
 import EditActivityBody from '../components/UI/Modals/Activity/EditActivityBody';
 import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
-import { capitalizeAllWords, isEmptyOrSpaces,formatDateUsToEs } from "../utils/misc/strings";
+import { formatDateUsToEs } from "../utils/misc/strings";
 
 function Activities() {
     const [activity, setActivity] = useState<any[]>([])
