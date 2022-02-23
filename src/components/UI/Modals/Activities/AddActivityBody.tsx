@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
-import { getAddJanijData } from "../../../../services/viewService";
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import { isEmptyOrSpaces,formatDateEsToUs } from "../../../../utils/misc/strings";
-import { addActivity, getActivityById } from '../../../../services/activityService';
+import { addActivity } from '../../../../services/activityService';
 import {getSystemVariableBykey} from '../../../../services/systemVariableService'
 
 function AddActivityBody(props: any) {
@@ -33,7 +32,6 @@ function AddActivityBody(props: any) {
 
     }
     
-
     const postRequest = async () => {
         setError(false)
         if(fields.individualPrice = -1){fields.individualPrice = viewData["value"]}
@@ -43,12 +41,12 @@ function AddActivityBody(props: any) {
         }
         
         setIsAdding(true)
-        const ActivityToAdd = {
+        const fromToDate = {
             date: formatDateEsToUs(fields.date),
             individualPrice: fields.individualPrice,
             
         }
-        await addActivity(ActivityToAdd)
+        await addActivity(fromToDate)
         props.toggle()
         setIsAdding(false)
         props.refresh()

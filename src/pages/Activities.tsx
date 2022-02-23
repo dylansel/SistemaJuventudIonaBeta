@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Modal, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
-import AddActivityBody from "../components/UI/Modals/Activity/AddActivityBody";
-import AddMultipleActivitiesBody from "../components/UI/Modals/Activity/AddMultipleActivitiesBody";
+import AddActivityBody from "../components/UI/Modals/Activities/AddActivityBody";
+import AddMultipleActivitiesBody from "../components/UI/Modals/Activities/AddMultipleActivitiesBody";
 import DeleteBody from '../components/UI/Modals/DeleteBody';
 import {deleteActivity, getAllActivities} from '../services/activityService';
-import EditActivityBody from '../components/UI/Modals/Activity/EditActivityBody';
+import EditActivityBody from '../components/UI/Modals/Activities/EditActivityBody';
 import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import { formatDateUsToEs } from "../utils/misc/strings";
