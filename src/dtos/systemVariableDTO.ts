@@ -1,4 +1,4 @@
-export default interface systemVariableDTO{
-    key:String,
+export default interface SystemVariableDTO {
+    key: string,
     value: string
 }

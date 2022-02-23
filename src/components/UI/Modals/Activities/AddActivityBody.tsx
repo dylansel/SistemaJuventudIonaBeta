@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import { isEmptyOrSpaces,formatDateEsToUs } from "../../../../utils/misc/strings";
+import { isEmptyOrSpaces, formatDateEsToUs } from "../../../../utils/misc/strings";
 import { addActivity } from '../../../../services/activityService';
-import {getSystemVariableBykey} from '../../../../services/systemVariableService'
+import { getSystemVariableByKey } from '../../../../services/systemVariableService'
 
 function AddActivityBody(props: any) {
 
@@ -18,10 +18,10 @@ function AddActivityBody(props: any) {
     const [viewData, setViewData] = useState<any>([null])
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getSystemVariableBykey("NORMAL_ACTIVITY_PRICE"))
+        setViewData(await getSystemVariableByKey("NORMAL_ACTIVITY_PRICE"))
         setLoaded(true)
     }
-    
+
     const addHandleChange = (e: any) => {
         setError(false)
         let { name, value } = e.target
@@ -31,20 +31,20 @@ function AddActivityBody(props: any) {
         }))
 
     }
-    
+
     const postRequest = async () => {
         setError(false)
-        if(fields.individualPrice = -1){fields.individualPrice = viewData["value"]}
-        if (isEmptyOrSpaces(fields.date) || fields.individualPrice <= -1 ){
+        if (fields.individualPrice = -1) { fields.individualPrice = viewData["value"] }
+        if (isEmptyOrSpaces(fields.date) || fields.individualPrice <= -1) {
             setError(true)
             return
         }
-        
+
         setIsAdding(true)
         const fromToDate = {
             date: formatDateEsToUs(fields.date),
             individualPrice: fields.individualPrice,
-            
+
         }
         await addActivity(fromToDate)
         props.toggle()
@@ -59,7 +59,7 @@ function AddActivityBody(props: any) {
     useEffect(() => {
         fetchData()
     }, []);
-    
+
     return (
         <>
             <ModalHeader toggle={toggleCancelAddModal} charcode="close">
