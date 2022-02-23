@@ -7,7 +7,7 @@ import EditAreaBody from "../components/UI/Modals/Areas/EditAreaBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import AreaDTO from "../dtos/AreaDTO";
 import { deleteArea, getAllAreas, switchActiveArea } from "../services/areaService";
-import Loading from "./Loading";
+import Loading from "./misc/Loading";
 
 function Areas() {
     const [areas, setAreas] = useState<any[]>([])
@@ -26,6 +26,12 @@ function Areas() {
         setItemSelected(item)
         setEditModal(!editModal)
     }
+
+    const handleActive = async (item: any) => {
+        await switchActiveArea(item.id, item.active)
+        refresh()
+    }
+
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
     const handleDelete = (item: any) => {
@@ -75,7 +81,7 @@ function Areas() {
                         }
                     </Input>
                 </FormGroup>
-                <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
+                <Button color='danger' title='Actualizar' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Shijva</Button>
                 <Modal isOpen={addModal} toggle={toggleAddModal} ><AddAreaBody title='Agregar' refresh={refresh} toggle={toggleAddModal} /></Modal>
                 <Modal isOpen={editModal} toggle={toggleEditModal} ><EditAreaBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
@@ -98,15 +104,17 @@ function Areas() {
                                     <td>{++i}</td>
                                     <td>{area.name}</td>
                                     <td>
-                                        <span className="actions">
-                                            <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: area.id })}><i className=" fas fa-edit"></i></button>
-                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: area.id, name: area.name, active: area.active })} ><i className="fas fa-trash"></i></button></span>
+                                        <span className="actions d-flex">
+                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: area.id })}><i className=" fas fa-edit"></i></button>
+                                            <button type="button" title={area.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: area.id, active: !area.active })}><i className={`fas ${area.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
+                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: area.id, name: area.name, active: area.active })} ><i className="fas fa-trash"></i></button>
+                                        </span>
                                     </td>
                                 </tr>
                             )
                             )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Shijva' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteArea} switchActive={switchActiveArea} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Shijva' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteArea} /></Modal>
                 </table>
                     :
                     <div className="text-center">

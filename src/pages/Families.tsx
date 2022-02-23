@@ -7,7 +7,7 @@ import EditFamilyBody from "../components/UI/Modals/Families/EditFamilyBody";
 import FamilyDTO from "../dtos/FamilyDTO";
 import JanijDTO from "../dtos/JanijDTO";
 import { getAllFamilies, deleteFamily, switchActiveFamily } from "../services/familyService";
-import Loading from "./Loading";
+import Loading from "./misc/Loading";
 
 function Families() {
 
@@ -27,6 +27,12 @@ function Families() {
         setItemSelected(item)
         setEditModal(!editModal)
     }
+
+    const handleActive = async (item: any) => {
+        await switchActiveFamily(item.id, item.active)
+        refresh()
+    }
+
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
     const handleDelete = (item: any) => {
@@ -77,7 +83,7 @@ function Families() {
                         }
                     </Input>
                 </FormGroup>
-                <Button color='danger' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
+                <Button color='danger' title='Actualizar' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Modal isOpen={editModal} toggle={toggleEditModal} ><EditFamilyBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
             </div>
             <div className="justify-content-center table-content mx-3 mt-4">
@@ -108,15 +114,17 @@ function Families() {
                                         </div>
                                     </td>
                                     <td>
-                                        <span className="actions">
-                                            <button type="button" className="btn btn-danger" onClick={() => toggleEditModal({ id: family.id })}><i className=" fas fa-edit"></i></button>
-                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: family.id, name: family.surname, active: family.active })} ><i className="fas fa-trash"></i></button></span>
+                                        <span className="actions d-flex">
+                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: family.id })}><i className=" fas fa-edit"></i></button>
+                                            <button type="button" title={family.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: family.id, active: !family.active })}><i className={`fas ${family.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
+                                            <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: family.id, name: family.surname, active: family.active })} ><i className="fas fa-trash"></i></button>
+                                        </span>
                                     </td>
                                 </tr>
                             )
                             )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Familia' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteFamily} switchActive={switchActiveFamily} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Familia' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteFamily}/></Modal>
                 </table>
                     :
                     <div className="text-center">

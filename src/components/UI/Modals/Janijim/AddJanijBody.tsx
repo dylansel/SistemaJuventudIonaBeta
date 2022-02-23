@@ -3,14 +3,14 @@ import { getAddJanijData } from "../../../../services/viewService";
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import CreatableSelectSearch from "../../Selects/CreatableSelect";
 import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { addFamily, getAllFamilies } from '../../../../services/familyService';
+import { addFamily } from '../../../../services/familyService';
 import { addJanij } from '../../../../services/janijService';
 
 function AddJanijBody(props: any) {
 
     const initialFieldsState = {
         name: '',
-        groupId: 1,
+        groupId: -1,
         leadersCourse: false,
         familyId: -1,
         familySurname: ''
@@ -51,7 +51,7 @@ function AddJanijBody(props: any) {
 
     const postRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || (isEmptyOrSpaces(fields.familySurname) && fields.familyId === -1)) {
+        if (isEmptyOrSpaces(fields.name) || (isEmptyOrSpaces(fields.familySurname) && fields.familyId === -1 ) || fields.groupId === -1){
             setError(true)
             return
         }
@@ -63,9 +63,7 @@ function AddJanijBody(props: any) {
         }
         else {
             const surname = capitalizeAllWords(fields.familySurname)
-            await addFamily({ surname, discount: 0 })
-            const families: any = await getAllFamilies()
-            familyId = families[families.length - 1].id
+            familyId = await addFamily({ surname })
         }
         const janijToAdd = {
             groupId: fields.groupId,
@@ -137,7 +135,9 @@ function AddJanijBody(props: any) {
                             {(!(loaded && viewData && viewData["families"] && viewData["groups"])) &&
                                 <option disabled selected>Cargando...</option>
                             }
-
+                            {(loaded) &&
+                            <option key="-1" value="-1" selected disabled >Elija un grupo</option>
+                            }
                             {loaded && viewData && viewData["groups"].map((grupo: any) => (
                                 <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
                             ))}

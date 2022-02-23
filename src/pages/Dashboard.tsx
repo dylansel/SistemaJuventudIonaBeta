@@ -1,7 +1,7 @@
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import logo from '../assets/logo/logo-horizontal.png';
 import { getProfile } from '../services/profileService';
-import Loading from './Loading';
+import Loading from './misc/Loading';
 
 function Dashboard() {
     const { getAccessTokenSilently } = useAuth0()

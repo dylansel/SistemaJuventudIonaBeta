@@ -1,91 +1,91 @@
-import React, { useState } from "react"
+import React, { useState} from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { addArea } from "../../../../services/areaService";
+import { isEmptyOrSpaces,formatDateEsToUs } from "../../../../utils/misc/strings";
+import { addMultipleActivities } from '../../../../services/activityService';
 
-function AddAreaBody(props: any) {
+function AddMultipleActivitiesBody(props: any) {
+
+    const initialFieldsState = {
+        fromDate:'',
+        toDate:''
+
+    }
+    const [fields, setFields] = useState(initialFieldsState)
     const [error, setError] = useState(false)
     const [isAdding, setIsAdding] = useState(false)
 
-    const initialFieldsState = {
-        name: "",
-        ordinal: -1,
-    }
-    const [fields, setFields] = useState(initialFieldsState)
-
-    const handleChange = (e: any) => {
+    const addHandleChange = (e: any) => {
         setError(false)
         let { name, value } = e.target
-        if (name === "ordinal") {
-            value = parseInt(value)
-        }
         setFields(prevState => ({
             ...prevState,
             [name]: value
         }))
 
     }
-
-    const handleCancel = () => {
-        setError(false)
-        props.toggle()
-    }
+    
 
     const postRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal <= 0) {
+        if (isEmptyOrSpaces(fields.fromDate) || isEmptyOrSpaces(fields.toDate)){
             setError(true)
             return
         }
-        const name = capitalizeAllWords(fields.name)
-        const areaToAdd = {
-            name,
-            ordinal: fields.ordinal,
-        }
         setIsAdding(true)
-        await addArea(areaToAdd)
-        setIsAdding(false)
+        const ActivityToAdd = {
+            fromDate: formatDateEsToUs(fields.fromDate),
+            toDate: formatDateEsToUs(fields.toDate),
+            
+        }
+        await addMultipleActivities(ActivityToAdd)
         props.toggle()
+        setIsAdding(false)
         props.refresh()
     }
 
+    const toggleCancelAddModal = () => {
+        setError(false)
+        props.toggle()
+    };
+    
     return (
         <>
-            <ModalHeader toggle={props.toggle} charcode="close">
-                {props.title} Shijva
+            <ModalHeader toggle={toggleCancelAddModal} charcode="close">
+                {props.title} Actividades
             </ModalHeader>
             <ModalBody>
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
-                        <Label for="name">
-                            Nombre
+                        <Label for="fromDate">
+                            Fecha Incio
                         </Label>
                         <Input
-                            id="name"
+                            id="fromDate"
                             disabled={isAdding}
-                            name="name"
-                            onChange={handleChange}
+                            name="fromDate"
+                            type="date"
+                            onChange={addHandleChange}
                             autoComplete="off"
+                            
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="ordinal">
-                            Ordinal
+                        <Label for="toDate">
+                            Fecha Limite
                         </Label>
                         <Input
-                            id="ordinal"
-                            disabled={isAdding}
-                            name="ordinal"
-                            type="number"
-                            onChange={handleChange}
+                            id="toDate"
+                            disabled={ isAdding}
+                            name="toDate"
+                            type="date"
+                            onChange={addHandleChange}
                             autoComplete="off"
                         />
                     </FormGroup>
-
                     <ModalFooter>
                         <Button
-                            onClick={handleCancel}
+                            onClick={toggleCancelAddModal}
                             disabled={isAdding}
                         >
                             Cancelar
@@ -105,4 +105,4 @@ function AddAreaBody(props: any) {
     );
 }
 
-export default AddAreaBody
+export default AddMultipleActivitiesBody

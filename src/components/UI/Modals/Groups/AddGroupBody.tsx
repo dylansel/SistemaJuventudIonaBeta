@@ -11,8 +11,8 @@ function AddGroupBody(props: any) {
 
     const initialFieldsState = {
         name: "",
-        ordinal: 0,
-        areaId: 0,
+        ordinal: -1,
+        areaId: -1,
     }
     const [fields, setFields] = useState(initialFieldsState)
 
@@ -46,7 +46,7 @@ function AddGroupBody(props: any) {
 
     const postRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal === 0 || fields.areaId === 0) {
+        if (isEmptyOrSpaces(fields.name) || fields.ordinal <= 0 || fields.areaId === -1) {
             setError(true)
             return
         }
@@ -111,6 +111,7 @@ function AddGroupBody(props: any) {
                             {(!(loaded && viewData && viewData["areas"])) &&
                                 <option disabled selected>Cargando...</option>
                             }
+                            {(loaded) &&<option key="-1" value="-1" selected disabled>Elija un Area</option>}
                             {loaded && viewData && viewData["areas"].map((area: any) => (
                                 <option key={area.id} value={area.id}>{area.name}</option>
                             ))}

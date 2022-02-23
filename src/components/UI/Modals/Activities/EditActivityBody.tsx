@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { getAreaById, updateArea } from "../../../../services/areaService";
+import { isEmptyOrSpaces } from "../../../../utils/misc/strings";
+import { getActivityById, updateActivity } from "../../../../services/activityService";
 
-function EditAreaBody(props: any) {
+function EditActivityBody(props: any) {
     const [loaded, setLoaded] = useState(false)
     const [notEditedFields, setNotEditedFields] = useState<any>()
     const [firstLoad, setFirstLoad] = useState(false)
@@ -13,7 +13,7 @@ function EditAreaBody(props: any) {
 
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getAreaById(props.item.id))
+        setViewData(await getActivityById(props.item.id))
         setLoaded(true)
     }
 
@@ -22,15 +22,15 @@ function EditAreaBody(props: any) {
     }, []);
 
     let initialFieldsState = {
-        name: "",
-        ordinal: -1,
+        date: "",
+        individualPrice: -1,
     }
     const [fields, setFields] = useState(initialFieldsState)
 
     if (loaded && !firstLoad) {
         initialFieldsState = {
-            name: viewData.name,
-            ordinal: viewData.ordinal,
+            date: viewData.date,
+            individualPrice: viewData.individualPrice,
         }
         setNotEditedFields(initialFieldsState)
         setFields(initialFieldsState)
@@ -40,7 +40,7 @@ function EditAreaBody(props: any) {
     const handleChange = (e: any) => {
         setError(false)
         let { name, value } = e.target
-        if (name === "ordinal") {
+        if (name === "individualPrice") {
             value = parseInt(value)
         }
         setFields(prevState => ({
@@ -56,18 +56,18 @@ function EditAreaBody(props: any) {
 
     const editRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal <= 0) {
+        if (isEmptyOrSpaces(fields.date) || fields.individualPrice <= 0) {
             setError(true)
             return
         }
         setIsUpdating(true)
-        const name = capitalizeAllWords(fields.name)
-        const areaToUpdate = {
-            name,
-            ordinal: fields.ordinal,
+        
+        const activityToUpdate = {
+            date:fields.date,
+            individualPrice: fields.individualPrice,
         }
-        if (JSON.stringify(areaToUpdate) != JSON.stringify(notEditedFields)) {
-            await updateArea(props.item.id, areaToUpdate)
+        if (JSON.stringify(activityToUpdate) != JSON.stringify(notEditedFields)) {
+            await updateActivity(props.item.id, activityToUpdate)
         }
         setIsUpdating(false)
         props.toggle()
@@ -77,38 +77,40 @@ function EditAreaBody(props: any) {
     return (
         <>
             <ModalHeader toggle={props.toggle} charcode="close">
-                {props.title} Shijva
+                {props.title} Actividad
             </ModalHeader>
             <ModalBody>
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
-                        <Label for="name">
-                            Nombre
+                        <Label for="date">
+                            Fecha
                         </Label>
                         <Input
-                            id="name"
+                            id="date"
                             disabled={isUpdating || !firstLoad}
-                            name="name"
+                            name="date"
+                            type="date"
                             onChange={handleChange}
                             autoComplete="off"
                             placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
-                            value={loaded && viewData && firstLoad ? fields.name : "Cargando..."}
+                            value={loaded && viewData && firstLoad ? fields.date : "Cargando..."}
                         />
                     </FormGroup>
                     <FormGroup>
                         <Label for="ordinal">
-                            Ordinal
+                            Precio invididual
                         </Label>
                         <Input
-                            id="ordinal"
+                            id="individualPrice"
                             disabled={isUpdating || !firstLoad}
-                            name="ordinal"
+                            name="individualPrice"
                             type="number"
+                            step="5"
                             onChange={handleChange}
                             autoComplete="off"
                             placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
-                            value={loaded && viewData && firstLoad ? fields.ordinal : "Cargando..."}
+                            value={loaded && viewData && firstLoad ? fields.individualPrice : "Cargando..."}
                         />
                     </FormGroup>
 
@@ -134,4 +136,4 @@ function EditAreaBody(props: any) {
     );
 }
 
-export default EditAreaBody
+export default EditActivityBody
