@@ -1,6 +1,6 @@
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
-import { Spinner } from 'reactstrap';
+import { Input, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import ActivityDTO from '../dtos/ActivityDTO';
 import { getAllActivities } from '../services/activityService';
@@ -13,6 +13,7 @@ function Attendance() {
     const [activities, setActivities] = useState<ActivityDTO[]>([])
     const [loaded, setLoaded] = useState(false)
     const [today, setToday] = useState<ActivityDTO>()
+    const [canEditPreviousAttendances, setCanEditPreviousAttendances] = useState(false)
 
     const loadAttendance = (id: number) => {
         history(`/attendance/${id}`)
@@ -45,8 +46,8 @@ function Attendance() {
         <main>
             <div className="main-container row justify-content-center text-center">
                 <h3>Asistencias</h3>
-                <h5>Seleccioná la actividad que quieras cargar su asistencia</h5>
-                {loaded && activities.length > 0 && today &&
+
+                {loaded && activities.length > 0 && today && <>
                     <div className="justify-content-center table-content p-2 mt-4 col-8 bg-warning">
                         <h3>Hoy!</h3>
                         <span className='d-flex justify-content-center'>
@@ -54,8 +55,15 @@ function Attendance() {
                             <button type="button" title='Cargar Asistencia' className="btn btn-danger mx-3" onClick={() => loadAttendance(today.id)}><i className=" fas fa-arrow-right"></i></button>
                         </span>
                     </div>
+                    <span className="d-flex text-center justify-content-center my-4">
+                        <p className='mx-3'>Permitir edición asistencias de otras fechas</p>
+                        <Input type='checkbox' onChange={() => setCanEditPreviousAttendances(!canEditPreviousAttendances)} checked={canEditPreviousAttendances} />
+                    </span>
+                </>
                 }
-                <div className="justify-content-center table-content mt-5 col-10 col-md-8">
+
+
+                <div className="justify-content-center table-content col-10 col-md-8">
 
                     {loaded ? <>
                         {
@@ -69,13 +77,12 @@ function Attendance() {
                                     </thead>
                                     <tbody>
                                         {activities
-                                            //.filter((activity: ActivityDTO) => (!((tableFilter === 'Inactivos' && area.active) || (tableFilter === 'Activos' && !area.active))))
                                             .map((activity: ActivityDTO) => (
                                                 <tr key={activity.id}>
                                                     <td className="td-attendance">{dateToEsString(activity.date)}</td>
                                                     <td className="td-attendance">
                                                         <span>
-                                                            <button type="button" title='Cargar Asistencia' className="btn btn-danger" onClick={() => loadAttendance(activity.id)}><i className=" fas fa-arrow-right"></i></button>
+                                                            <button type="button" disabled={!canEditPreviousAttendances} title='Cargar Asistencia' className="btn btn-danger" onClick={() => loadAttendance(activity.id)}><i className=" fas fa-arrow-right"></i></button>
                                                         </span>
                                                     </td>
                                                 </tr>
