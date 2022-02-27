@@ -16,12 +16,7 @@ import AreaDTO from '../dtos/AreaDTO';
 import { getAllAreas } from '../services/areaService';
 import { getAllGroups } from '../services/groupService';
 import GroupDTO from '../dtos/GroupDTO';
-
-export interface Present {
-    janijId: number,
-    present: boolean,
-    trial: boolean
-}
+import { Present } from '../interfaces/Present';
 
 function AttendanceList() {
     const history = useNavigate();
