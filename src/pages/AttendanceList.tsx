@@ -96,6 +96,7 @@ function AttendanceList() {
     useEffect(() => {
         setJanijimPresents(loadPresents())
         setChanges([...janijimPresents])
+        //TODO: Because this depends on janijim list, it doesn't load all the times.
     }, [janijim]);
 
     return (
@@ -138,7 +139,7 @@ function AttendanceList() {
                                                     type='checkbox'
                                                     name={'present'}
                                                     onChange={() => handlePresent(janij.id)}
-                                                    defaultChecked={janijimPresents[janij.id]?.present!}
+                                                    defaultChecked={janijimPresents[janij.id] && janijimPresents[janij.id].present}
                                                 />
                                             </td>
                                             <td>
@@ -148,7 +149,7 @@ function AttendanceList() {
                                                     disabled={!janijimPresents[janij.id].present!}
                                                     //TODO: Here we have to use changes array values but it has problems with checkboxs
                                                     onChange={() => handleTrial(janij.id)}
-                                                    defaultChecked={janijimPresents[janij.id].trial}
+                                                    defaultChecked={janijimPresents[janij.id] && janijimPresents[janij.id].trial}
                                                 />
                                             </td>
                                         </tr>

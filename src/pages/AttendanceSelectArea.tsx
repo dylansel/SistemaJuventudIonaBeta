@@ -122,6 +122,7 @@ function AttendanceSelectArea() {
     useEffect(() => {
         setJanijimPresents(loadPresents())
         setChanges([...janijimPresents])
+        //TODO: Because this depends on janijim list, it doesn't load all the times.
     }, [janijim]);
 
     return (
@@ -171,7 +172,7 @@ function AttendanceSelectArea() {
                                                 type='checkbox'
                                                 name={'present'}
                                                 onChange={() => handlePresent(janij.id)}
-                                                defaultChecked={janijimPresents[janij.id]?.present!}
+                                                defaultChecked={janijimPresents[janij.id] && janijimPresents[janij.id]?.present!}
                                             />
                                         </td>
                                         <td>
@@ -180,7 +181,7 @@ function AttendanceSelectArea() {
                                                 name='trial'
                                                 disabled={!changes[janij.id].present!}
                                                 onChange={() => handleTrial(janij.id)}
-                                                defaultChecked={janijimPresents[janij.id].trial}
+                                                defaultChecked={janijimPresents[janij.id] && janijimPresents[janij.id].trial}
                                             />
                                         </td>
                                     </tr>
