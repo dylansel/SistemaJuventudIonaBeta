@@ -121,7 +121,7 @@ function AttendanceSelectArea() {
 
     useEffect(() => {
         setJanijimPresents(loadPresents())
-        setChanges(janijimPresents)
+        setChanges([...janijimPresents])
     }, [janijim]);
 
     return (

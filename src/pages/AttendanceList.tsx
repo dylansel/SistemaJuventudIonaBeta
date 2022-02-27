@@ -95,7 +95,7 @@ function AttendanceList() {
 
     useEffect(() => {
         setJanijimPresents(loadPresents())
-        setChanges(janijimPresents)
+        setChanges([...janijimPresents])
     }, [janijim]);
 
     return (
