@@ -47,7 +47,7 @@ function App() {
             <Route path="attendance" element={<Attendance />} />
             <Route path="attendance/:activityId" element={<AttendanceSelectArea />} />
             <Route path="attendance/:activityId/:areaId" element={<AttendanceSelectGroup />} />
-            <Route path="attendance/:activityId/:groupId" element={<AttendanceList />} />
+            <Route path="attendance/:activityId/:areaId/:groupId" element={<AttendanceList />} />
             <Route path="prices" element={<Prices />} />
             <Route path="payments" element={<Payments />} />
             <Route path="grants" element={<Grants />} />
