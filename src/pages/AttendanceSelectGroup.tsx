@@ -2,7 +2,6 @@ import { withAuthenticationRequired } from '@auth0/auth0-react';
 import Loading from './misc/Loading';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import JanijDTO from '../dtos/JanijDTO';
 import { Button, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import ActivityDTO from '../dtos/ActivityDTO';
@@ -17,7 +16,6 @@ function AttendanceSelectGroup() {
     const history = useNavigate();
     let { activityId, areaId } = useParams();
 
-    const [janijim, setJanijim] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
     const [areaData, setAreaData] = useState<AreaDTO>()
     const [groups, setGroups] = useState<GroupDTO[]>()
@@ -25,14 +23,6 @@ function AttendanceSelectGroup() {
 
     const loadAttendance = (activityId: number, areaId: number, groupId: number) => {
         history(`/attendance/${activityId}/${areaId}/${groupId}`)
-    }
-
-    const handlePresent = (id: number) => {
-
-    }
-
-    const handleSaveAttendance = () => {
-
     }
 
     const refresh = () => {
@@ -68,10 +58,10 @@ function AttendanceSelectGroup() {
                 <div className="justify-content-center mx-3 text-center">
                     {groups &&
                         <div className='mt-3 inline-grid'>
-                            {groups?.filter((group: GroupDTO) => group.areaId === areaData?.id)
-                            .map((group: GroupDTO) =>
-                                <Button color="danger" size='lg' className="mx-5" title={group.name} onClick={() => loadAttendance(activityData?.id!, areaData?.id!, group.id)}>{group.name}</Button>
-                            )}
+                            {groups?.filter((group: GroupDTO) => group.active && group.areaId === areaData?.id)
+                                .map((group: GroupDTO) =>
+                                    <Button color="danger" size='lg' className="mx-5" title={group.name} onClick={() => loadAttendance(activityData?.id!, areaData?.id!, group.id)}>{group.name}</Button>
+                                )}
                         </div>
                     }
                 </div>

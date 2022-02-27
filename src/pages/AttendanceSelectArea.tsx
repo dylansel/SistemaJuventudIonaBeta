@@ -130,13 +130,14 @@ function AttendanceSelectArea() {
                     </div>
 
                     }
-                    {searchValue != "" && janijimSearched.length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
+                    {searchValue !== "" && janijimSearched.length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
 
                     {areas &&
                         <div className='mt-3 inline-grid'>
-                            {areas?.map((area: AreaDTO) =>
-                                <Button color="danger" size='lg' className="mx-5" title={area.name} onClick={() => loadAttendance(activityData?.id!, area.id)}>{area.name}</Button>
-                            )}
+                            {areas?.filter((area: AreaDTO) => area.active)
+                                .map((area: AreaDTO) =>
+                                    <Button color="danger" size='lg' className="mx-5" title={area.name} onClick={() => loadAttendance(activityData?.id!, area.id)}>{area.name}</Button>
+                                )}
                         </div>
                     }
                 </div>
