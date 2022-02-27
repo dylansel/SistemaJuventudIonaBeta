@@ -9,7 +9,9 @@ import NotFound from './misc/NotFound';
 import NotLoggedIn from './misc/NotLoggedIn';
 import Activities from './Activities';
 import Attendance from './Attendance';
-import AttendanceByActivity from './AttendanceByActivity';
+import AttendanceSelectArea from './AttendanceSelectArea';
+import AttendanceSelectGroup from './AttendanceSelectGroup';
+import AttendanceList from './AttendanceList';
 import Prices from './Prices';
 import Payments from './Payments';
 import Grants from './Grants';
@@ -22,7 +24,9 @@ export {
     Janijim,
     Activities,
     Attendance,
-    AttendanceByActivity,
+    AttendanceSelectArea,
+    AttendanceSelectGroup,
+    AttendanceList,
     Prices,
     Payments,
     Grants,

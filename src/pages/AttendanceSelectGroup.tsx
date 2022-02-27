@@ -23,7 +23,7 @@ export interface Present {
     trial: boolean
 }
 
-function AttendanceByActivity() {
+function AttendanceSelectGroup() {
     const history = useNavigate();
     let { activityId } = useParams();
 
@@ -185,6 +185,6 @@ function AttendanceByActivity() {
     );
 }
 
-export default withAuthenticationRequired(AttendanceByActivity, {
+export default withAuthenticationRequired(AttendanceSelectGroup, {
     onRedirecting: () => <Loading />,
 });

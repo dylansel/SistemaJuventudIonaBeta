@@ -2,7 +2,24 @@ import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import './styles/App.css';
 import { Route, Routes } from "react-router-dom";
-import { Areas, Groups, Families, Dashboard, Login, NotFound, Janijim, Loading, Activities, Attendance, Prices, Payments, Grants, AttendanceByActivity } from "./pages"
+import {
+  Areas,
+  Groups,
+  Families,
+  Dashboard,
+  Login,
+  NotFound,
+  Janijim,
+  Loading,
+  Activities,
+  Attendance,
+  Prices,
+  Payments,
+  Grants,
+  AttendanceSelectArea,
+  AttendanceSelectGroup,
+  AttendanceList
+} from "./pages"
 import Navbar from './components/UI/Layout/HeaderNav';
 
 function App() {
@@ -28,7 +45,9 @@ function App() {
             <Route path="families" element={<Families />} />
             <Route path="activities" element={<Activities />} />
             <Route path="attendance" element={<Attendance />} />
-            <Route path="attendance/:activityId" element={<AttendanceByActivity />} />
+            <Route path="attendance/:activityId" element={<AttendanceSelectArea />} />
+            <Route path="attendance/:activityId/:areaId" element={<AttendanceSelectGroup />} />
+            <Route path="attendance/:activityId/:groupId" element={<AttendanceList />} />
             <Route path="prices" element={<Prices />} />
             <Route path="payments" element={<Payments />} />
             <Route path="grants" element={<Grants />} />
