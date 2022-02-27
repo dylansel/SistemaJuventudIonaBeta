@@ -12,9 +12,15 @@ function Attendance() {
     const history = useNavigate();
     const [activities, setActivities] = useState<ActivityDTO[]>([])
     const [loaded, setLoaded] = useState(false)
+    const [today, setToday] = useState<ActivityDTO>()
 
     const loadAttendance = (id: number) => {
         history(`/attendance/${id}`)
+    }
+
+    const checkToday = () => {
+        const todayDate = new Date().toISOString().split('T')[0]
+        return activities.find((activity: ActivityDTO) => todayDate === activity.date)
     }
 
     const refresh = () => {
@@ -23,7 +29,7 @@ function Attendance() {
 
     async function fetchData() {
         setLoaded(false)
-        await setActivities(await getAllActivities("sort=date,desc"))
+        setActivities(await getAllActivities("sort=date,desc"))
         setLoaded(true)
     }
 
@@ -31,21 +37,25 @@ function Attendance() {
         refresh()
     }, []);
 
+    useEffect(() => {
+        setToday(checkToday())
+    }, [activities]);
+
     return (
         <main>
             <div className="main-container row justify-content-center text-center">
                 <h3>Asistencias</h3>
                 <h5>Seleccioná la actividad que quieras cargar su asistencia</h5>
-                {loaded && activities.length > 0 && (new Date().toISOString().split('T')[0] === activities[0].date) &&
-                    <div className="justify-content-center table-content mx-3 mt-5 col-8 bg-warning">
-                        <h2>Hoy!</h2>
+                {loaded && activities.length > 0 && today &&
+                    <div className="justify-content-center table-content p-2 mt-4 col-8 bg-warning">
+                        <h3>Hoy!</h3>
                         <span className='d-flex justify-content-center'>
-                            <h4>{dateToEsString(activities[0].date)}</h4>
-                            <button type="button" title='Cargar Asistencia' className="btn btn-danger mx-3" onClick={() => loadAttendance(activities[0].id)}><i className=" fas fa-arrow-right"></i></button>
+                            <h5>{dateToEsString(today.date)}</h5>
+                            <button type="button" title='Cargar Asistencia' className="btn btn-danger mx-3" onClick={() => loadAttendance(today.id)}><i className=" fas fa-arrow-right"></i></button>
                         </span>
                     </div>
                 }
-                <div className="justify-content-center table-content mx-3 mt-5 col-8">
+                <div className="justify-content-center table-content mt-5 col-10 col-md-8">
 
                     {loaded ? <>
                         {
