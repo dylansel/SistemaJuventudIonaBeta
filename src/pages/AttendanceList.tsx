@@ -137,9 +137,9 @@ function AttendanceList() {
                                             <td>
                                                 <Input
                                                     type='checkbox'
-                                                    name={'present'}
+                                                    name='present'
                                                     onChange={() => handlePresent(janij.id)}
-                                                    defaultChecked={janijimPresents[janij.id] && janijimPresents[janij.id].present}
+                                                    defaultChecked={janijimPresents[janij.id] ? janijimPresents[janij.id]?.present! : false}
                                                 />
                                             </td>
                                             <td>
@@ -149,7 +149,7 @@ function AttendanceList() {
                                                     disabled={!janijimPresents[janij.id].present!}
                                                     //TODO: Here we have to use changes array values but it has problems with checkboxs
                                                     onChange={() => handleTrial(janij.id)}
-                                                    defaultChecked={janijimPresents[janij.id] && janijimPresents[janij.id].trial}
+                                                    defaultChecked={janijimPresents[janij.id] ? janijimPresents[janij.id]?.trial! : false}
                                                 />
                                             </td>
                                         </tr>

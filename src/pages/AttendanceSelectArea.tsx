@@ -170,9 +170,9 @@ function AttendanceSelectArea() {
                                         <td>
                                             <Input
                                                 type='checkbox'
-                                                name={'present'}
+                                                name='present'
                                                 onChange={() => handlePresent(janij.id)}
-                                                defaultChecked={janijimPresents[janij.id] && janijimPresents[janij.id]?.present!}
+                                                defaultChecked={janijimPresents[janij.id] ? janijimPresents[janij.id]?.present! : false}
                                             />
                                         </td>
                                         <td>
@@ -181,7 +181,7 @@ function AttendanceSelectArea() {
                                                 name='trial'
                                                 disabled={!changes[janij.id].present!}
                                                 onChange={() => handleTrial(janij.id)}
-                                                defaultChecked={janijimPresents[janij.id] && janijimPresents[janij.id].trial}
+                                                defaultChecked={janijimPresents[janij.id] ? janijimPresents[janij.id]?.trial! : false}
                                             />
                                         </td>
                                     </tr>
