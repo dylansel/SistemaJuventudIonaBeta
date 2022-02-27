@@ -19,7 +19,7 @@ function AttendanceSelectArea() {
 
     const [janijim, setJanijim] = useState<JanijDTO[]>([])
     const [searchValue, setSearchValue] = useState('')
-    const [janijimSearched, setJanijSearched] = useState<JanijDTO[]>([])
+    const [janijimSearched, setJanijimSearched] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
     const [areas, setAreas] = useState<AreaDTO[]>()
     const [loaded, setLoaded] = useState(false)
@@ -29,16 +29,21 @@ function AttendanceSelectArea() {
     }
 
     const findJanij = (janijInput: string) => {
-        return janijim.filter((janij: JanijDTO) => (
+        return janijim.filter((janij: JanijDTO) => (janij.active && (
             janij.name.toLowerCase().includes(janijInput.toLowerCase()) ||
             janij.familySurname.toLowerCase().includes(janijInput.toLowerCase()) ||
-            `${janij.name.toLowerCase()} ${janij.familySurname.toLowerCase()}`.includes(janijInput.toLowerCase()))
+            `${janij.name.toLowerCase()} ${janij.familySurname.toLowerCase()}`.includes(janijInput.toLowerCase())))
         )
     }
 
-    const handleChange = (e: any) => {
-        setSearchValue(e.target.value)
-        setJanijSearched(findJanij(searchValue))
+    const handleChange = (e?: any) => {
+        if (e) {
+            setSearchValue(e.target.value)
+            setJanijimSearched(findJanij(searchValue))
+        } else {
+            setSearchValue("")
+            setJanijimSearched([])
+        }
     }
 
     const handlePresent = (id: number) => {
@@ -46,7 +51,7 @@ function AttendanceSelectArea() {
     }
 
     const handleSaveAttendance = () => {
-        //TODO: Send only one janij
+        handleChange()
         saveAttendance(activityData?.id!, [])
     }
 
@@ -91,7 +96,7 @@ function AttendanceSelectArea() {
 
             {loaded ?
                 <div className="justify-content-center text-center">
-                    {searchValue && <div>
+                    {janijimSearched.length > 0 && <div>
                         <table className="table table-hover table-responsive mx-3 mb-4">
                             <thead>
                                 <tr>
@@ -123,7 +128,9 @@ function AttendanceSelectArea() {
                         </table>
                         <Button title='Save' onClick={() => handleSaveAttendance()}>Guardar Asistencia</Button>
                     </div>
+
                     }
+                    {searchValue != "" && janijimSearched.length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
 
                     {areas &&
                         <div className='mt-3 inline-grid'>

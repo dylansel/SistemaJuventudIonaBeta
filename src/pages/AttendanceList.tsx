@@ -12,43 +12,23 @@ import { getActivityById } from '../services/activityService';
 import { AttendanceDTO } from '../dtos/AttendanceDTO';
 import { getAttendanceByActivity } from '../services/attendanceService';
 import { dateToEsString } from '../utils/misc/strings';
-import AreaDTO from '../dtos/AreaDTO';
-import { getAllAreas } from '../services/areaService';
-import { getAllGroups } from '../services/groupService';
-import GroupDTO from '../dtos/GroupDTO';
 import { Present } from '../interfaces/Present';
+import GroupDTO from '../dtos/GroupDTO';
+import { getGroupById } from '../services/groupService';
 
 function AttendanceList() {
     const history = useNavigate();
-    let { activityId } = useParams();
-
+    let { activityId, groupId } = useParams();
     const [janijim, setJanijim] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
-    const [areas, setAreas] = useState<AreaDTO[]>()
-    const [groups, setGroups] = useState<GroupDTO[]>()
+    const [groupData, setGroupData] = useState<GroupDTO>()
     const [activityPreviousAttendance, setActivityPreviousAttendance] = useState<AttendanceDTO[]>()
     const [loaded, setLoaded] = useState(false)
-    const [areaSelected, setAreaSelected] = useState<number>(-1)
-    const [groupSelected, setGroupSelected] = useState<number>(-1)
     const [presentChecked, setPresentChecked] = useState<Present[]>([])
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
 
-    const resetFilters = () => {
-        setAreaSelected(-1)
-        setGroupSelected(-1)
-    }
-
-    const handleAreaChange = (e: any) => {
-        setAreaSelected(parseInt(e.target.value))
-        setGroupSelected(-1)
-    }
-
-    const handleGroupChange = (e: any) => {
-        setGroupSelected(e.target.value)
-    }
-
     const handlePresent = (id: number) => {
-        
+
     }
 
     const handleSaveAttendance = () => {
@@ -60,10 +40,9 @@ function AttendanceList() {
     }
     async function fetchData() {
         setLoaded(false)
-        setAreas(await getAllAreas("sort=ordinal,asc"))
-        setGroups(await getAllGroups("sort=ordinal,asc"))
         setJanijim(await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc"))
         setActivityData(await getActivityById(parseInt(activityId!)))
+        setGroupData(await getGroupById(parseInt(groupId!)))
         setActivityPreviousAttendance(await getAttendanceByActivity(parseInt(activityId!)))
         setLoaded(true)
     }
@@ -80,48 +59,7 @@ function AttendanceList() {
                         <button type="button" title='Volver' className="btn btn-danger mx-5" onClick={() => history(-1)}><i className=" fas fa-arrow-left"></i></button>
                         <h4>{loaded && dateToEsString(activityData?.date!)} </h4>
                     </div>
-                    <div className="d-flex col-12 justify-content-center text-center">
-                        <FormGroup className='no-margin'>
-                            <Input
-                                id="areaId"
-                                name="areaId"
-                                type="select"
-                                disabled={!loaded || !areas}
-                                onChange={handleAreaChange}
-                                value={areaSelected}
-                            >
-                                {(!(loaded && areas)) &&
-                                    <option disabled selected>Cargando...</option>
-                                }
-                                {(loaded) && <option key="-1" value="-1" selected disabled>Area</option>}
-                                {loaded && areas!
-                                    .map((area: AreaDTO) => (
-                                        <option key={area.id} value={area.id}>{area.name}</option>
-                                    ))}
-                            </Input>
-                        </FormGroup>
-                        <FormGroup className='no-margin mx-5'>
-                            <Input
-                                id="groupId"
-                                name="groupId"
-                                type="select"
-                                disabled={!loaded || !groups || areaSelected === -1}
-                                onChange={handleGroupChange}
-                                value={groupSelected}
-                            >
-                                {(!(loaded && groups)) &&
-                                    <option disabled selected>Cargando...</option>
-                                }
-                                {(loaded) && <option key="-1" value="-1" selected disabled>Grupo</option>}
-                                {loaded && groups!
-                                    .filter((group: GroupDTO) => group.areaId === areaSelected || areaSelected === -1)
-                                    .map((group: GroupDTO) => (
-                                        <option key={group.id} value={group.id}>{group.name}</option>
-                                    ))}
-                            </Input>
-                        </FormGroup>
-                        <Button onClick={resetFilters} color="danger" title="Reiniciar Filtros">Resetear filtros</Button>
-                    </div>
+                    <h4></h4>
                 </>}
             </div>
 
@@ -140,10 +78,7 @@ function AttendanceList() {
                             <tbody>
                                 {janijim
                                     .filter((janij: JanijDTO) => (
-                                        janij.active && (
-                                            (areaSelected === -1) ||
-                                            ((groupSelected === -1 && areas?.find((area: AreaDTO) => area.id === groups?.find((group: GroupDTO) => group.id === janij.groupId)?.areaId)?.id === areaSelected!)) ||
-                                            (groupSelected !== -1 && janij.groupId === parseInt(groupSelected.toString())))
+                                        janij.active && janij.groupId === parseInt(groupId!)
                                     ))
                                     .map(janij => (
                                         <tr key={janij.id}>
@@ -170,7 +105,7 @@ function AttendanceList() {
 
                     :
                     <div className="text-center">
-                        <h2>Cargando Asistencias de la actividad...</h2>
+                        <h2>Cargando...</h2>
                         <Spinner animation="border" className='text-danger my-2' variant="light" />
                     </div>
                 }
