@@ -201,3 +201,11 @@
 .no-margin{
   margin-bottom: 0 !important;
 }
+
+.inline-grid{
+  display: inline-grid;
+}
+
+.inline-grid .btn{
+  margin-block-start: 20px;
+}

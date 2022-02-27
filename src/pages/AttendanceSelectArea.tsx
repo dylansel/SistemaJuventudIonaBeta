@@ -4,25 +4,50 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import JanijDTO from '../dtos/JanijDTO';
 import { getAllJanijim } from '../services/janijService';
-import { Button, Spinner } from 'reactstrap';
+import { Button, FormGroup, Input, Label, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import ActivityDTO from '../dtos/ActivityDTO';
 import { getActivityById } from '../services/activityService';
 import { dateToEsString } from '../utils/misc/strings';
 import AreaDTO from '../dtos/AreaDTO';
 import { getAllAreas } from '../services/areaService';
+import { saveAttendance } from '../services/attendanceService';
 
 function AttendanceSelectArea() {
     const history = useNavigate();
     let { activityId } = useParams();
 
     const [janijim, setJanijim] = useState<JanijDTO[]>([])
+    const [searchValue, setSearchValue] = useState('')
+    const [janijimSearched, setJanijSearched] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
     const [areas, setAreas] = useState<AreaDTO[]>()
     const [loaded, setLoaded] = useState(false)
 
     const loadAttendance = (activityId: number, areaId: number) => {
         history(`/attendance/${activityId}/${areaId}`)
+    }
+
+    const findJanij = (janijInput: string) => {
+        return janijim.filter((janij: JanijDTO) => (
+            janij.name.toLowerCase().includes(janijInput.toLowerCase()) ||
+            janij.familySurname.toLowerCase().includes(janijInput.toLowerCase()) ||
+            `${janij.name.toLowerCase()} ${janij.familySurname.toLowerCase()}`.includes(janijInput.toLowerCase()))
+        )
+    }
+
+    const handleChange = (e: any) => {
+        setSearchValue(e.target.value)
+        setJanijSearched(findJanij(searchValue))
+    }
+
+    const handlePresent = (id: number) => {
+
+    }
+
+    const handleSaveAttendance = () => {
+        //TODO: Send only one janij
+        saveAttendance(activityData?.id!, [])
     }
 
     const refresh = () => {
@@ -42,34 +67,78 @@ function AttendanceSelectArea() {
 
     return (
         <main>
-            <div className="filters mx-4 align-items-center justify-content-center">
+            <div className="align-items-center justify-content-center mx-2">
                 {loaded && <>
                     <div className="d-flex justify-content-center mb-4">
                         <button type="button" title='Volver' className="btn btn-danger mx-5" onClick={() => history(-1)}><i className=" fas fa-arrow-left"></i></button>
                         <h4>{loaded && dateToEsString(activityData?.date!)} </h4>
                     </div>
-                    <div className="d-flex col-12 justify-content-center text-center">
-                        Buscador
+                    <div className="d-flex col-12 justify-content-center text-center align-middle mt-3">
+                        <Label for='janij'>Buscar Janij:</Label>
+                        <FormGroup>
+                            <Input
+                                id="janij"
+                                name="janij"
+                                type="text"
+                                onChange={handleChange}
+                                value={searchValue}
+                            >
+                            </Input>
+                        </FormGroup>
                     </div>
                 </>}
             </div>
 
-            <div className="justify-content-center table-content mx-3 mt-4 text-center">
-                {loaded ?
-                    <>
-                        {areas &&
-                            areas.map((area: AreaDTO) => {
-                                <Button title={area.name} onClick={() => loadAttendance(activityData?.id!, area.id)}>{area.name}</Button>
-                            })
-                        }
-                    </>
-                    :
-                    <div className="text-center">
-                        <h2>Cargando...</h2>
-                        <Spinner animation="border" className='text-danger my-2' variant="light" />
+            {loaded ?
+                <div className="justify-content-center text-center">
+                    {searchValue && <div>
+                        <table className="table table-hover table-responsive mx-3 mb-4">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nombre y Apellido</th>
+                                    <th scope="col">Grupo</th>
+                                    <th scope="col">Presente</th>
+                                    <th scope="col">Prueba</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {janijimSearched.map((janij: JanijDTO) => (
+                                    <tr key={janij.id}>
+                                        <td>{`${janij.name} ${janij.familySurname}`}</td>
+                                        <td>{janij.groupName}</td>
+                                        <td>
+                                            <Input
+                                                type='checkbox'
+                                                onChange={() => handlePresent(janij.id)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <Input
+                                                type='checkbox'
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <Button title='Save' onClick={() => handleSaveAttendance()}>Guardar Asistencia</Button>
                     </div>
-                }
-            </div>
+                    }
+
+                    {areas &&
+                        <div className='mt-3 inline-grid'>
+                            {areas?.map((area: AreaDTO) =>
+                                <Button color="danger" size='lg' className="mx-5" title={area.name} onClick={() => loadAttendance(activityData?.id!, area.id)}>{area.name}</Button>
+                            )}
+                        </div>
+                    }
+                </div>
+                :
+                <div className="table-content text-center mx-3">
+                    <h2>Cargando...</h2>
+                    <Spinner animation="border" className='text-danger my-2' variant="light" />
+                </div>
+            }
             <Scroll showBelow={250} />
         </main >
     );
