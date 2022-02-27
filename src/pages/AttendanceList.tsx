@@ -4,15 +4,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import JanijDTO from '../dtos/JanijDTO';
 import { getAllJanijim } from '../services/janijService';
-import { Button, FormGroup, Input, Spinner } from 'reactstrap';
+import { Button, Input, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import { JanijAttendanceRequestDTO } from '../dtos/JanijAttendanceRequestDTO';
 import ActivityDTO from '../dtos/ActivityDTO';
 import { getActivityById } from '../services/activityService';
 import { AttendanceDTO } from '../dtos/AttendanceDTO';
-import { getAttendanceByActivity } from '../services/attendanceService';
+import { getAttendanceByActivity, saveAttendance } from '../services/attendanceService';
 import { dateToEsString } from '../utils/misc/strings';
-import { Present } from '../interfaces/Present';
 import GroupDTO from '../dtos/GroupDTO';
 import { getGroupById } from '../services/groupService';
 
@@ -22,17 +21,58 @@ function AttendanceList() {
     const [janijim, setJanijim] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
     const [groupData, setGroupData] = useState<GroupDTO>()
-    const [activityPreviousAttendance, setActivityPreviousAttendance] = useState<AttendanceDTO[]>()
+    const [attendanceLoaded, setAttendanceLoaded] = useState<AttendanceDTO[]>()
+    const [janijimPresents, setJanijimPresents] = useState<JanijAttendanceRequestDTO[]>([])
     const [loaded, setLoaded] = useState(false)
-    const [presentChecked, setPresentChecked] = useState<Present[]>([])
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
 
-    const handlePresent = (id: number) => {
+    const loadPresents = () => {
+        let presents: JanijAttendanceRequestDTO[] = []
+        //TODO: Problems with undefined elements. If I load janij 100-160, first 100 janijim are undefined
+        const janijimFiltered = janijim
+            .filter((janij: JanijDTO) => janij.active && janij.groupId === parseInt(groupId!))
+        janijimFiltered.forEach((janij: JanijDTO) => {
+            const attendance = attendanceLoaded?.find((attendance: AttendanceDTO) => attendance.janijId === janij.id)
+            presents[janij.id] = {
+                janijId: janij.id,
+                present: attendance ? true : false,
+                trial: attendance && attendance.trial ? true : false
+            }
+        })
+        return presents
+    }
 
+    const handlePresent = (id: number) => {
+        let newPresents: JanijAttendanceRequestDTO[] = [...changes]
+        newPresents[id] = {
+            janijId: janijimPresents[id].janijId,
+            present: !janijimPresents[id].present,
+            trial: janijimPresents[id].trial
+        }
+        setChanges(newPresents)
+    }
+
+    const handleTrial = (id: number) => {
+        let newPresents: JanijAttendanceRequestDTO[] = [...changes]
+        newPresents[id] = {
+            janijId: janijimPresents[id].janijId,
+            present: janijimPresents[id].present,
+            trial: !janijimPresents[id].trial
+        }
+        setChanges(newPresents)
     }
 
     const handleSaveAttendance = () => {
-
+        let request: JanijAttendanceRequestDTO[] = []
+        for (const id in changes) {
+            if (changes[id]) {
+                if (changes[id].present !== janijimPresents[id].present ||
+                    changes[id].trial !== janijimPresents[id].trial) {
+                    request.push(changes[id])
+                }
+            }
+        }
+        saveAttendance(activityData?.id!, request)
     }
 
     const refresh = () => {
@@ -43,13 +83,20 @@ function AttendanceList() {
         setJanijim(await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc"))
         setActivityData(await getActivityById(parseInt(activityId!)))
         setGroupData(await getGroupById(parseInt(groupId!)))
-        setActivityPreviousAttendance(await getAttendanceByActivity(parseInt(activityId!)))
+        setAttendanceLoaded(await getAttendanceByActivity(parseInt(activityId!)))
         setLoaded(true)
     }
+
+    let i = 0
 
     useEffect(() => {
         refresh()
     }, []);
+
+    useEffect(() => {
+        setJanijimPresents(loadPresents())
+        setChanges(janijimPresents)
+    }, [janijim]);
 
     return (
         <main>
@@ -59,18 +106,20 @@ function AttendanceList() {
                         <button type="button" title='Volver' className="btn btn-danger mx-5" onClick={() => history(-1)}><i className=" fas fa-arrow-left"></i></button>
                         <h4>{loaded && dateToEsString(activityData?.date!)} </h4>
                     </div>
-                    <h4></h4>
+                    <div className="text-center">
+                        <h4>{groupData?.name}</h4>
+                    </div>
                 </>}
             </div>
 
             <div className="justify-content-center table-content mx-3 mt-4 text-center">
                 {loaded ?
-                    <>
+                    <div>
                         <table className="table table-hover table-responsive">
                             <thead>
                                 <tr>
+                                    <th scope="col">#</th>
                                     <th scope="col">Nombre y Apellido</th>
-                                    <th scope="col">Grupo</th>
                                     <th scope="col">Presente</th>
                                     <th scope="col">Prueba</th>
                                 </tr>
@@ -82,17 +131,24 @@ function AttendanceList() {
                                     ))
                                     .map(janij => (
                                         <tr key={janij.id}>
+                                            <td>{++i}</td>
                                             <td>{`${janij.name} ${janij.familySurname}`}</td>
-                                            <td>{janij.groupName}</td>
                                             <td>
                                                 <Input
                                                     type='checkbox'
+                                                    name={'present'}
                                                     onChange={() => handlePresent(janij.id)}
+                                                    defaultChecked={janijimPresents[janij.id]?.present!}
                                                 />
                                             </td>
                                             <td>
                                                 <Input
                                                     type='checkbox'
+                                                    name='trial'
+                                                    disabled={!janijimPresents[janij.id].present!}
+                                                    //TODO: Here we have to use changes array values but it has problems with checkboxs
+                                                    onChange={() => handleTrial(janij.id)}
+                                                    defaultChecked={janijimPresents[janij.id].trial}
                                                 />
                                             </td>
                                         </tr>
@@ -100,8 +156,8 @@ function AttendanceList() {
                                     )}
                             </tbody>
                         </table>
-                        <Button onClick={handleSaveAttendance} className='my-5' color='danger' type='button'>Grabar Asistencias</Button>
-                    </>
+                        <Button onClick={handleSaveAttendance} className='my-3' color='danger' type='button'>Grabar Asistencias</Button>
+                    </div>
 
                     :
                     <div className="text-center">

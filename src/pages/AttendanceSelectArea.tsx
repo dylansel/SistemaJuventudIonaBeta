@@ -8,10 +8,12 @@ import { Button, FormGroup, Input, Label, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import ActivityDTO from '../dtos/ActivityDTO';
 import { getActivityById } from '../services/activityService';
-import { dateToEsString } from '../utils/misc/strings';
+import { dateToEsString, isEmptyOrSpaces } from '../utils/misc/strings';
 import AreaDTO from '../dtos/AreaDTO';
 import { getAllAreas } from '../services/areaService';
-import { saveAttendance } from '../services/attendanceService';
+import { getAttendanceByActivity, saveAttendance } from '../services/attendanceService';
+import { AttendanceDTO } from '../dtos/AttendanceDTO';
+import { JanijAttendanceRequestDTO } from '../dtos/JanijAttendanceRequestDTO';
 
 function AttendanceSelectArea() {
     const history = useNavigate();
@@ -21,11 +23,29 @@ function AttendanceSelectArea() {
     const [searchValue, setSearchValue] = useState('')
     const [janijimSearched, setJanijimSearched] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
+    const [attendanceLoaded, setAttendanceLoaded] = useState<AttendanceDTO[]>()
+    const [janijimPresents, setJanijimPresents] = useState<JanijAttendanceRequestDTO[]>([])
+    const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
     const [areas, setAreas] = useState<AreaDTO[]>()
     const [loaded, setLoaded] = useState(false)
 
     const loadAttendance = (activityId: number, areaId: number) => {
         history(`/attendance/${activityId}/${areaId}`)
+    }
+
+    const loadPresents = () => {
+        let presents: JanijAttendanceRequestDTO[] = []
+        const janijimFiltered = janijim
+            .filter((janij: JanijDTO) => janij.active)
+        janijimFiltered.forEach((janij: JanijDTO) => {
+            const attendance = attendanceLoaded?.find((attendance: AttendanceDTO) => attendance.janijId === janij.id)
+            presents[janij.id] = {
+                janijId: janij.id,
+                present: attendance ? true : false,
+                trial: attendance && attendance.trial ? true : false
+            }
+        })
+        return presents
     }
 
     const findJanij = (janijInput: string) => {
@@ -44,15 +64,43 @@ function AttendanceSelectArea() {
             setSearchValue("")
             setJanijimSearched([])
         }
+        if (isEmptyOrSpaces(searchValue)) {
+            setJanijimSearched([])
+        }
     }
 
     const handlePresent = (id: number) => {
+        let newPresents: JanijAttendanceRequestDTO[] = [...changes]
+        newPresents[id] = {
+            janijId: janijimPresents[id].janijId,
+            present: !janijimPresents[id].present,
+            trial: janijimPresents[id].trial
+        }
+        setChanges(newPresents)
+    }
 
+    const handleTrial = (id: number) => {
+        let newPresents: JanijAttendanceRequestDTO[] = [...changes]
+        newPresents[id] = {
+            janijId: janijimPresents[id].janijId,
+            present: janijimPresents[id].present,
+            trial: !janijimPresents[id].trial
+        }
+        setChanges(newPresents)
     }
 
     const handleSaveAttendance = () => {
         handleChange()
-        saveAttendance(activityData?.id!, [])
+        let request: JanijAttendanceRequestDTO[] = []
+        for (const id in changes) {
+            if (changes[id]) {
+                if (changes[id].present !== janijimPresents[id].present ||
+                    changes[id].trial !== janijimPresents[id].trial) {
+                    request.push(changes[id])
+                }
+            }
+        }
+        saveAttendance(activityData?.id!, request)
     }
 
     const refresh = () => {
@@ -63,12 +111,18 @@ function AttendanceSelectArea() {
         setAreas(await getAllAreas("sort=ordinal,asc"))
         setJanijim(await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc"))
         setActivityData(await getActivityById(parseInt(activityId!)))
+        setAttendanceLoaded(await getAttendanceByActivity(parseInt(activityId!)))
         setLoaded(true)
     }
 
     useEffect(() => {
         refresh()
     }, []);
+
+    useEffect(() => {
+        setJanijimPresents(loadPresents())
+        setChanges(janijimPresents)
+    }, [janijim]);
 
     return (
         <main>
@@ -85,6 +139,7 @@ function AttendanceSelectArea() {
                                 id="janij"
                                 name="janij"
                                 type="text"
+                                autoComplete='off'
                                 onChange={handleChange}
                                 value={searchValue}
                             >
@@ -114,12 +169,18 @@ function AttendanceSelectArea() {
                                         <td>
                                             <Input
                                                 type='checkbox'
+                                                name={'present'}
                                                 onChange={() => handlePresent(janij.id)}
+                                                defaultChecked={janijimPresents[janij.id]?.present!}
                                             />
                                         </td>
                                         <td>
                                             <Input
                                                 type='checkbox'
+                                                name='trial'
+                                                disabled={!changes[janij.id].present!}
+                                                onChange={() => handleTrial(janij.id)}
+                                                defaultChecked={janijimPresents[janij.id].trial}
                                             />
                                         </td>
                                     </tr>
@@ -130,7 +191,7 @@ function AttendanceSelectArea() {
                     </div>
 
                     }
-                    {searchValue !== "" && janijimSearched.length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
+                    {!isEmptyOrSpaces(searchValue) && janijimSearched.length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
 
                     {areas &&
                         <div className='mt-3 inline-grid'>

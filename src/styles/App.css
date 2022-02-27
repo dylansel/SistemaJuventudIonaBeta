@@ -5,13 +5,7 @@
 }
 
 #root {
-  padding-top: 12rem;
-}
-
-@media (max-width: 768px) {
-  #root {
-    padding-top: 10rem;
-  }
+  padding-top: 8rem;
 }
 
 /*----------------NAVBAR---------------*/
