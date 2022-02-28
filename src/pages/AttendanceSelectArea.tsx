@@ -23,7 +23,6 @@ function AttendanceSelectArea() {
     const [searchValue, setSearchValue] = useState('')
     const [janijimSearched, setJanijimSearched] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
-    const [attendanceLoaded, setAttendanceLoaded] = useState<AttendanceDTO[]>()
     const [janijimPresents, setJanijimPresents] = useState<JanijAttendanceRequestDTO[]>([])
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
     const [areas, setAreas] = useState<AreaDTO[]>()
@@ -34,8 +33,10 @@ function AttendanceSelectArea() {
         history(`/attendance/${activityId}/${areaId}`)
     }
 
-    const loadPresents = () => {
+    const loadPresents = async () => {
         let presents: JanijAttendanceRequestDTO[] = []
+        const janijim = await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc")
+        const attendanceLoaded = await getAttendanceByActivity(parseInt(activityId!))
         const janijimFiltered = janijim
             .filter((janij: JanijDTO) => janij.active)
         janijimFiltered.forEach((janij: JanijDTO) => {
@@ -98,7 +99,6 @@ function AttendanceSelectArea() {
     }
 
     const handleSaveAttendance = () => {
-        handleChange()
         let request: JanijAttendanceRequestDTO[] = []
         Object.values(changes).forEach((change: JanijAttendanceRequestDTO) => {
             const dbObject = janijimPresents.find
@@ -107,13 +107,12 @@ function AttendanceSelectArea() {
                 request.push(change)
             }
         })
-        console.log(changes)
-        console.log(request)
         if (request.length > 0) {
             setIsSaving(true)
             setTimeout(() => {
                 saveAttendance(activityData?.id!, request)
                 setIsSaving(false)
+                handleChange()
                 refresh()
             }, 3000);
         }
@@ -127,14 +126,13 @@ function AttendanceSelectArea() {
         setAreas(await getAllAreas("sort=ordinal,asc"))
         setJanijim(await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc"))
         setActivityData(await getActivityById(parseInt(activityId!)))
-        setAttendanceLoaded(await getAttendanceByActivity(parseInt(activityId!)))
-        setJanijimPresents(loadPresents())
-        setChanges([...janijimPresents])
+        setJanijimPresents(await loadPresents())
+        setChanges(await loadPresents())
         setLoaded(true)
     }
 
     useEffect(() => {
-        refresh()
+        fetchData()
     }, []);
 
     return (

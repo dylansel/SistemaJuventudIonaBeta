@@ -21,14 +21,15 @@ function AttendanceList() {
     const [janijim, setJanijim] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
     const [groupData, setGroupData] = useState<GroupDTO>()
-    const [attendanceLoaded, setAttendanceLoaded] = useState<AttendanceDTO[]>()
     const [janijimPresents, setJanijimPresents] = useState<JanijAttendanceRequestDTO[]>([])
     const [loaded, setLoaded] = useState(false)
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
     const [isSaving, setIsSaving] = useState(false)
 
-    const loadPresents = () => {
+    const loadPresents = async () => {
         let presents: JanijAttendanceRequestDTO[] = []
+        const janijim = await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc")
+        const attendanceLoaded = await getAttendanceByActivity(parseInt(activityId!))
         const janijimFiltered = janijim
             .filter((janij: JanijDTO) => janij.active && janij.groupId === parseInt(groupId!))
         janijimFiltered.forEach((janij: JanijDTO) => {
@@ -74,7 +75,6 @@ function AttendanceList() {
         Object.values(changes).forEach((change: JanijAttendanceRequestDTO) => {
             const dbObject = janijimPresents.find
                 ((present: JanijAttendanceRequestDTO) => present.janijId === change.janijId)
-            console.log(dbObject)
             if (dbObject && (dbObject.present !== change.present || dbObject.trial !== change.trial)) {
                 request.push(change)
             }
@@ -97,9 +97,8 @@ function AttendanceList() {
         setJanijim(await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc"))
         setActivityData(await getActivityById(parseInt(activityId!)))
         setGroupData(await getGroupById(parseInt(groupId!)))
-        setAttendanceLoaded(await getAttendanceByActivity(parseInt(activityId!)))
-        setJanijimPresents(loadPresents())
-        setChanges([...janijimPresents])
+        setJanijimPresents(await loadPresents())
+        setChanges(await loadPresents())
         setLoaded(true)
     }
 
@@ -119,8 +118,6 @@ function AttendanceList() {
                     </div>
                     <div className="text-center">
                         <h4>{groupData?.name}</h4>
-                        <Button color={janijimPresents.length > 0 ? "success" : "danger"} />
-                        <Button color={changes.length > 0 ? "success" : "danger"} />
                     </div>
                 </>}
             </div>

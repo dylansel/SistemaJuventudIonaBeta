@@ -167,12 +167,12 @@
   margin-bottom: 0 !important;
 }
 
-.rowDisabled{
+.rowDisabled {
   color: #808080
 }
 
-.user{
-  color:white;
+.user {
+  color: white;
   font-size: 1.2rem;
 }
 
@@ -192,14 +192,20 @@
   vertical-align: middle;
 }
 
-.no-margin{
+.no-margin {
   margin-bottom: 0 !important;
 }
 
-.inline-grid{
+.inline-grid {
   display: inline-grid;
 }
 
-.inline-grid .btn{
+.inline-grid .btn {
   margin-block-start: 20px;
+}
+
+/*ATTENDANCE*/
+input[type="checkbox"]:checked {
+  background-color: #DD5041;
+  border: none;
 }
