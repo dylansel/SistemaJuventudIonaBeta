@@ -12,7 +12,6 @@ function DeleteBody(props: any) {
     const handleDeleteField = (e: any) => {
         const { value } = e.target
         setCanDelete(value === props.item.name ? true : false)
-        console.log(value, canDelete)
     }
 
     const deleteRequest = async (id: number) => {
