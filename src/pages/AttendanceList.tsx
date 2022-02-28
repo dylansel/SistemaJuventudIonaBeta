@@ -42,9 +42,9 @@ function AttendanceList() {
         return presents
     }
 
-    const getDataById = (list: JanijAttendanceRequestDTO[], id: number) => {
-        if (list) {
-            return list.find((data: JanijAttendanceRequestDTO) => data.janijId === id)
+    const getDataById = (id: number) => {
+        if (changes) {
+            return changes.find((change: JanijAttendanceRequestDTO) => change.janijId === id)
         }
     }
 
@@ -62,7 +62,7 @@ function AttendanceList() {
 
     const handleTrial = (id: number) => {
         let newPresents: JanijAttendanceRequestDTO[] = [...changes]
-        const change = newPresents.find((change: JanijAttendanceRequestDTO) => change.janijId === id)
+        const change = newPresents.find((change: AttendanceDTO) => change.janijId === id)
         if (change) {
             change.trial = !change.trial
         }
@@ -74,6 +74,7 @@ function AttendanceList() {
         Object.values(changes).forEach((change: JanijAttendanceRequestDTO) => {
             const dbObject = janijimPresents.find
                 ((present: JanijAttendanceRequestDTO) => present.janijId === change.janijId)
+            console.log(dbObject)
             if (dbObject && (dbObject.present !== change.present || dbObject.trial !== change.trial)) {
                 request.push(change)
             }
@@ -149,18 +150,16 @@ function AttendanceList() {
                                                     type='checkbox'
                                                     name='present'
                                                     onChange={() => handlePresent(janij.id)}
-                                                    defaultChecked={getDataById(janijimPresents, janij.id)?.present}
-                                                    checked={changes && getDataById(changes, janij.id)?.present}
+                                                    checked={changes && getDataById(janij.id)?.present}
                                                 />
                                             </td>
                                             <td>
                                                 <Input
                                                     type='checkbox'
                                                     name='trial'
-                                                    disabled={changes && !getDataById(changes, janij.id)?.present}
+                                                    disabled={changes && !getDataById(janij.id)?.present}
                                                     onChange={() => handleTrial(janij.id)}
-                                                    defaultChecked={getDataById(janijimPresents, janij.id)?.trial}
-                                                    checked={changes && getDataById(changes, janij.id)?.trial}
+                                                    checked={changes && getDataById(janij.id)?.trial}
                                                 />
                                             </td>
                                         </tr>
