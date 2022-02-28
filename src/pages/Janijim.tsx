@@ -8,8 +8,7 @@ import EditJanijBody from '../components/UI/Modals/Janijim/EditJanijBody';
 import JanijDTO from '../dtos/JanijDTO';
 import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import SkeletonRows from './misc/SkeletonRows';
 
 function Janijim() {
     const [janijim, setJanijim] = useState<any[]>([])
@@ -22,16 +21,6 @@ function Janijim() {
         name: "",
         active: false
     })
-
-    const skeletonRows: JSX.Element[] = []
-    for (let i = 1; i <= 200; i++) {
-        skeletonRows.push(<tr className='skeleton'>
-            <td className='skeleton'><Skeleton /></td>
-            <td><Skeleton /></td>
-            <td><Skeleton /></td>
-            <td><Skeleton /></td>
-        </tr>)
-    }
 
     const toggleAddModal = () => setAddModal(!addModal)
     const toggleEditModal = (item?: any) => {
@@ -111,7 +100,7 @@ function Janijim() {
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && skeletonRows}
+                        {!loaded && <SkeletonRows/>}
                         {loaded &&
                             janijim
                                 .filter((janij: JanijDTO) => (!((tableFilter === 'Inactivos' && janij.active) || (tableFilter === 'Activos' && !janij.active))))
