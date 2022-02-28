@@ -183,6 +183,7 @@ function AttendanceSelectArea() {
                                                     type='checkbox'
                                                     name='present'
                                                     onChange={() => handlePresent(janij.id)}
+                                                    disabled={isSaving}
                                                     checked={getDataById(janij.id)?.present}
                                                 />
                                             </td>
@@ -190,8 +191,8 @@ function AttendanceSelectArea() {
                                                 <Input
                                                     type='checkbox'
                                                     name='trial'
-                                                    disabled={!getDataById(janij.id)?.present}
                                                     onChange={() => handleTrial(janij.id)}
+                                                    disabled={isSaving || !getDataById(janij.id)?.present}
                                                     checked={getDataById(janij.id)?.trial}
                                                 />
                                             </td>

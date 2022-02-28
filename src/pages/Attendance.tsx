@@ -57,7 +57,7 @@ function Attendance() {
                     </div>
                 }
                 <span className="d-flex text-center justify-content-center my-4">
-                    <p className='mx-3'>Permitir edición asistencias de otras fechas</p>
+                    <p className='mx-3'>Permitir editar asistencias de otras fechas</p>
                     <Input type='checkbox' onChange={() => setCanEditPreviousAttendances(!canEditPreviousAttendances)} checked={canEditPreviousAttendances} />
                 </span>
 

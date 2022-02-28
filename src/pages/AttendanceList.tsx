@@ -149,6 +149,7 @@ function AttendanceList() {
                                                     name='present'
                                                     color='danger'
                                                     onChange={() => handlePresent(janij.id)}
+                                                    disabled={isSaving}
                                                     checked={getDataById(janij.id)?.present}
                                                 />
                                             </td>
@@ -156,8 +157,8 @@ function AttendanceList() {
                                                 <Input
                                                     type='checkbox'
                                                     name='trial'
-                                                    disabled={!getDataById(janij.id)?.present}
                                                     onChange={() => handleTrial(janij.id)}
+                                                    disabled={isSaving || !getDataById(janij.id)?.present}
                                                     checked={getDataById(janij.id)?.trial}
                                                 />
                                             </td>
