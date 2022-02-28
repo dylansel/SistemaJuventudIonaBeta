@@ -8,6 +8,8 @@ import EditJanijBody from '../components/UI/Modals/Janijim/EditJanijBody';
 import JanijDTO from '../dtos/JanijDTO';
 import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 function Janijim() {
     const [janijim, setJanijim] = useState<any[]>([])
@@ -20,6 +22,16 @@ function Janijim() {
         name: "",
         active: false
     })
+
+    const skeletonRows: JSX.Element[] = []
+    for (let i = 1; i <= 200; i++) {
+        skeletonRows.push(<tr className='skeleton'>
+            <td className='skeleton'><Skeleton /></td>
+            <td><Skeleton /></td>
+            <td><Skeleton /></td>
+            <td><Skeleton /></td>
+        </tr>)
+    }
 
     const toggleAddModal = () => setAddModal(!addModal)
     const toggleEditModal = (item?: any) => {
@@ -89,7 +101,7 @@ function Janijim() {
             </div>
             <div className="justify-content-center table-content mx-3 mt-4">
 
-                {loaded ? <table className="table table-hover table-responsive">
+                <table className={`table ${loaded && 'table-hover'} table-responsive`}>
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -99,7 +111,8 @@ function Janijim() {
                         </tr>
                     </thead>
                     <tbody>
-                        {
+                        {!loaded && skeletonRows}
+                        {loaded &&
                             janijim
                                 .filter((janij: JanijDTO) => (!((tableFilter === 'Inactivos' && janij.active) || (tableFilter === 'Activos' && !janij.active))))
                                 .map(janij => (
@@ -118,14 +131,8 @@ function Janijim() {
                                 )
                                 )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteJanij}/></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteJanij} /></Modal>
                 </table>
-                    :
-                    <div className="text-center">
-                        <h2>Cargando Lista de Janijim...</h2>
-                        <Spinner animation="border" className='text-danger my-2' variant="light" />
-                    </div>
-                }
             </div>
             <Scroll showBelow={250} />
         </main>
