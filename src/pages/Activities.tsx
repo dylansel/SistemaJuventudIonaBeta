@@ -75,7 +75,7 @@ function Activities() {
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows />}
+                        {!loaded && <SkeletonRows columns={3}/>}
                         {loaded &&
                             activity
                                 .map(activity => (

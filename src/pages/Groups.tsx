@@ -100,7 +100,7 @@ function Groups() {
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows />}
+                        {!loaded && <SkeletonRows columns={4}/>}
                         {loaded &&
                             groups
                                 .filter((group: GroupDTO) => (!((tableFilter === 'Inactivos' && group.active) || (tableFilter === 'Activos' && !group.active))))

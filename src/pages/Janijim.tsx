@@ -100,7 +100,7 @@ function Janijim() {
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows/>}
+                        {!loaded && <SkeletonRows columns={4}/>}
                         {loaded &&
                             janijim
                                 .filter((janij: JanijDTO) => (!((tableFilter === 'Inactivos' && janij.active) || (tableFilter === 'Activos' && !janij.active))))

@@ -98,7 +98,7 @@ function Areas() {
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows />}
+                        {!loaded && <SkeletonRows columns={3}/>}
                         {loaded && areas
                             .filter((area: AreaDTO) => (!((tableFilter === 'Inactivos' && area.active) || (tableFilter === 'Activos' && !area.active))))
                             .map(area => (
