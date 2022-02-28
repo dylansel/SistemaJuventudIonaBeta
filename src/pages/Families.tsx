@@ -8,6 +8,7 @@ import FamilyDTO from "../dtos/FamilyDTO";
 import JanijDTO from "../dtos/JanijDTO";
 import { getAllFamilies, deleteFamily, switchActiveFamily } from "../services/familyService";
 import Loading from "./misc/Loading";
+import SkeletonRows from "./misc/SkeletonRows";
 
 function Families() {
 
@@ -88,7 +89,7 @@ function Families() {
             </div>
             <div className="justify-content-center table-content mx-3 mt-4">
 
-                {loaded ? <table className="table table-hover table-responsive">
+                <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -97,41 +98,38 @@ function Families() {
                         </tr>
                     </thead>
                     <tbody>
-                        {families
-                            .filter((family: FamilyDTO) => (!((tableFilter === 'Inactivos' && family.active) || (tableFilter === 'Activos' && !family.active))))
-                            .map(family => (
-                                <tr key={family.id} className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
-                                    <td>{++i}</td>
-                                    <td className="w-50">
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}><span className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>{family.surname}</span></button>
+                        {!loaded && <SkeletonRows />}
+                        {loaded &&
+                            families
+                                .filter((family: FamilyDTO) => (!((tableFilter === 'Inactivos' && family.active) || (tableFilter === 'Activos' && !family.active))))
+                                .map(family => (
+                                    <tr key={family.id} className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                        <td>{++i}</td>
+                                        <td className="w-50">
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}><span className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>{family.surname}</span></button>
 
-                                        <div className="collapse" id={`collapse${family.id}`}>
-                                            <div className="card card-body">
-                                                {family.janijim.map((janij: JanijDTO) => (
-                                                    <p>{janij.name} {` (${janij.groupName})`} </p>
-                                                ))}
+                                            <div className="collapse" id={`collapse${family.id}`}>
+                                                <div className="card card-body">
+                                                    {family.janijim.map((janij: JanijDTO) => (
+                                                        <p>{janij.name} {` (${janij.groupName})`} </p>
+                                                    ))}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span className="actions d-flex">
-                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: family.id })}><i className=" fas fa-edit"></i></button>
-                                            <button type="button" title={family.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: family.id, active: !family.active })}><i className={`fas ${family.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
-                                            <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: family.id, name: family.surname, active: family.active })} ><i className="fas fa-trash"></i></button>
-                                        </span>
-                                    </td>
-                                </tr>
-                            )
-                            )}
+                                        </td>
+                                        <td>
+                                            <span className="actions d-flex">
+                                                <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: family.id })}><i className=" fas fa-edit"></i></button>
+                                                <button type="button" title={family.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: family.id, active: !family.active })}><i className={`fas ${family.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
+                                                <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: family.id, name: family.surname, active: family.active })} ><i className="fas fa-trash"></i></button>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                )
+                                )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Familia' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteFamily}/></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Familia' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteFamily} /></Modal>
                 </table>
-                    :
-                    <div className="text-center">
-                        <h2>Cargando Lista de Familias...</h2>
-                        <Spinner animation="border" className='text-danger my-2' variant="light" />
-                    </div>
-                }
+                
             </div>
             <Scroll showBelow={250} />
         </main >
