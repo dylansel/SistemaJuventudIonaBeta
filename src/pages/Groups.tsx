@@ -8,6 +8,7 @@ import EditGroupBody from "../components/UI/Modals/Groups/EditGroupBody";
 import GroupDTO from "../dtos/GroupDTO";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import Loading from "./misc/Loading";
+import SkeletonRows from "./misc/SkeletonRows";
 
 function Groups() {
     const [groups, setGroups] = useState<any[]>([])
@@ -89,7 +90,7 @@ function Groups() {
             </div>
             <div className="justify-content-center table-content mx-3 mt-4">
 
-                {loaded ? <table className="table table-hover table-responsive">
+                <table className={`table ${loaded && 'table-hover'} table-responsive`}>
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -99,32 +100,28 @@ function Groups() {
                         </tr>
                     </thead>
                     <tbody>
-                        {groups
-                            .filter((group: GroupDTO) => (!((tableFilter === 'Inactivos' && group.active) || (tableFilter === 'Activos' && !group.active))))
-                            .map(group => (
-                                <tr key={group.id} className={!group.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
-                                    <td>{++i}</td>
-                                    <td>{group.name}</td>
-                                    <td>{group.areaName}</td>
-                                    <td>
-                                        <span className="actions d-flex">
-                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: group.id })}><i className=" fas fa-edit"></i></button>
-                                            <button type="button" title={group.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: group.id, active: !group.active })}><i className={`fas ${group.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
-                                            <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: group.id, name: group.name, active: group.active })} ><i className="fas fa-trash"></i></button>
-                                        </span>
-                                    </td>
-                                </tr>
-                            )
-                            )}
+                        {!loaded && <SkeletonRows />}
+                        {loaded &&
+                            groups
+                                .filter((group: GroupDTO) => (!((tableFilter === 'Inactivos' && group.active) || (tableFilter === 'Activos' && !group.active))))
+                                .map(group => (
+                                    <tr key={group.id} className={!group.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                        <td>{++i}</td>
+                                        <td>{group.name}</td>
+                                        <td>{group.areaName}</td>
+                                        <td>
+                                            <span className="actions d-flex">
+                                                <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: group.id })}><i className=" fas fa-edit"></i></button>
+                                                <button type="button" title={group.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: group.id, active: !group.active })}><i className={`fas ${group.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
+                                                <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: group.id, name: group.name, active: group.active })} ><i className="fas fa-trash"></i></button>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                )
+                                )}
                     </tbody>
                     <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Grupo' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteGroup} /></Modal>
                 </table>
-                    :
-                    <div className="text-center">
-                        <h2>Cargando Lista de Grupos...</h2>
-                        <Spinner animation="border" className='text-danger my-2' variant="light" />
-                    </div>
-                }
             </div>
             <Scroll showBelow={250} />
         </main>

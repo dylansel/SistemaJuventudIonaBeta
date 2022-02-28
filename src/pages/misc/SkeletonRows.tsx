@@ -3,7 +3,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 
 function SkeletonRows() {
     let body = []
-    for (let i = 1; i <= 200; i++) {
+    for (let i = 1; i <= 50; i++) {
         body.push(<tr className='skeleton'>
             <td><Skeleton /></td>
             <td><Skeleton /></td>

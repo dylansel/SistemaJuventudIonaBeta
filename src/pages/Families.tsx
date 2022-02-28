@@ -89,7 +89,7 @@ function Families() {
             </div>
             <div className="justify-content-center table-content mx-3 mt-4">
 
-                <table className="table table-hover table-responsive">
+                <table className={`table ${loaded && 'table-hover'} table-responsive`}>
                     <thead>
                         <tr>
                             <th scope="col">#</th>
