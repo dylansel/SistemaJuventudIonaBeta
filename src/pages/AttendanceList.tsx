@@ -25,54 +25,68 @@ function AttendanceList() {
     const [janijimPresents, setJanijimPresents] = useState<JanijAttendanceRequestDTO[]>([])
     const [loaded, setLoaded] = useState(false)
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
+    const [isSaving, setIsSaving] = useState(false)
 
     const loadPresents = () => {
         let presents: JanijAttendanceRequestDTO[] = []
-        //TODO: Problems with undefined elements. If I load janij 100-160, first 100 janijim are undefined
         const janijimFiltered = janijim
             .filter((janij: JanijDTO) => janij.active && janij.groupId === parseInt(groupId!))
         janijimFiltered.forEach((janij: JanijDTO) => {
             const attendance = attendanceLoaded?.find((attendance: AttendanceDTO) => attendance.janijId === janij.id)
-            presents[janij.id] = {
+            presents.push({
                 janijId: janij.id,
                 present: attendance ? true : false,
                 trial: attendance && attendance.trial ? true : false
-            }
+            })
         })
         return presents
     }
 
+    const getDataById = (id: number) => {
+        if (changes) {
+            return changes.find((change: JanijAttendanceRequestDTO) => change.janijId === id)
+        }
+    }
+
     const handlePresent = (id: number) => {
         let newPresents: JanijAttendanceRequestDTO[] = [...changes]
-        newPresents[id] = {
-            janijId: janijimPresents[id].janijId,
-            present: !janijimPresents[id].present,
-            trial: janijimPresents[id].trial
+        const change = newPresents.find((change: AttendanceDTO) => change.janijId === id)
+        if (change) {
+            change.present = !change.present
+            if (!change.present) {
+                change.trial = false
+            }
         }
         setChanges(newPresents)
     }
 
     const handleTrial = (id: number) => {
         let newPresents: JanijAttendanceRequestDTO[] = [...changes]
-        newPresents[id] = {
-            janijId: janijimPresents[id].janijId,
-            present: janijimPresents[id].present,
-            trial: !janijimPresents[id].trial
+        const change = newPresents.find((change: AttendanceDTO) => change.janijId === id)
+        if (change) {
+            change.trial = !change.trial
         }
         setChanges(newPresents)
     }
 
     const handleSaveAttendance = () => {
         let request: JanijAttendanceRequestDTO[] = []
-        for (const id in changes) {
-            if (changes[id]) {
-                if (changes[id].present !== janijimPresents[id].present ||
-                    changes[id].trial !== janijimPresents[id].trial) {
-                    request.push(changes[id])
-                }
+        Object.values(changes).forEach((change: JanijAttendanceRequestDTO) => {
+            const dbObject = janijimPresents.find
+                ((present: JanijAttendanceRequestDTO) => present.janijId === change.janijId)
+            if (dbObject && (dbObject.present !== change.present || dbObject.trial !== change.trial)) {
+                request.push(change)
             }
+        })
+        console.log(request)
+        if (request.length > 0) {
+            setIsSaving(true)
+            setTimeout(() => {
+                saveAttendance(activityData?.id!, request)
+                setIsSaving(false)
+                refresh()
+            }, 3000);
         }
-        saveAttendance(activityData?.id!, request)
     }
 
     const refresh = () => {
@@ -84,6 +98,8 @@ function AttendanceList() {
         setActivityData(await getActivityById(parseInt(activityId!)))
         setGroupData(await getGroupById(parseInt(groupId!)))
         setAttendanceLoaded(await getAttendanceByActivity(parseInt(activityId!)))
+        setJanijimPresents(loadPresents())
+        setChanges([...janijimPresents])
         setLoaded(true)
     }
 
@@ -92,12 +108,6 @@ function AttendanceList() {
     useEffect(() => {
         refresh()
     }, []);
-
-    useEffect(() => {
-        setJanijimPresents(loadPresents())
-        setChanges([...janijimPresents])
-        //TODO: Because this depends on janijim list, it doesn't load all the times.
-    }, [janijim]);
 
     return (
         <main>
@@ -139,17 +149,16 @@ function AttendanceList() {
                                                     type='checkbox'
                                                     name='present'
                                                     onChange={() => handlePresent(janij.id)}
-                                                    defaultChecked={janijimPresents[janij.id] ? janijimPresents[janij.id]?.present! : false}
+                                                    checked={changes && getDataById(janij.id)?.present}
                                                 />
                                             </td>
                                             <td>
                                                 <Input
                                                     type='checkbox'
                                                     name='trial'
-                                                    disabled={!janijimPresents[janij.id].present!}
-                                                    //TODO: Here we have to use changes array values but it has problems with checkboxs
+                                                    disabled={changes && !getDataById(janij.id)?.present}
                                                     onChange={() => handleTrial(janij.id)}
-                                                    defaultChecked={janijimPresents[janij.id] ? janijimPresents[janij.id]?.trial! : false}
+                                                    checked={changes && getDataById(janij.id)?.trial}
                                                 />
                                             </td>
                                         </tr>
@@ -157,7 +166,7 @@ function AttendanceList() {
                                     )}
                             </tbody>
                         </table>
-                        <Button onClick={handleSaveAttendance} className='my-3' color='danger' type='button'>Grabar Asistencias</Button>
+                        <Button onClick={handleSaveAttendance} className='my-3' color={isSaving ? 'success' : 'danger'} type='button'>{isSaving ? 'Grabando...' : 'Grabar Asistencias'}</Button>
                     </div>
 
                     :

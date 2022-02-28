@@ -28,6 +28,7 @@ function AttendanceSelectArea() {
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
     const [areas, setAreas] = useState<AreaDTO[]>()
     const [loaded, setLoaded] = useState(false)
+    const [isSaving, setIsSaving] = useState(false)
 
     const loadAttendance = (activityId: number, areaId: number) => {
         history(`/attendance/${activityId}/${areaId}`)
@@ -39,13 +40,19 @@ function AttendanceSelectArea() {
             .filter((janij: JanijDTO) => janij.active)
         janijimFiltered.forEach((janij: JanijDTO) => {
             const attendance = attendanceLoaded?.find((attendance: AttendanceDTO) => attendance.janijId === janij.id)
-            presents[janij.id] = {
+            presents.push({
                 janijId: janij.id,
                 present: attendance ? true : false,
                 trial: attendance && attendance.trial ? true : false
-            }
+            })
         })
         return presents
+    }
+
+    const getDataById = (id: number) => {
+        if (changes) {
+            return changes.find((change: JanijAttendanceRequestDTO) => change.janijId === id)
+        }
     }
 
     const findJanij = (janijInput: string) => {
@@ -71,20 +78,21 @@ function AttendanceSelectArea() {
 
     const handlePresent = (id: number) => {
         let newPresents: JanijAttendanceRequestDTO[] = [...changes]
-        newPresents[id] = {
-            janijId: janijimPresents[id].janijId,
-            present: !janijimPresents[id].present,
-            trial: janijimPresents[id].trial
+        const change = newPresents.find((change: AttendanceDTO) => change.janijId === id)
+        if (change) {
+            change.present = !change.present
+            if (!change.present) {
+                change.trial = false
+            }
         }
         setChanges(newPresents)
     }
 
     const handleTrial = (id: number) => {
         let newPresents: JanijAttendanceRequestDTO[] = [...changes]
-        newPresents[id] = {
-            janijId: janijimPresents[id].janijId,
-            present: janijimPresents[id].present,
-            trial: !janijimPresents[id].trial
+        const change = newPresents.find((change: AttendanceDTO) => change.janijId === id)
+        if (change) {
+            change.trial = !change.trial
         }
         setChanges(newPresents)
     }
@@ -92,15 +100,23 @@ function AttendanceSelectArea() {
     const handleSaveAttendance = () => {
         handleChange()
         let request: JanijAttendanceRequestDTO[] = []
-        for (const id in changes) {
-            if (changes[id]) {
-                if (changes[id].present !== janijimPresents[id].present ||
-                    changes[id].trial !== janijimPresents[id].trial) {
-                    request.push(changes[id])
-                }
+        Object.values(changes).forEach((change: JanijAttendanceRequestDTO) => {
+            const dbObject = janijimPresents.find
+                ((present: JanijAttendanceRequestDTO) => present.janijId === change.janijId)
+            if (dbObject && (dbObject.present !== change.present || dbObject.trial !== change.trial)) {
+                request.push(change)
             }
+        })
+        console.log(changes)
+        console.log(request)
+        if (request.length > 0) {
+            setIsSaving(true)
+            setTimeout(() => {
+                saveAttendance(activityData?.id!, request)
+                setIsSaving(false)
+                refresh()
+            }, 3000);
         }
-        saveAttendance(activityData?.id!, request)
     }
 
     const refresh = () => {
@@ -112,18 +128,14 @@ function AttendanceSelectArea() {
         setJanijim(await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc"))
         setActivityData(await getActivityById(parseInt(activityId!)))
         setAttendanceLoaded(await getAttendanceByActivity(parseInt(activityId!)))
+        setJanijimPresents(loadPresents())
+        setChanges([...janijimPresents])
         setLoaded(true)
     }
 
     useEffect(() => {
         refresh()
     }, []);
-
-    useEffect(() => {
-        setJanijimPresents(loadPresents())
-        setChanges([...janijimPresents])
-        //TODO: Because this depends on janijim list, it doesn't load all the times.
-    }, [janijim]);
 
     return (
         <main>
@@ -172,23 +184,23 @@ function AttendanceSelectArea() {
                                                 type='checkbox'
                                                 name='present'
                                                 onChange={() => handlePresent(janij.id)}
-                                                defaultChecked={janijimPresents[janij.id] ? janijimPresents[janij.id]?.present! : false}
+                                                checked={changes && getDataById(janij.id)?.present}
                                             />
                                         </td>
                                         <td>
                                             <Input
                                                 type='checkbox'
                                                 name='trial'
-                                                disabled={!changes[janij.id].present!}
+                                                disabled={changes && !getDataById(janij.id)?.present}
                                                 onChange={() => handleTrial(janij.id)}
-                                                defaultChecked={janijimPresents[janij.id] ? janijimPresents[janij.id]?.trial! : false}
+                                                checked={changes && getDataById(janij.id)?.trial}
                                             />
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        <Button title='Save' onClick={() => handleSaveAttendance()}>Guardar Asistencia</Button>
+                        <Button onClick={handleSaveAttendance} className='my-3' color={isSaving ? 'success' : 'secondary'} type='button'>{isSaving ? 'Grabando...' : 'Grabar Asistencias'}</Button>
                     </div>
 
                     }

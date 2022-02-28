@@ -47,7 +47,7 @@ function Attendance() {
             <div className="main-container row justify-content-center text-center">
                 <h3>Asistencias</h3>
 
-                {loaded && activities.length > 0 && today && <>
+                {loaded && activities.length > 0 && today &&
                     <div className="justify-content-center table-content p-2 mt-4 col-8 bg-warning">
                         <h3>Hoy!</h3>
                         <span className='d-flex justify-content-center'>
@@ -55,13 +55,11 @@ function Attendance() {
                             <button type="button" title='Cargar Asistencia' className="btn btn-danger mx-3" onClick={() => loadAttendance(today.id)}><i className=" fas fa-arrow-right"></i></button>
                         </span>
                     </div>
-                    <span className="d-flex text-center justify-content-center my-4">
-                        <p className='mx-3'>Permitir edición asistencias de otras fechas</p>
-                        <Input type='checkbox' onChange={() => setCanEditPreviousAttendances(!canEditPreviousAttendances)} checked={canEditPreviousAttendances} />
-                    </span>
-                </>
                 }
-
+                <span className="d-flex text-center justify-content-center my-4">
+                    <p className='mx-3'>Permitir edición asistencias de otras fechas</p>
+                    <Input type='checkbox' onChange={() => setCanEditPreviousAttendances(!canEditPreviousAttendances)} checked={canEditPreviousAttendances} />
+                </span>
 
                 <div className="justify-content-center table-content col-10 col-md-8">
 
