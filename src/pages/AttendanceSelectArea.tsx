@@ -78,7 +78,7 @@ function AttendanceSelectArea() {
 
     const handlePresent = (id: number) => {
         let newPresents: JanijAttendanceRequestDTO[] = [...changes]
-        const change = newPresents.find((change: AttendanceDTO) => change.janijId === id)
+        const change = newPresents.find((change: JanijAttendanceRequestDTO) => change.janijId === id)
         if (change) {
             change.present = !change.present
             if (!change.present) {
@@ -90,7 +90,7 @@ function AttendanceSelectArea() {
 
     const handleTrial = (id: number) => {
         let newPresents: JanijAttendanceRequestDTO[] = [...changes]
-        const change = newPresents.find((change: AttendanceDTO) => change.janijId === id)
+        const change = newPresents.find((change: JanijAttendanceRequestDTO) => change.janijId === id)
         if (change) {
             change.trial = !change.trial
         }
