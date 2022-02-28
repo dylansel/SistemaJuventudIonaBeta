@@ -164,45 +164,52 @@ function AttendanceSelectArea() {
 
             {loaded ?
                 <div className="justify-content-center text-center">
-                    {janijimSearched.length > 0 && <div>
-                        <table className="table table-hover table-responsive mx-3 mb-4">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Nombre y Apellido</th>
-                                    <th scope="col">Grupo</th>
-                                    <th scope="col">Presente</th>
-                                    <th scope="col">Prueba</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {janijimSearched.map((janij: JanijDTO) => (
-                                    <tr key={janij.id}>
-                                        <td>{`${janij.name} ${janij.familySurname}`}</td>
-                                        <td>{janij.groupName}</td>
-                                        <td>
-                                            <Input
-                                                type='checkbox'
-                                                name='present'
-                                                onChange={() => handlePresent(janij.id)}
-                                                checked={changes && getDataById(janij.id)?.present}
-                                            />
-                                        </td>
-                                        <td>
-                                            <Input
-                                                type='checkbox'
-                                                name='trial'
-                                                disabled={changes && !getDataById(janij.id)?.present}
-                                                onChange={() => handleTrial(janij.id)}
-                                                checked={changes && getDataById(janij.id)?.trial}
-                                            />
-                                        </td>
+                    {janijimSearched.length > 0 &&
+                        <div>
+                            <table className="table table-hover table-responsive mx-3 mb-4">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Nombre y Apellido</th>
+                                        <th scope="col">Grupo</th>
+                                        <th scope="col">Presente</th>
+                                        <th scope="col">Prueba</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        <Button onClick={handleSaveAttendance} className='my-3' color={isSaving ? 'success' : 'secondary'} type='button'>{isSaving ? 'Grabando...' : 'Grabar Asistencias'}</Button>
-                    </div>
-
+                                </thead>
+                                <tbody>
+                                    {janijimSearched.map((janij: JanijDTO) => (
+                                        <tr key={janij.id}>
+                                            <td>{`${janij.name} ${janij.familySurname}`}</td>
+                                            <td>{janij.groupName}</td>
+                                            <td>
+                                                <Input
+                                                    type='checkbox'
+                                                    name='present'
+                                                    onChange={() => handlePresent(janij.id)}
+                                                    checked={getDataById(janij.id)?.present}
+                                                />
+                                            </td>
+                                            <td>
+                                                <Input
+                                                    type='checkbox'
+                                                    name='trial'
+                                                    disabled={!getDataById(janij.id)?.present}
+                                                    onChange={() => handleTrial(janij.id)}
+                                                    checked={getDataById(janij.id)?.trial}
+                                                />
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <Button
+                                onClick={handleSaveAttendance}
+                                className='my-3'
+                                color={isSaving ? 'success' : 'secondary'}
+                                disabled={isSaving}
+                                type='button'
+                            >
+                                {isSaving ? <>Grabando...<Spinner animation="border" variant="light" size="sm" /></> : 'Grabar Asistencias'}                            </Button>
+                        </div>
                     }
                     {!isEmptyOrSpaces(searchValue) && janijimSearched.length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
 
@@ -210,7 +217,7 @@ function AttendanceSelectArea() {
                         <div className='mt-3 inline-grid'>
                             {areas?.filter((area: AreaDTO) => area.active)
                                 .map((area: AreaDTO) =>
-                                    <Button color="danger" size='lg' className="mx-5" title={area.name} onClick={() => loadAttendance(activityData?.id!, area.id)}>{area.name}</Button>
+                                    <Button key={area.id} color="danger" size='lg' className="mx-5" title={area.name} onClick={() => loadAttendance(activityData?.id!, area.id)}>{area.name}</Button>
                                 )}
                         </div>
                     }

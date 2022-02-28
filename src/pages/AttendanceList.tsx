@@ -79,7 +79,6 @@ function AttendanceList() {
                 request.push(change)
             }
         })
-        console.log(request)
         if (request.length > 0) {
             setIsSaving(true)
             setTimeout(() => {
@@ -120,6 +119,8 @@ function AttendanceList() {
                     </div>
                     <div className="text-center">
                         <h4>{groupData?.name}</h4>
+                        <Button color={janijimPresents.length > 0 ? "success" : "danger"} />
+                        <Button color={changes.length > 0 ? "success" : "danger"} />
                     </div>
                 </>}
             </div>
@@ -149,17 +150,18 @@ function AttendanceList() {
                                                 <Input
                                                     type='checkbox'
                                                     name='present'
+                                                    color='danger'
                                                     onChange={() => handlePresent(janij.id)}
-                                                    checked={changes && getDataById(janij.id)?.present}
+                                                    checked={getDataById(janij.id)?.present}
                                                 />
                                             </td>
                                             <td>
                                                 <Input
                                                     type='checkbox'
                                                     name='trial'
-                                                    disabled={changes && !getDataById(janij.id)?.present}
+                                                    disabled={!getDataById(janij.id)?.present}
                                                     onChange={() => handleTrial(janij.id)}
-                                                    checked={changes && getDataById(janij.id)?.trial}
+                                                    checked={getDataById(janij.id)?.trial}
                                                 />
                                             </td>
                                         </tr>
@@ -167,7 +169,15 @@ function AttendanceList() {
                                     )}
                             </tbody>
                         </table>
-                        <Button onClick={handleSaveAttendance} className='my-3' color={isSaving ? 'success' : 'danger'} type='button'>{isSaving ? 'Grabando...' : 'Grabar Asistencias'}</Button>
+                        <Button
+                            onClick={handleSaveAttendance}
+                            className='my-3'
+                            color={isSaving ? 'success' : 'danger'}
+                            disabled={isSaving}
+                            type='button'
+                        >
+                            {isSaving ? <>Grabando...<Spinner animation="border" variant="light" size="sm" /></> : 'Grabar Asistencias'}
+                        </Button>
                     </div>
 
                     :

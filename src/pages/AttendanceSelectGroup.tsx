@@ -60,7 +60,7 @@ function AttendanceSelectGroup() {
                         <div className='mt-3 inline-grid'>
                             {groups?.filter((group: GroupDTO) => group.active && group.areaId === areaData?.id)
                                 .map((group: GroupDTO) =>
-                                    <Button color="danger" size='lg' className="mx-5" title={group.name} onClick={() => loadAttendance(activityData?.id!, areaData?.id!, group.id)}>{group.name}</Button>
+                                    <Button key={group.id} color="danger" size='lg' className="mx-5" title={group.name} onClick={() => loadAttendance(activityData?.id!, areaData?.id!, group.id)}>{group.name}</Button>
                                 )}
                         </div>
                     }
