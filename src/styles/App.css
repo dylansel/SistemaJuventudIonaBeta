@@ -5,13 +5,7 @@
 }
 
 #root {
-  padding-top: 12rem;
-}
-
-@media (max-width: 768px) {
-  #root {
-    padding-top: 10rem;
-  }
+  padding-top: 8rem;
 }
 
 /*----------------NAVBAR---------------*/
@@ -173,12 +167,12 @@
   margin-bottom: 0 !important;
 }
 
-.rowDisabled{
+.rowDisabled {
   color: #808080
 }
 
-.user{
-  color:white;
+.user {
+  color: white;
   font-size: 1.2rem;
 }
 
@@ -191,4 +185,31 @@
 .user p {
   margin-bottom: 0px;
   font-weight: bold;
+}
+
+.td-attendance {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.no-margin {
+  margin-bottom: 0 !important;
+}
+
+.inline-grid {
+  display: inline-grid;
+}
+
+.inline-grid .btn {
+  margin-block-start: 20px;
+}
+
+/*ATTENDANCE*/
+input[type="checkbox"]:checked {
+  background-color: #DD5041;
+  border: none;
+}
+
+.skeleton:hover{
+  background-color: "#ffffff"
 }

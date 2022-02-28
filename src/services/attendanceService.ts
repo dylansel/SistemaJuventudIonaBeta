@@ -1,9 +1,20 @@
 import axios from 'axios';
-import { AttendanceRequestDTO } from '../dtos/AttendanceRequestDTO';
+import { AttendanceDTO } from '../dtos/AttendanceDTO';
+import { JanijAttendanceRequestDTO } from '../dtos/JanijAttendanceRequestDTO';
 
-export async function saveAttendance(activityId: number, attendanceRequest: AttendanceRequestDTO) {
+export async function getAttendanceByActivity(activityId: number): Promise<AttendanceDTO[]> {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/save/getAll/${activityId}`, attendanceRequest)
+        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/attendance/getByActivity/${activityId}`)
+        const data = await response.data
+        return data
+    } catch (error: any) {
+        throw error
+    }
+}
+
+export async function saveAttendance(activityId: number, janijAttendancesRequest: JanijAttendanceRequestDTO[]) {
+    try {
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/attendance/save/${activityId}`, janijAttendancesRequest)
         const data = await response.data
         return data
     } catch (error: any) {

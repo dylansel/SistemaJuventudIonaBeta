@@ -8,6 +8,7 @@ import DeleteBody from "../components/UI/Modals/DeleteBody";
 import AreaDTO from "../dtos/AreaDTO";
 import { deleteArea, getAllAreas, switchActiveArea } from "../services/areaService";
 import Loading from "./misc/Loading";
+import SkeletonRows from "./misc/SkeletonRows";
 
 function Areas() {
     const [areas, setAreas] = useState<any[]>([])
@@ -88,7 +89,7 @@ function Areas() {
             </div>
             <div className="justify-content-center table-content mx-3 mt-4">
 
-                {loaded ? <table className="table table-hover table-responsive">
+                <table className={`table ${loaded && 'table-hover'} table-responsive`}>
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -97,7 +98,8 @@ function Areas() {
                         </tr>
                     </thead>
                     <tbody>
-                        {areas
+                        {!loaded && <SkeletonRows columns={3}/>}
+                        {loaded && areas
                             .filter((area: AreaDTO) => (!((tableFilter === 'Inactivos' && area.active) || (tableFilter === 'Activos' && !area.active))))
                             .map(area => (
                                 <tr key={area.id} className={!area.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
@@ -116,12 +118,6 @@ function Areas() {
                     </tbody>
                     <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Shijva' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteArea} /></Modal>
                 </table>
-                    :
-                    <div className="text-center">
-                        <h2>Cargando Lista de Shijvot...</h2>
-                        <Spinner animation="border" className='text-danger my-2' variant="light" />
-                    </div>
-                }
             </div>
             <Scroll showBelow={250} />
         </main >

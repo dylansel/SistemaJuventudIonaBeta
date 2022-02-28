@@ -4,11 +4,12 @@ import Scroll from '../components/UI/Layout/Scroll';
 import AddActivityBody from "../components/UI/Modals/Activities/AddActivityBody";
 import AddMultipleActivitiesBody from "../components/UI/Modals/Activities/AddMultipleActivitiesBody";
 import DeleteBody from '../components/UI/Modals/DeleteBody';
-import {deleteActivity, getAllActivities} from '../services/activityService';
+import { deleteActivity, getAllActivities } from '../services/activityService';
 import EditActivityBody from '../components/UI/Modals/Activities/EditActivityBody';
 import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import { formatDateUsToEs } from "../utils/misc/strings";
+import SkeletonRows from './misc/SkeletonRows';
 
 function Activities() {
     const [activity, setActivity] = useState<any[]>([])
@@ -36,7 +37,7 @@ function Activities() {
         item.name = formatDateUsToEs(item.name)
         setItemSelected(item)
         toggleDeleteModal()
-    }  
+    }
 
     const refresh = () => {
         fetchData()
@@ -50,10 +51,10 @@ function Activities() {
     useEffect(() => {
         fetchData()
     }, []);
-    
+
     return (
         <main>
-            <div className="filters d-flex mx-4 align-items-center justify-content-end">                
+            <div className="filters d-flex mx-4 align-items-center justify-content-end">
 
                 <Button color='danger' title='Actualizar' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Actividad</Button>
@@ -61,11 +62,11 @@ function Activities() {
                 <Modal isOpen={addModal} toggle={toggleAddModal} ><AddActivityBody title='Agregar' toggle={toggleAddModal} refresh={refresh} /></Modal>
                 <Modal isOpen={addMultipleModal} toggle={toggleAddMultipleModal} ><AddMultipleActivitiesBody title='Cargar' toggle={toggleAddMultipleModal} refresh={refresh} /></Modal>
                 <Modal isOpen={editModal} toggle={toggleEditModal} ><EditActivityBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
-                
+
             </div>
             <div className="justify-content-center table-content mx-3 mt-4">
 
-                {loaded ? <table className="table table-hover table-responsive">
+                <table className={`table ${loaded && 'table-hover'} table-responsive`}>
                     <thead>
                         <tr>
                             <th scope="col">Fecha</th>
@@ -74,7 +75,8 @@ function Activities() {
                         </tr>
                     </thead>
                     <tbody>
-                        {
+                        {!loaded && <SkeletonRows columns={3}/>}
+                        {loaded &&
                             activity
                                 .map(activity => (
                                     <tr key={activity.id} >
@@ -90,19 +92,13 @@ function Activities() {
                                 )
                                 )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Actividad' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteActivity}/></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Actividad' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteActivity} /></Modal>
                 </table>
-                    :
-                    <div className="text-center">
-                        <h2>Cargando Lista de Actividades...</h2>
-                        <Spinner animation="border" className='text-danger my-2' variant="light" />
-                    </div>
-                }
             </div>
-            <Scroll showBelow={250}/>
+            <Scroll showBelow={250} />
         </main>
     );
-    
+
 }
 
 export default withAuthenticationRequired(Activities, {
