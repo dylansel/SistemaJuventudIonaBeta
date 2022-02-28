@@ -7,7 +7,6 @@ import { getAllActivities } from '../services/activityService';
 import Loading from './misc/Loading';
 import { useNavigate } from 'react-router-dom';
 import { dateToEsString } from '../utils/misc/strings';
-import SkeletonRows from './misc/SkeletonRows';
 
 function Attendance() {
     const history = useNavigate();
@@ -63,40 +62,44 @@ function Attendance() {
                 </span>
 
                 <div className="justify-content-center table-content col-10 col-md-8">
-                    <table className={`table ${loaded && 'table-hover'} table-responsive`}>
-                        <thead>
-                            <tr>
-                                <th scope="col">Fecha</th>
-                                <th scope="col">Cargar Asistencia</th>
-                            </tr>
-                        </thead>
-                        {!loaded && <SkeletonRows/>}
-                        {loaded &&
+
+                    {loaded ? <>
+                        {
                             activities.length > 0 ?
-                            <tbody>
-
-                                {activities
-                                    .map((activity: ActivityDTO) => (
-                                        <tr key={activity.id}>
-                                            <td className="td-attendance">{dateToEsString(activity.date)}</td>
-                                            <td className="td-attendance">
-                                                <span>
-                                                    <button type="button" disabled={!canEditPreviousAttendances} title='Cargar Asistencia' className="btn btn-danger" onClick={() => loadAttendance(activity.id)}><i className=" fas fa-arrow-right"></i></button>
-                                                </span>
-                                            </td>
+                                <table className="table table-hover table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Cargar Asistencia</th>
                                         </tr>
-                                    ))
-                                }
-
-                            </tbody>
-                            : <p>No hay actividades cargadas</p>
-
+                                    </thead>
+                                    <tbody>
+                                        {activities
+                                            .map((activity: ActivityDTO) => (
+                                                <tr key={activity.id}>
+                                                    <td className="td-attendance">{dateToEsString(activity.date)}</td>
+                                                    <td className="td-attendance">
+                                                        <span>
+                                                            <button type="button" disabled={!canEditPreviousAttendances} title='Cargar Asistencia' className="btn btn-danger" onClick={() => loadAttendance(activity.id)}><i className=" fas fa-arrow-right"></i></button>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            )
+                                            )}
+                                    </tbody>
+                                </table>
+                                : <p>No hay actividades cargadas</p>
                         }
-                    </table>
+                    </>
+                        :
+                        <div className="text-center">
+                            <Spinner animation="border" className='text-danger my-2' variant="light" />
+                        </div>
+                    }
                 </div>
                 <Scroll showBelow={250} />
             </div>
-        </main >
+        </main>
     );
 }
 
