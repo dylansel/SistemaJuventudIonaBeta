@@ -54,7 +54,7 @@ function Janijim() {
         setError("")
         setLoaded(false)
         try {
-            const janijim = await getAllJanijim("sort=,asc;firstName,asc;family.surname,asc")
+            const janijim = await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc")
             setJanijim(janijim)
         }
         catch (error: any) {
