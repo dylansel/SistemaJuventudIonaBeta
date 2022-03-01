@@ -9,9 +9,11 @@ import JanijDTO from '../dtos/JanijDTO';
 import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import SkeletonRows from './misc/SkeletonRows';
+import { getErrorByMessage } from '../utils/misc/errors';
 
 function Janijim() {
     const [janijim, setJanijim] = useState<any[]>([])
+    const [error, setError] = useState("")
     const [loaded, setLoaded] = useState(false)
     const [addModal, setAddModal] = useState(false)
     const [editModal, setEditModal] = useState(false)
@@ -49,8 +51,15 @@ function Janijim() {
         fetchData()
     }
     async function fetchData() {
+        setError("")
         setLoaded(false)
-        setJanijim(await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc"))
+        try {
+            const janijim = await getAllJanijim("sort=,asc;firstName,asc;family.surname,asc")
+            setJanijim(janijim)
+        }
+        catch (error: any) {
+            setError(error.message)
+        }
         setLoaded(true)
     }
 
@@ -90,38 +99,44 @@ function Janijim() {
             </div>
             <div className="justify-content-center table-content mx-3 mt-4">
 
-                <table className={`table ${loaded && 'table-hover'} table-responsive`}>
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Nombre y Apellido</th>
-                            <th scope="col">Grupo</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {!loaded && <SkeletonRows columns={4}/>}
-                        {loaded &&
-                            janijim
-                                .filter((janij: JanijDTO) => (!((tableFilter === 'Inactivos' && janij.active) || (tableFilter === 'Activos' && !janij.active))))
-                                .map(janij => (
-                                    <tr key={janij.id} className={!janij.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
-                                        <td>{++i}</td>
-                                        <td>{`${janij.name} ${janij.familySurname}`}</td>
-                                        <td>{janij.groupName}</td>
-                                        <td>
-                                            <span className="actions d-flex">
-                                                <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: janij.id })}><i className=" fas fa-edit"></i></button>
-                                                <button type="button" title={janij.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: janij.id, active: !janij.active })}><i className={`fas ${janij.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
-                                                <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.familySurname}`, active: janij.active })} ><i className="fas fa-trash"></i></button>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                )
-                                )}
-                    </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteJanij} /></Modal>
-                </table>
+                {error === "" ?
+                    <table className={`table ${loaded && 'table-hover'} table-responsive`}>
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre y Apellido</th>
+                                <th scope="col">Grupo</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {!loaded && <SkeletonRows columns={4} />}
+                            {loaded &&
+                                janijim
+                                    .filter((janij: JanijDTO) => (!((tableFilter === 'Inactivos' && janij.active) || (tableFilter === 'Activos' && !janij.active))))
+                                    .map(janij => (
+                                        <tr key={janij.id} className={!janij.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                            <td>{++i}</td>
+                                            <td>{`${janij.name} ${janij.familySurname}`}</td>
+                                            <td>{janij.groupName}</td>
+                                            <td>
+                                                <span className="actions d-flex">
+                                                    <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: janij.id })}><i className=" fas fa-edit"></i></button>
+                                                    <button type="button" title={janij.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: janij.id, active: !janij.active })}><i className={`fas ${janij.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
+                                                    <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.familySurname}`, active: janij.active })} ><i className="fas fa-trash"></i></button>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    )
+                                    )}
+                        </tbody>
+                        <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Janij' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteJanij} /></Modal>
+                    </table>
+                    :
+                    <div className="text-center">
+                        <h3>{getErrorByMessage(error)}</h3>
+                    </div>
+                }
             </div>
             <Scroll showBelow={250} />
         </main>
