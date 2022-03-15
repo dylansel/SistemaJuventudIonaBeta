@@ -95,7 +95,7 @@ function AddActivityBody(props: any) {
                             type="number"
                             step="5"
                             min="0"
-                            value={(loaded && fields.individualPrice) ? fields.individualPrice : viewData["value"]}
+                            value={(loaded) ? fields.individualPrice : viewData["value"]}
                             onChange={addHandleChange}
                         />
                     </FormGroup>
