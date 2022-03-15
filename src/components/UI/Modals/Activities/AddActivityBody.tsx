@@ -19,6 +19,10 @@ function AddActivityBody(props: any) {
     async function fetchData() {
         setLoaded(false)
         setViewData(await getSystemVariableByKey("NORMAL_ACTIVITY_PRICE"))
+        setFields(prevState => ({
+            ...prevState,
+            individualPrice: viewData['value']
+        }))
         setLoaded(true)
     }
 
@@ -29,12 +33,11 @@ function AddActivityBody(props: any) {
             ...prevState,
             [name]: value
         }))
-
     }
 
     const postRequest = async () => {
         setError(false)
-        if (fields.individualPrice = -1) { fields.individualPrice = viewData["value"] }
+        if (fields.individualPrice == -1) { fields.individualPrice = viewData["value"] }
         if (isEmptyOrSpaces(fields.date) || fields.individualPrice <= -1) {
             setError(true)
             return
@@ -44,7 +47,6 @@ function AddActivityBody(props: any) {
         const fromToDate = {
             date: formatDateEsToUs(fields.date),
             individualPrice: fields.individualPrice,
-
         }
         await addActivity(fromToDate)
         props.toggle()
@@ -92,10 +94,9 @@ function AddActivityBody(props: any) {
                             name="individualPrice"
                             type="number"
                             step="5"
-                            inicial={viewData["value"]}
+                            min="0"
+                            value={(loaded && fields.individualPrice) ? fields.individualPrice : viewData["value"]}
                             onChange={addHandleChange}
-                            autoComplete="off"
-                            placeholder={(!(loaded)) ? "Cargando..." : viewData["value"]}
                         />
                     </FormGroup>
                     <ModalFooter>
