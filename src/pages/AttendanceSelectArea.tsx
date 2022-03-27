@@ -57,20 +57,20 @@ function AttendanceSelectArea() {
     }
 
     const findJanij = (janijInput: string) => {
+        if(janijInput==="") return []
+        
         return janijim.filter((janij: JanijDTO) => (janij.active && (
-            janij.name.toLowerCase().includes(janijInput.toLowerCase()) ||
-            janij.familySurname.toLowerCase().includes(janijInput.toLowerCase()) ||
-            `${janij.name.toLowerCase()} ${janij.familySurname.toLowerCase()}`.includes(janijInput.toLowerCase())))
+            janij.name.toLowerCase().startsWith(janijInput.toLowerCase()) ||
+            janij.familySurname.toLowerCase().startsWith(janijInput.toLowerCase()) ||
+            `${janij.name.toLowerCase()} ${janij.familySurname.toLowerCase()}`.startsWith(janijInput.toLowerCase())))
         )
     }
 
     const handleChange = (e?: any) => {
         if (e) {
             setSearchValue(e.target.value)
-            setJanijimSearched(findJanij(searchValue))
         } else {
             setSearchValue("")
-            setJanijimSearched([])
         }
         if (isEmptyOrSpaces(searchValue)) {
             setJanijimSearched([])
@@ -162,7 +162,7 @@ function AttendanceSelectArea() {
 
             {loaded ?
                 <div className="justify-content-center text-center">
-                    {janijimSearched.length > 0 &&
+                    {findJanij(searchValue).length > 0 &&
                         <div>
                             <table className="table table-hover table-responsive mx-3 mb-4">
                                 <thead>
@@ -174,7 +174,7 @@ function AttendanceSelectArea() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {janijimSearched.map((janij: JanijDTO) => (
+                                    {findJanij(searchValue).map((janij: JanijDTO) => (
                                         <tr key={janij.id}>
                                             <td>{`${janij.name} ${janij.familySurname}`}</td>
                                             <td>{janij.groupName}</td>
@@ -210,7 +210,7 @@ function AttendanceSelectArea() {
                                 {isSaving ? <>Grabando...<Spinner animation="border" variant="light" size="sm" /></> : 'Grabar Asistencias'}                            </Button>
                         </div>
                     }
-                    {!isEmptyOrSpaces(searchValue) && janijimSearched.length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
+                    {!isEmptyOrSpaces(searchValue) && findJanij(searchValue).length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
 
                     {areas &&
                         <div className='mt-3 inline-grid'>
