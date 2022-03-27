@@ -98,7 +98,7 @@ function Families() {
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows columns={3}/>}
+                        {!loaded && <SkeletonRows rows={50} columns={3}/>}
                         {loaded &&
                             families
                                 .filter((family: FamilyDTO) => (!((tableFilter === 'Inactivos' && family.active) || (tableFilter === 'Activos' && !family.active))))
