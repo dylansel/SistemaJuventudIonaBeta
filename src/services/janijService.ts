@@ -3,13 +3,9 @@ import JanijDTO from '../dtos/JanijDTO';
 import JanijRequestDTO from '../dtos/JanijRequestDTO';
 
 export async function getAllJanijim(orderBy?: string): Promise<JanijDTO[]> {
-    try {
-        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/janij/getAll?${orderBy}`)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/janij/getAll?${orderBy}`)
+    const data = await response.data
+    return data
 }
 
 export async function getJanijById(id: number): Promise<JanijDTO> {
