@@ -21,6 +21,7 @@ import {
   AttendanceList
 } from "./pages"
 import Navbar from './components/UI/Layout/HeaderNav';
+import PricingCases from './pages/PricingCases';
 
 function App() {
   const { isLoading, isAuthenticated } = useAuth0()
@@ -51,6 +52,7 @@ function App() {
             <Route path="prices" element={<Prices />} />
             <Route path="payments" element={<Payments />} />
             <Route path="grants" element={<Grants />} />
+            <Route path="pricingCases" element={<PricingCases />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

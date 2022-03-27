@@ -93,12 +93,12 @@ function Families() {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows columns={3}/>}
+                        {!loaded && <SkeletonRows rows={50} columns={3}/>}
                         {loaded &&
                             families
                                 .filter((family: FamilyDTO) => (!((tableFilter === 'Inactivos' && family.active) || (tableFilter === 'Activos' && !family.active))))

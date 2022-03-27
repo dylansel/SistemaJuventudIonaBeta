@@ -118,6 +118,7 @@ function AttendanceList() {
                     </div>
                     <div className="text-center">
                         <h4>{groupData?.name}</h4>
+                        <p>{janijimPresents.filter((janij:JanijAttendanceRequestDTO)=> janij.present).length} Presentes</p>
                     </div>
                 </>}
             </div>

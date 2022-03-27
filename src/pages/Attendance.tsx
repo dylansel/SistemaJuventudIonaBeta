@@ -75,6 +75,7 @@ function Attendance() {
                                     </thead>
                                     <tbody>
                                         {activities
+                                            .filter((activity: ActivityDTO) => activity.date <= new Date().toISOString().split('T')[0])
                                             .map((activity: ActivityDTO) => (
                                                 <tr key={activity.id}>
                                                     <td className="td-attendance">{dateToEsString(activity.date)}</td>
