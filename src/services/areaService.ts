@@ -1,63 +1,27 @@
-import axios from 'axios';
 import AreaDTO from '../dtos/AreaDTO';
 import AreaRequestDTO from '../dtos/AreaRequestDTO';
+import { add, deleteOne, get, getAll, switchActive, update } from './crudService';
 
 export async function getAllAreas(orderBy?: string): Promise<AreaDTO[]> {
-    try {
-        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN!}/area/getAll?${orderBy}`)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return getAll("area", orderBy)
 }
 
 export async function getAreaById(id: number): Promise<AreaDTO> {
-    try {
-        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN!}/area/get/${id}`)
-        const data = await response.data
-        return data as AreaDTO
-    } catch (error: any) {
-        throw error
-    }
+    return get("area", id)
 }
 
 export async function addArea(areaToAdd: AreaRequestDTO) {
-    try {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/area/add`,areaToAdd)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return add("area", areaToAdd)
 }
 
 export async function updateArea(id: number, areaToUpdate: AreaRequestDTO) {
-    try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN!}/area/update/${id}`,areaToUpdate)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return update("area", id, areaToUpdate)
 }
 
 export async function switchActiveArea(id: number, active: boolean) {
-    try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN!}/area/update/${id}`, { active })
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return switchActive("area", id, active)
 }
 
 export async function deleteArea(id: number) {
-    try {
-        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN!}/area/delete/${id}`)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return deleteOne("area", id)
 }
