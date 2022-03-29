@@ -1,12 +1,11 @@
-import AreaDTO from '../dtos/AreaDTO';
 import AreaRequestDTO from '../dtos/AreaRequestDTO';
 import { add, deleteOne, get, getAll, switchActive, update } from './crudService';
 
-export async function getAllAreas(orderBy?: string): Promise<AreaDTO[]> {
+export async function getAllAreas(orderBy?: string) {
     return getAll("area", orderBy)
 }
 
-export async function getAreaById(id: number): Promise<AreaDTO> {
+export async function getAreaById(id: number) {
     return get("area", id)
 }
 

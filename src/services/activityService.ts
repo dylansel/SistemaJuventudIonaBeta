@@ -4,11 +4,11 @@ import ActivityRequestDTO from '../dtos/ActivityRequestDTO';
 import MultipleActivitiesRequestDTO from '../dtos/MultipleActivitiesRequestDTO';
 import { add, deleteOne, get, getAll, update } from './crudService';
 
-export async function getAllActivities(orderBy?: string): Promise<ActivityDTO[]> {
+export async function getAllActivities(orderBy?: string) {
     return getAll("activity", orderBy)
 }
 
-export async function getActivityById(id: number): Promise<ActivityDTO> {
+export async function getActivityById(id: number) {
     return get("activity", id)
 }
 
