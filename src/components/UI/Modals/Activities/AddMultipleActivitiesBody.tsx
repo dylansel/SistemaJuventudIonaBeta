@@ -35,7 +35,7 @@ function AddMultipleActivitiesBody(props: any) {
         const ActivityToAdd = {
             fromDate: formatDateEsToUs(fields.fromDate),
             toDate: formatDateEsToUs(fields.toDate),
-            
+            price: 0 //TODO: Add value from field price
         }
         await addMultipleActivities(ActivityToAdd)
         props.toggle()
