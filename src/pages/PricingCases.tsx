@@ -130,9 +130,7 @@ function PricingCases() {
                                                                     provided.draggableProps.style
                                                                 )}
                                                             >
-                                                                {item.pricingCaseGroups.map(groupCase => (
-                                                                    <p>{groupCase.group.name}</p>
-                                                                ))}
+                                                                {item.name}
                                                             </div>
                                                         )}
                                                     </Draggable>
