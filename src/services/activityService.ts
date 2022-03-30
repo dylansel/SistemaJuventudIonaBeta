@@ -1,5 +1,4 @@
 import axios from 'axios';
-import ActivityDTO from '../dtos/ActivityDTO';
 import ActivityRequestDTO from '../dtos/ActivityRequestDTO';
 import MultipleActivitiesRequestDTO from '../dtos/MultipleActivitiesRequestDTO';
 import { add, deleteOne, get, getAll, update } from './crudService';
