@@ -1,15 +1,10 @@
 import axios from 'axios';
 import SystemVariableDTO from '../dtos/systemVariableDTO';
+import { add, getAll } from './crudService';
 
 
 export async function getAllSystemVariable(orderBy?: string): Promise<SystemVariableDTO[]> {
-    try {
-        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN!}/systemVariable/getAll?${orderBy}`)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return getAll("systemVariable", orderBy)
 }
 
 export async function getSystemVariableByKey(key: string): Promise<SystemVariableDTO> {
@@ -23,25 +18,18 @@ export async function getSystemVariableByKey(key: string): Promise<SystemVariabl
 }
 
 export async function addSystemVariable(systemVariableToAdd: SystemVariableDTO) {
-    try {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/systemVariable/add`,systemVariableToAdd)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return add("systemVariable", systemVariableToAdd)
 }
 
 export async function updateSystemVariable(key: string, systemVariableToUpdate: SystemVariableDTO) {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN!}/systemVariable/update/${key}`,systemVariableToUpdate)
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN!}/systemVariable/update/${key}`, systemVariableToUpdate)
         const data = await response.data
         return data
     } catch (error: any) {
         throw error
     }
 }
-
 
 export async function deleteSystemVariable(key: string) {
     try {
