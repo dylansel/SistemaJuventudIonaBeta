@@ -1,4 +1,6 @@
+import PricingCaseGroupDTO from "./PricingCaseGroupDTO";
+
 export default interface PricingCaseDTO {
-    id: number,
-    name: string
+    name: string,
+    pricingCaseGroups: PricingCaseGroupDTO[]
 }
