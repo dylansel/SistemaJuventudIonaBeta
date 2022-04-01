@@ -63,6 +63,8 @@ function PricingCases() {
         }
         const sInd = +source.droppableId;
         const dInd = +destination.droppableId; 
+        console.log(previousActivePricingCases)
+        console.log(previousActivePricingCases[0].pricingCaseGroups[0].group.name)
         if (sInd === dInd) {
             if(sInd == -1){
                 const items:any = reorder(groupCases, source.index, destination.index);
@@ -76,26 +78,27 @@ function PricingCases() {
                 setState(newState);
             }
             
-          }else{
+        }else{
               
             if(sInd == -1){
                 console.log(source.droppable)
                 const result:any = move(groupCases, state[dInd], source, destination);
-                const newState:any = [...state];
-                newState[sInd] = result[sInd];
+                const newState:any = [...groupCases];
+                newState[sInd] = result[sInd]; //Seguro hay error aca
                 newState[dInd] = result[dInd];
-                
+                setGroupCases(newState.filter((group:any) => group.length));
 
             }else{
                 const result:any = move(state[sInd], state[dInd], source, destination);
                 const newState:any = [...state];
                 newState[sInd] = result[sInd];
                 newState[dInd] = result[dInd];
+                setState(newState.filter((group:any) => group.length));
             }
 
             
       
-            setState(newState.filter((group:any) => group.length));
+            
           }
 
     }
@@ -199,12 +202,7 @@ function PricingCases() {
                                                                 ))}
 
 
-
-
-
-
-
-
+                                                                            {provided.placeholder}
                                                             </div>
                                                         )}
                                                     </Droppable>
@@ -234,7 +232,6 @@ function PricingCases() {
                                                                 )}
                                                             >
                                                             {item.name}
-                                                            {/*item.pricingCaseGroups*/}
                                                             </div>
                                                         )}
                                                     </Draggable>

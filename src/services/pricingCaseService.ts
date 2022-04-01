@@ -25,7 +25,6 @@ export async function getGroupCases() {
     try {
         const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/pricingCase/getGroupCases`)
         const data = await response.data
-        console.log(data)
         return data
     } catch (error: any) {
         throw error
