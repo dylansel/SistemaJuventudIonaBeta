@@ -213,3 +213,7 @@ input[type="checkbox"]:checked {
 .skeleton:hover{
   background-color: "#ffffff"
 }
+
+.BodyPricingCases{
+  margin: 10px;
+}

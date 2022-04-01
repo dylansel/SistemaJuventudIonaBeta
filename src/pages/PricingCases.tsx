@@ -33,13 +33,14 @@ const grid = 8;
 const getListStyle = (isDraggingOver: any) => ({
     background: isDraggingOver ? "#FF7F7F" : "lightgrey",
     padding: grid,
+    margin:`0 0 20px 0`,
     width: 250
 });
 
 const getItemStyle = (isDragging: any, draggableStyle: any) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
-    padding: grid * 2,
+    padding: grid * 3,
     margin: `0 0 ${grid}px 0`,
 
     // change background colour if dragging
@@ -51,49 +52,57 @@ const getItemStyle = (isDragging: any, draggableStyle: any) => ({
 
 function PricingCases() {
     const [groupCases, setGroupCases] = useState<PricingCaseGroupDTO[]>([])
-    const [previousActivePricingCases, setPreviousActivePricingCases] = useState<PricingCaseDTO[]>([])
-    const [state, setState] = useState([]);
+    const [ActivePricingCases, setActivePricingCases] = useState<PricingCaseDTO[]>([])
+    
     const [loaded, setLoaded] = useState<boolean>(false)
     const onDragEnd = (result: any) => {
         const { source, destination } = result;
-
         // dropped outside the list
         if (!destination) {
         return;
         }
         const sInd = +source.droppableId;
         const dInd = +destination.droppableId; 
-        console.log(previousActivePricingCases)
-        console.log(previousActivePricingCases[0].pricingCaseGroups[0].group.name)
+
         if (sInd === dInd) {
             if(sInd == -1){
                 const items:any = reorder(groupCases, source.index, destination.index);
-                const newState:any = [...groupCases];
+                const newState:any = [...groupCases];   
                 newState[sInd] = items;
                 setGroupCases(newState[-1]);
             }else{
-                const items:any = reorder(state[sInd], source.index, destination.index);
-                const newState:any = [...state];
-                newState[sInd] = items;
-                setState(newState);
+
+                const items:any = reorder(ActivePricingCases[sInd].pricingCaseGroups, source.index, destination.index);
+                const newState:any = [...ActivePricingCases];
+                newState[sInd].pricingCaseGroups = items;
+                setActivePricingCases(newState);
             }
             
         }else{
               
             if(sInd == -1){
-                console.log(source.droppable)
-                const result:any = move(groupCases, state[dInd], source, destination);
-                const newState:any = [...groupCases];
-                newState[sInd] = result[sInd]; //Seguro hay error aca
-                newState[dInd] = result[dInd];
-                setGroupCases(newState.filter((group:any) => group.length));
+                const result:any = move(groupCases, ActivePricingCases[dInd].pricingCaseGroups, source, destination);
+                let newStateGroup:any = groupCases;
+                const newStateCases:any = ActivePricingCases;
+                newStateGroup = result[sInd]; 
+                newStateCases[dInd].pricingCaseGroups = result[dInd];
+                setGroupCases(newStateGroup)
+                setActivePricingCases(newStateCases)
 
+            }else if(dInd == -1){
+                const result:any = move(ActivePricingCases[sInd].pricingCaseGroups,groupCases, source, destination);
+                let newStateGroup:any = groupCases;
+                const newStateCases:any = ActivePricingCases;
+                newStateGroup = result[dInd]; 
+                newStateCases[sInd].pricingCaseGroups = result[sInd];
+                setGroupCases(newStateGroup)
+                setActivePricingCases(newStateCases)
             }else{
-                const result:any = move(state[sInd], state[dInd], source, destination);
-                const newState:any = [...state];
-                newState[sInd] = result[sInd];
-                newState[dInd] = result[dInd];
-                setState(newState.filter((group:any) => group.length));
+                const result:any = move(ActivePricingCases[sInd].pricingCaseGroups,ActivePricingCases[dInd].pricingCaseGroups, source, destination);
+                const newStateCases:any = ActivePricingCases;
+                newStateCases[sInd].pricingCaseGroups = result[sInd];
+                newStateCases[dInd].pricingCaseGroups = result[dInd];
+                setActivePricingCases(newStateCases)
             }
 
             
@@ -102,11 +111,13 @@ function PricingCases() {
           }
 
     }
+    
+
 
     async function fetchData() {
         setLoaded(false)
+        setActivePricingCases(await getActive())
         setGroupCases(await getGroupCases())
-        setPreviousActivePricingCases(await getActive())
         setLoaded(true)
     }
 
@@ -131,6 +142,7 @@ function PricingCases() {
                                                 ref={provided.innerRef}
                                                 style={getListStyle(snapshot.isDraggingOver)}
                                             >
+                                                <h3>Grupos</h3>
                                                 {groupCases.map((item, index) => (
                                                     <Draggable key={index} draggableId={`g${index}`} index={index}>
                                                         {(provided, snapshot) => (
@@ -154,30 +166,38 @@ function PricingCases() {
                                     </Droppable> 
                                 </div>
                             }
-                            {previousActivePricingCases &&
+
+
+
+
+
+
+
+                            {ActivePricingCases &&
                                 <div className='col-8'>
-                                    
-                                    {/*previousActivePricingCases.map((el, ind) => (
-                                                    <Droppable key={ind} droppableId={ind.toString()}>
+                                    <h3>Casos</h3>
+                                    {ActivePricingCases.map((el, ind) => (
+                                                    <Droppable key={ind} droppableId={`${ind}`}>
                                                         {(provided, snapshot) => (
                                                             <div
+                                                            
                                                             ref={provided.innerRef}
                                                             style={getListStyle(snapshot.isDraggingOver)}
+                                                            className="BodyPricingCases"
                                                             {...provided.droppableProps}
+                                                           
                                                             >
                                                                 
+                                                                <h3>{el.name}</h3>
+                                                                
 
-
-
-
-
-                                                                {el.map((item, index) => (
+                                                                {el.pricingCaseGroups.map((item, index) => (
                                                                     <Draggable
-                                                                    key={item.id}
-                                                                    draggableId={item.id}
+                                                                    draggableId={`${item.group.name+index}`}
                                                                     index={index}
                                                                     >
                                                                     {(provided, snapshot) => (
+                                                                        
                                                                         <div
                                                                         ref={provided.innerRef}
                                                                         {...provided.draggableProps}
@@ -187,59 +207,19 @@ function PricingCases() {
                                                                             provided.draggableProps.style
                                                                         )}
                                                                         >
-                                                                        <div
-                                                                            style={{
-                                                                            display: "flex",
-                                                                            justifyContent: "space-around"
-                                                                            }}
-                                                                        >
-                                                                            {item.name}
-                                                                        
-                                                                        </div>
+                                                                            {item.group.name}
                                                                         </div>
                                                                     )}
+                                                                    
                                                                     </Draggable>
                                                                 ))}
-
 
                                                                             {provided.placeholder}
                                                             </div>
                                                         )}
                                                     </Droppable>
-                                        ))*/}
+                                        ))}
                                     
-                                        
-
-
-
-                                    <Droppable droppableId="pricingCases">
-                                        {(provided, snapshot) => (
-                                            <div
-                                                {...provided.droppableProps}
-                                                ref={provided.innerRef}
-                                                style={getListStyle(snapshot.isDraggingOver)}
-                                            >
-                                                {previousActivePricingCases.map((item, index) => (
-                                                    <Draggable key={index} draggableId={index.toString()} index={index}>
-                                                        {(provided, snapshot) => (
-                                                            <div
-                                                                ref={provided.innerRef}
-                                                                {...provided.draggableProps}
-                                                                {...provided.dragHandleProps}
-                                                                style={getItemStyle(
-                                                                    snapshot.isDragging,
-                                                                    provided.draggableProps.style
-                                                                )}
-                                                            >
-                                                            {item.name}
-                                                            </div>
-                                                        )}
-                                                    </Draggable>
-                                                ))}
-                                                {provided.placeholder}
-                                            </div>
-                                        )}
-                                    </Droppable>
                                 </div>
                             }
 
