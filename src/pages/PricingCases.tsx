@@ -61,7 +61,6 @@ const getItemStyle = (isDragging: any, draggableStyle: any) => ({
 function PricingCases() {
     const [groupCases, setGroupCases] = useState<PricingCaseGroupDTO[]>([])
     const [activePricingCases, setActivePricingCases] = useState<PricingCaseDTO[]>([])
-    const [caseDeleted, setCaseDeleted] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
 
     const [loaded, setLoaded] = useState<boolean>(false)
@@ -115,7 +114,7 @@ function PricingCases() {
     }
 
     const handleChangeName = (e: any) => {
-
+        //Change name of one case
     }
 
     const handleAddCase = () => {
@@ -127,13 +126,12 @@ function PricingCases() {
 
     const handleDeleteCase = (name: string) => {
         setActivePricingCases(activePricingCases.filter(pricingCase => pricingCase.name !== name))
-        setCaseDeleted(true)
     }
 
     const handleSaveCases = () => {
         setIsSaving(true)
-        setTimeout(() => setIsSaving(false)
-            , 5000)
+        //call savePricingCases...
+        setIsSaving(false)
     }
 
     async function fetchData() {
