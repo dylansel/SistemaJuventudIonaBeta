@@ -21,14 +21,12 @@ function AttendanceSelectArea() {
     const history = useNavigate();
     let { activityId } = useParams();
 
-    const [state, setState] = useState({})
     const [showDialog, setShowDialog] = useState(false)
     const [showPrompt, confirmNavigation, cancelNavigation] =
         useCallbackPrompt(showDialog)
 
     const [janijim, setJanijim] = useState<JanijDTO[]>([])
     const [searchValue, setSearchValue] = useState('')
-    const [janijimSearched, setJanijimSearched] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
     const [janijimPresents, setJanijimPresents] = useState<JanijAttendanceRequestDTO[]>([])
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
@@ -78,9 +76,6 @@ function AttendanceSelectArea() {
             setSearchValue(e.target.value)
         } else {
             setSearchValue("")
-        }
-        if (isEmptyOrSpaces(searchValue)) {
-            setJanijimSearched([])
         }
     }
 
