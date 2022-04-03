@@ -7,7 +7,6 @@ import { getGroupCases, getActive, savePricingCases } from '../services/pricingC
 import Scroll from '../components/UI/Layout/Scroll';
 import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { Button, Input, Spinner } from 'reactstrap';
-import { group } from 'console';
 
 const reorder = (list: any, startIndex: any, endIndex: any) => {
     const result = Array.from(list);
@@ -52,8 +51,9 @@ const getItemStyle = (isDragging: any, draggableStyle: any) => ({
     padding: grid * 3,
     margin: `0 0 ${grid}px 0`,
 
-    // change background colour if dragging
+    // change colour if dragging
     background: isDragging ? "lightgreen" : "#EED3D3",
+    fontWeight: isDragging ? "bold" : "normal",
 
     // styles we need to apply on draggables
     ...draggableStyle
@@ -62,16 +62,17 @@ const getItemStyle = (isDragging: any, draggableStyle: any) => ({
 function PricingCases() {
     const [groupCases, setGroupCases] = useState<PricingCaseGroupDTO[]>([])
     const [activePricingCases, setActivePricingCases] = useState<PricingCaseDTO[]>([])
-    const [isSaving, setIsSaving] = useState(false)
+    const [isSaving, setIsSaving] = useState<boolean>(false)
     const [loaded, setLoaded] = useState<boolean>(false)
-    const [caseName, setCaseName] = useState('')
-    const [handleAddCaseActive,setHandleAddCaseActive] = useState<boolean>(false)
+    const [caseName, setCaseName] = useState<string>('')
+    const [handleAddCaseActive, setHandleAddCaseActive] = useState<boolean>(false)
+
     const refresh = () => {
         setLoaded(false)
         setTimeout(() => {
             setCaseName('')
             setHandleAddCaseActive(false)
-            setLoaded(true)  
+            setLoaded(true)
         }, 1);
     }
     const onDragEnd = (result: any) => {
@@ -123,19 +124,20 @@ function PricingCases() {
         }
     }
 
-    const handleChangeName =(e: any) =>{
-       setCaseName(e.target.value)
+    const handleChangeName = (e: any) => {
+        setCaseName(e.target.value)
     }
-    const handleSaveCase =(i: any) =>{
+
+    const handleSaveCase = (i: any) => {
         console.log(activePricingCases[i].name)
         const newStateCases: any = activePricingCases;
-        newStateCases[i].name=caseName; 
+        newStateCases[i].name = caseName;
         setActivePricingCases(newStateCases)
         setCaseName('')
         setHandleAddCaseActive(false)
         refresh()
-
     }
+
     const handleAddCase = () => {
         setHandleAddCaseActive(true);
         activePricingCases.push({
@@ -148,14 +150,13 @@ function PricingCases() {
     const handleDeleteCase = (name: string) => {
         setActivePricingCases(activePricingCases.filter(pricingCase => pricingCase.name !== name))
         refresh()
-        
     }
 
-    async function handleSaveCases(){
-        setIsSaving(true) 
-        let newPricingCases:any = [...activePricingCases]
-        newPricingCases.map((e:any,i:any)=>{
-            e.pricingCaseGroups.map((el:any)=>{
+    async function handleSaveCases() {
+        setIsSaving(true)
+        let newPricingCases: any = [...activePricingCases]
+        newPricingCases.map((e: any, i: any) => {
+            e.pricingCaseGroups.map((el: any) => {
                 el.groupId = el.group.id
                 delete el.group
                 console.log(el)
@@ -223,8 +224,8 @@ function PricingCases() {
                             {activePricingCases &&
                                 <div className='col-12 col-md-7 padrepricingCasesActive-custom'>
                                     <div className='justify-content-center d-flex py-3'>
-                                    <h2>Casos</h2>
-                                    <button type='button' title='Agregar' className="btn btn-danger mx-2" onClick={handleAddCase} disabled={handleAddCaseActive}><i className="fas fa-plus"></i> Agregar Caso</button>
+                                        <h2 className='px-5'>Casos</h2>
+                                        <button type='button' title='Agregar' className="btn btn-danger mx-2" onClick={handleAddCase} disabled={handleAddCaseActive}><i className="fas fa-plus"></i> Agregar Nuevo Caso</button>
                                     </div>
                                     <div className='pricingCasesActive-custom'>
                                         {activePricingCases.map((element, index) => (
@@ -239,25 +240,25 @@ function PricingCases() {
                                                         <div className='justify-content-center d-flex flex-row py-3 '>
 
                                                             {element.name !== "" ?
-                                                                <h3 className='px-5 text-break'>{element.name}</h3>
-                                                                :<>
-                                                                <Input
-                                                                    type='text'
-                                                                    id={`${index}`}
-                                                                    className="w-50"
-                                                                    name={`pricingCaseName${index}`}
-                                                                    value={caseName}
-                                                                    placeholder='Nombre del caso'
-                                                                    onChange={handleChangeName}
-                                                                />
+                                                                <h3 className='px-5'>{element.name}</h3>
+                                                                : <>
+                                                                    <Input
+                                                                        type='text'
+                                                                        id={`${index}`}
+                                                                        className="w-50"
+                                                                        name={`pricingCaseName${index}`}
+                                                                        value={caseName}
+                                                                        placeholder='Nombre del caso'
+                                                                        onChange={handleChangeName}
+                                                                    />
                                                                 </>
 
                                                             }
                                                             <div>
-                                                                <button type='button' title={(handleAddCaseActive)?'Guardar':'Editar'} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className="fas fa-edit"></i></button>
+                                                                <button type='button' title={(handleAddCaseActive) ? 'Guardar' : 'Editar'} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className="fas fa-edit"></i></button>
                                                                 <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => { handleDeleteCase(element.name) }} ><i className="fas fa-trash"></i></button>
                                                             </div>
-                                                            
+
                                                         </div>
 
                                                         {element.pricingCaseGroups.map((item, index) => (
@@ -288,14 +289,14 @@ function PricingCases() {
                                             </Droppable>
                                         ))}
                                     </div>
-                                        <Button
-                                            onClick={handleSaveCases}
-                                            className='my-3'
-                                            color={isSaving ? 'success' : 'danger'}
-                                            disabled={isSaving}
-                                            type='button'
-                                        >{isSaving ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : "Guardar Casos de Precios"}</Button>
-                                    
+                                    <Button
+                                        onClick={handleSaveCases}
+                                        className='my-3'
+                                        color={isSaving ? 'success' : 'danger'}
+                                        disabled={isSaving || activePricingCases.length === 0 || handleAddCaseActive}
+                                        type='button'
+                                    >{isSaving ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : "Guardar Casos de Precios"}</Button>
+
                                 </div>
                             }
                         </DragDropContext>

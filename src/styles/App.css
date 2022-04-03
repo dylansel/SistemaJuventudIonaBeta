@@ -218,11 +218,17 @@ input[type="checkbox"]:checked {
   margin: 10px;
 }
 .padrepricingCasesActive-custom{
-background-color: #9202245d;
+  background-color: #9202245d;
 }
 .pricingCasesActive-custom{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 10px;
+}
 
+@media only screen and (max-width: 600px) {
+  .pricingCasesActive-custom{
+    display: flex;
+    flex-direction: column;
+  }
 }
