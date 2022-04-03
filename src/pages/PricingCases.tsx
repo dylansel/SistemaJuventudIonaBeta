@@ -32,7 +32,7 @@ const move = (source: any, destination: any, droppableSource: any, droppableDest
 const grid = 8;
 
 const getListStyle = (isDraggingOver: any) => ({
-    background: isDraggingOver ? "#FF7F7F" : "lightgrey",
+    background: isDraggingOver ? "#c7002f71" : "#9202245d",
     padding: grid,
     margin: `0 0 20px 0`,
     width: "100%",
@@ -182,7 +182,7 @@ function PricingCases() {
                                                 ref={provided.innerRef}
                                                 style={getListStyle(snapshot.isDraggingOver)}
                                             >
-                                                <h3 className='py-3'>Grupos</h3>
+                                                <h2 className='py-3'>Grupos</h2>
                                                 {groupCases.map((item, index) => (
                                                     <Draggable key={index} draggableId={`g${index}`} index={index}>
                                                         {(provided, snapshot) => (
@@ -209,71 +209,81 @@ function PricingCases() {
                             <div className="d-xs-none col-1"></div>
 
                             {activePricingCases &&
-                                <div className='col-12 col-md-7'>
-                                    <button type='button' title='Agregar' className="btn btn-danger" onClick={handleAddCase} disabled={handleAddCaseActive}><i className="fas fa-plus"></i></button>
+                                <div className='col-12 col-md-7 padrepricingCasesActive-custom'>
+                                    <div className='justify-content-center d-flex py-3'>
+                                    <h2>Casos</h2>
+                                    <button type='button' title='Agregar' className="btn btn-danger mx-2" onClick={handleAddCase} disabled={handleAddCaseActive}><i className="fas fa-plus"></i> Agregar Caso</button>
+                                    </div>
+                                    <div className='pricingCasesActive-custom'>
+                                        {activePricingCases.map((element, index) => (
+                                            <Droppable key={index} droppableId={`${index}`}>
+                                                {(provided, snapshot) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        style={getCasesStyle(snapshot.isDraggingOver)}
+                                                        className="bodyPricingCases"
+                                                        {...provided.droppableProps}
+                                                    >
+                                                        <div className='justify-content-center d-flex flex-row py-3 '>
 
-                                    {activePricingCases.map((element, index) => (
-                                        <Droppable key={index} droppableId={`${index}`}>
-                                            {(provided, snapshot) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    style={getCasesStyle(snapshot.isDraggingOver)}
-                                                    className="bodyPricingCases"
-                                                    {...provided.droppableProps}
-                                                >
-                                                    <div className='justify-content-center d-flex flex-row py-3'>
+                                                            {element.name !== "" ?
+                                                                <h3 className='px-5'>{element.name}</h3>
+                                                                :<>
+                                                                <Input
+                                                                    type='text'
+                                                                    id={`${index}`}
+                                                                    className="w-50"
+                                                                    name={`pricingCaseName${index}`}
+                                                                    value={caseName}
+                                                                    placeholder='Nombre del caso'
+                                                                    onChange={handleChangeName}
+                                                                />
+                                                                </>
 
-                                                        {element.name !== "" ?
-                                                            <h3 className='px-5'>{element.name}</h3>
-                                                            :<>
-                                                            <Input
-                                                                type='text'
-                                                                id={`${index}`}
-                                                                name={`pricingCaseName${index}`}
-                                                                value={caseName}
-                                                                onChange={handleChangeName}
-                                                            />
-                                                            <button type='button' title='cargar' className="btn btn-danger" onClick={() => { handleSaveCase(index) }} ><i className="fas fa-edit"></i></button>
-                                                            </>
+                                                            }
+                                                            <div>
+                                                                <button type='button' title={(handleAddCaseActive)?'Guardar':'Editar'} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className="fas fa-edit"></i></button>
+                                                                <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => { handleDeleteCase(element.name) }} ><i className="fas fa-trash"></i></button>
+                                                            </div>
+                                                            
+                                                        </div>
 
-                                                        }
-                                                        <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => { handleDeleteCase(element.name) }} ><i className="fas fa-trash"></i></button>
+                                                        {element.pricingCaseGroups.map((item, index) => (
+                                                            <Draggable
+                                                                draggableId={`${item.group.name + index}`}
+                                                                index={index}
+                                                            >
+                                                                {(provided, snapshot) => (
+
+                                                                    <div
+                                                                        ref={provided.innerRef}
+                                                                        {...provided.draggableProps}
+                                                                        {...provided.dragHandleProps}
+                                                                        style={getItemStyle(
+                                                                            snapshot.isDragging,
+                                                                            provided.draggableProps.style
+                                                                        )}
+                                                                    >
+                                                                        {item.group.name}
+                                                                    </div>
+                                                                )}
+
+                                                            </Draggable>
+                                                        ))}
+                                                        {provided.placeholder}
                                                     </div>
-
-                                                    {element.pricingCaseGroups.map((item, index) => (
-                                                        <Draggable
-                                                            draggableId={`${item.group.name + index}`}
-                                                            index={index}
-                                                        >
-                                                            {(provided, snapshot) => (
-
-                                                                <div
-                                                                    ref={provided.innerRef}
-                                                                    {...provided.draggableProps}
-                                                                    {...provided.dragHandleProps}
-                                                                    style={getItemStyle(
-                                                                        snapshot.isDragging,
-                                                                        provided.draggableProps.style
-                                                                    )}
-                                                                >
-                                                                    {item.group.name}
-                                                                </div>
-                                                            )}
-
-                                                        </Draggable>
-                                                    ))}
-                                                    {provided.placeholder}
-                                                </div>
-                                            )}
-                                        </Droppable>
-                                    ))}
-                                    <Button
-                                        onClick={handleSaveCases}
-                                        className='my-3'
-                                        color={isSaving ? 'success' : 'danger'}
-                                        disabled={isSaving}
-                                        type='button'
-                                    >{isSaving ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : "Guardar Casos de Precios"}</Button>
+                                                )}
+                                            </Droppable>
+                                        ))}
+                                    </div>
+                                        <Button
+                                            onClick={handleSaveCases}
+                                            className='my-3'
+                                            color={isSaving ? 'success' : 'danger'}
+                                            disabled={isSaving}
+                                            type='button'
+                                        >{isSaving ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : "Guardar Casos de Precios"}</Button>
+                                    
                                 </div>
                             }
                         </DragDropContext>
