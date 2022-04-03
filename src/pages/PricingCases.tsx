@@ -62,8 +62,15 @@ function PricingCases() {
     const [groupCases, setGroupCases] = useState<PricingCaseGroupDTO[]>([])
     const [activePricingCases, setActivePricingCases] = useState<PricingCaseDTO[]>([])
     const [isSaving, setIsSaving] = useState(false)
-
     const [loaded, setLoaded] = useState<boolean>(false)
+    const [caseName, setCaseName] = useState('')
+    const [handleAddCaseActive,setHandleAddCaseActive] = useState<boolean>(false)
+    const refresh = () => {
+        setLoaded(false)
+        setTimeout(() => {
+          setLoaded(true)  
+        }, 1);
+    }
     const onDragEnd = (result: any) => {
         const { source, destination } = result;
         // dropped outside the list
@@ -113,24 +120,37 @@ function PricingCases() {
         }
     }
 
-    const handleChangeName = (e: any) => {
-        //Change name of one case
+    const handleChangeName =(e: any) =>{
+       setCaseName(e.target.value)
     }
+    const handleSaveCase =(i: any) =>{
+        console.log(activePricingCases[i].name)
+        const newStateCases: any = activePricingCases;
+        newStateCases[i].name=caseName; //hay que captar el value del input
+        setActivePricingCases(newStateCases)
+        setCaseName('')
+        setHandleAddCaseActive(false)
+        refresh()
 
+    }
     const handleAddCase = () => {
+        setHandleAddCaseActive(true);
         activePricingCases.push({
-            name: "",
+            name: ``,
             pricingCaseGroups: []
         })
+        refresh()
     }
 
     const handleDeleteCase = (name: string) => {
         setActivePricingCases(activePricingCases.filter(pricingCase => pricingCase.name !== name))
+        
     }
 
     const handleSaveCases = () => {
         setIsSaving(true)
         //call savePricingCases...
+        console.log(activePricingCases)
         setIsSaving(false)
     }
 
@@ -190,7 +210,7 @@ function PricingCases() {
 
                             {activePricingCases &&
                                 <div className='col-12 col-md-7'>
-                                    <button type='button' title='Agregar' className="btn btn-danger" onClick={handleAddCase} ><i className="fas fa-plus"></i></button>
+                                    <button type='button' title='Agregar' className="btn btn-danger" onClick={handleAddCase} disabled={handleAddCaseActive}><i className="fas fa-plus"></i></button>
 
                                     {activePricingCases.map((element, index) => (
                                         <Droppable key={index} droppableId={`${index}`}>
@@ -205,14 +225,17 @@ function PricingCases() {
 
                                                         {element.name !== "" ?
                                                             <h3 className='px-5'>{element.name}</h3>
-                                                            :
+                                                            :<>
                                                             <Input
                                                                 type='text'
-                                                                id={`pricingCaseName${index}`}
+                                                                id={`${index}`}
                                                                 name={`pricingCaseName${index}`}
-                                                                value={element.name}
+                                                                value={caseName}
                                                                 onChange={handleChangeName}
                                                             />
+                                                            <button type='button' title='cargar' className="btn btn-danger" onClick={() => { handleSaveCase(index) }} ><i className="fas fa-edit"></i></button>
+                                                            </>
+
                                                         }
                                                         <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => { handleDeleteCase(element.name) }} ><i className="fas fa-trash"></i></button>
                                                     </div>
