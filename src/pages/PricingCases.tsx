@@ -7,6 +7,7 @@ import { getGroupCases, getActive, savePricingCases } from '../services/pricingC
 import Scroll from '../components/UI/Layout/Scroll';
 import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { Button, Input, Spinner } from 'reactstrap';
+import { group } from 'console';
 
 const reorder = (list: any, startIndex: any, endIndex: any) => {
     const result = Array.from(list);
@@ -68,7 +69,9 @@ function PricingCases() {
     const refresh = () => {
         setLoaded(false)
         setTimeout(() => {
-          setLoaded(true)  
+            setCaseName('')
+            setHandleAddCaseActive(false)
+            setLoaded(true)  
         }, 1);
     }
     const onDragEnd = (result: any) => {
@@ -126,7 +129,7 @@ function PricingCases() {
     const handleSaveCase =(i: any) =>{
         console.log(activePricingCases[i].name)
         const newStateCases: any = activePricingCases;
-        newStateCases[i].name=caseName; //hay que captar el value del input
+        newStateCases[i].name=caseName; 
         setActivePricingCases(newStateCases)
         setCaseName('')
         setHandleAddCaseActive(false)
@@ -144,13 +147,22 @@ function PricingCases() {
 
     const handleDeleteCase = (name: string) => {
         setActivePricingCases(activePricingCases.filter(pricingCase => pricingCase.name !== name))
+        refresh()
         
     }
 
-    const handleSaveCases = () => {
-        setIsSaving(true)
-        //call savePricingCases...
-        console.log(activePricingCases)
+    async function handleSaveCases(){
+        setIsSaving(true) 
+        let newPricingCases:any = [...activePricingCases]
+        newPricingCases.map((e:any,i:any)=>{
+            e.pricingCaseGroups.map((el:any)=>{
+                el.groupId = el.group.id
+                delete el.group
+                console.log(el)
+            })
+        })
+        console.log(newPricingCases)
+        await savePricingCases(newPricingCases)
         setIsSaving(false)
     }
 
@@ -227,7 +239,7 @@ function PricingCases() {
                                                         <div className='justify-content-center d-flex flex-row py-3 '>
 
                                                             {element.name !== "" ?
-                                                                <h3 className='px-5'>{element.name}</h3>
+                                                                <h3 className='px-5 text-break'>{element.name}</h3>
                                                                 :<>
                                                                 <Input
                                                                     type='text'
@@ -264,7 +276,7 @@ function PricingCases() {
                                                                             provided.draggableProps.style
                                                                         )}
                                                                     >
-                                                                        {item.group.name}
+                                                                        {item.group.name + (item.leadersCourse ? " (Curso)" : "")}
                                                                     </div>
                                                                 )}
 
