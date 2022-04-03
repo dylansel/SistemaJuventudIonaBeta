@@ -210,25 +210,30 @@ input[type="checkbox"]:checked {
   border: none;
 }
 
-.skeleton:hover{
+.skeleton:hover {
   background-color: "#ffffff"
 }
 
-.bodyPricingCases{
+.bodyPricingCases {
   margin: 10px;
 }
-.padrepricingCasesActive-custom{
+
+.padrepricingCasesActive-custom {
   background-color: #9202245d;
 }
-.pricingCasesActive-custom{
+
+.pricingCasesActive-custom {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 10px;
 }
 
-@media only screen and (max-width: 600px) {
-  .pricingCasesActive-custom{
-    display: flex;
-    flex-direction: column;
-  }
+.pricingCasesActive-custom a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.pricingCasesActive-custom {
+  display: flex;
+  flex-direction: column;
 }
