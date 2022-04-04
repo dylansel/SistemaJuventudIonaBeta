@@ -141,7 +141,7 @@ function PricingCases() {
         })
         await savePricingCases(newPricingCases)
         setIsSaving(false)
-        //window.location.reload() //Not the best way to refresh page
+        window.location.reload() //Not the best way to refresh page
     }
 
     async function fetchData() {
@@ -161,7 +161,6 @@ function PricingCases() {
                 loaded ?
                     <div className="main-container row justify-content-center text-center px-5">
                         <DragDropContext onDragEnd={onDragEnd}>
-
                             {filteredGroupCases &&
                                 <div className='col-12 col-md-3'>
                                     <Droppable droppableId="-1">
