@@ -75,15 +75,16 @@ function PricingCases() {
 
     const filterGroupCases = async () => {
         const groupCases = await getGroupCases()
+        const pricingCases = await getActive()
         let filteredGroupCases: PricingCaseGroupDTO[] = []
         for (const groupCase of groupCases) {
             let isInAnyPricingCase: boolean = false
             let i = 0
-            while (!isInAnyPricingCase && i < activePricingCases.length) {
+            while (!isInAnyPricingCase && i < pricingCases.length) {
                 let j = 0
-                while (!isInAnyPricingCase && j < activePricingCases[i].pricingCaseGroups.length) {
-                    if (activePricingCases[i].pricingCaseGroups[j].group.name ===
-                        groupCase.group.name && activePricingCases[i].pricingCaseGroups[j].leadersCourse === groupCase.leadersCourse) {
+                while (!isInAnyPricingCase && j < pricingCases[i].pricingCaseGroups.length) {
+                    if (pricingCases[i].pricingCaseGroups[j].group.name ===
+                        groupCase.group.name && pricingCases[i].pricingCaseGroups[j].leadersCourse === groupCase.leadersCourse) {
                         isInAnyPricingCase = true
                     }
                     else {
@@ -96,7 +97,6 @@ function PricingCases() {
                 filteredGroupCases.push(groupCase)
             }
         }
-        console.log(filteredGroupCases)
         return filteredGroupCases
     }
 
@@ -107,9 +107,8 @@ function PricingCases() {
     const handleSaveCase = (i: any) => {
         const newStateCases: any = activePricingCases;
         newStateCases[i].name = caseName;
+        console.log(newStateCases)
         setActivePricingCases(newStateCases)
-        setCaseName('')
-        setHandleAddCaseActive(false)
         setIsCreating(false)
         refresh()
     }
@@ -134,17 +133,15 @@ function PricingCases() {
     async function handleSaveCases() {
         setIsSaving(true)
         let newPricingCases: any = [...activePricingCases]
-        newPricingCases.map((e: any, i: any) => {
+        newPricingCases.map((e: any) => {
             e.pricingCaseGroups.map((el: any) => {
                 el.groupId = el.group.id
                 delete el.group
-                console.log(el)
             })
         })
-        console.log(newPricingCases)
         await savePricingCases(newPricingCases)
         setIsSaving(false)
-        window.location.reload() //Not the best way to refresh page
+        //window.location.reload() //Not the best way to refresh page
     }
 
     async function fetchData() {
@@ -162,7 +159,6 @@ function PricingCases() {
         <main>
             {
                 loaded ?
-
                     <div className="main-container row justify-content-center text-center px-5">
                         <DragDropContext onDragEnd={onDragEnd}>
 
