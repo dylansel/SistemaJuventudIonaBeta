@@ -17,7 +17,7 @@ function PricingCases() {
     const [caseName, setCaseName] = useState<string>('')
     const [handleAddCaseActive, setHandleAddCaseActive] = useState<boolean>(false)
     const [isCreating, setIsCreating] = useState<boolean>(false)
-
+    const [indexSelectCase, setIndexSelectCase] = useState(-1)
     const refresh = () => {
         setTimeout(() => {
             setCaseName('')
@@ -105,12 +105,19 @@ function PricingCases() {
     }
 
     const handleSaveCase = (i: any) => {
-        const newStateCases: any = activePricingCases;
-        newStateCases[i].name = caseName;
-        console.log(newStateCases)
-        setActivePricingCases(newStateCases)
-        setIsCreating(false)
-        refresh()
+        setHandleAddCaseActive(true);
+        setIsCreating(true)
+        
+            const newStateCases: any = activePricingCases;
+            newStateCases[i].name = caseName;
+            console.log(newStateCases)
+            setActivePricingCases(newStateCases)
+            setIsCreating(false)
+            if(!caseName){
+                setIsCreating(true)
+                setIndexSelectCase(i)
+            }
+            refresh()
     }
 
     const handleAddCase = () => {
@@ -120,6 +127,8 @@ function PricingCases() {
             name: ``,
             pricingCaseGroups: []
         })
+        console.log(activePricingCases.length)
+        setIndexSelectCase(activePricingCases.length -1)
         refresh()
     }
 
@@ -236,7 +245,7 @@ function PricingCases() {
                                                                 </a>
                                                             </div>
                                                             <div>
-                                                                <button type='button' title={(handleAddCaseActive) ? 'Guardar' : 'Editar'} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className="fas fa-edit"></i></button>
+                                                                <button type='button' title={(handleAddCaseActive) ? 'Guardar' : 'Editar'} disabled={isCreating && index != indexSelectCase} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className="fas fa-edit"></i></button>
                                                                 <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => { handleDeleteCase(element.name) }} ><i className="fas fa-trash"></i></button>
                                                             </div>
 
@@ -246,6 +255,7 @@ function PricingCases() {
                                                                 <Draggable
                                                                     draggableId={`${item.group.name + index}`}
                                                                     index={index}
+                                                                    key={index}
                                                                 >
                                                                     {(provided, snapshot) => (
 
