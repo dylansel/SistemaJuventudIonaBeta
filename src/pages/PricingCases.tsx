@@ -220,7 +220,7 @@ function PricingCases() {
                                                         <div className='justify-content-center d-flex flex-row py-3 '>
                                                             <div className='d-flex flex-row'>
                                                                 {element.name !== "" ?
-                                                                    <a data-bs-toggle="collapse" href={`#div-${element.name}`} role="button" aria-expanded="false" aria-controls={`div-${element.name}`}>
+                                                                    <a data-bs-toggle="collapse" href={`#case${index}`} role="button" aria-expanded="false" aria-controls={`#case${index}`}>
                                                                         <h3 className='px-5'>{element.name}</h3>
                                                                     </a>
                                                                     : <>
@@ -236,7 +236,7 @@ function PricingCases() {
                                                                     </>
 
                                                                 }
-                                                                <a data-bs-toggle="collapse" href={`#div-${element.name}`} role="button" aria-expanded="false" aria-controls={`div-${element.name}`}>
+                                                                <a data-bs-toggle="collapse" href={`#case${index}`} role="button" aria-expanded="false" aria-controls={`#case${index}`}>
                                                                     <i className="fas fa-angle-down mx-5"></i>
                                                                 </a>
                                                             </div>
@@ -246,7 +246,7 @@ function PricingCases() {
                                                             </div>
 
                                                         </div>
-                                                        <div className="collapse show" id={`div-${element.name}`}>
+                                                        <div className="collapse show" id={`case${index}`}>
                                                             {element.pricingCaseGroups.map((item, index) => (
                                                                 <Draggable
                                                                     draggableId={`${item.group.name + index}`}
