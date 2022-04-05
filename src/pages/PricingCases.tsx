@@ -141,6 +141,7 @@ function PricingCases() {
 
     async function handleSaveCases() {
         setIsSaving(true)
+        setLoaded(false)
         let newPricingCases: any = [...activePricingCases]
         newPricingCases.map((e: any) => {
             e.pricingCaseGroups.map((el: any) => {
@@ -150,7 +151,7 @@ function PricingCases() {
         })
         await savePricingCases(newPricingCases)
         setIsSaving(false)
-        window.location.reload() //Not the best way to refresh page
+        fetchData()
     }
 
     async function fetchData() {
@@ -245,7 +246,7 @@ function PricingCases() {
                                                                 </a>
                                                             </div>
                                                             <div>
-                                                                <button type='button' title={(handleAddCaseActive) ? 'Guardar' : 'Editar'} disabled={isCreating && index != indexSelectCase} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className="fas fa-edit"></i></button>
+                                                                <button type='button' title={(handleAddCaseActive) ? 'Guardar' : 'Editar'} disabled={isCreating && index != indexSelectCase} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className={`fas fa-${(isCreating && index == indexSelectCase)?"save":"edit"}`}></i></button>
                                                                 <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => { handleDeleteCase(element.name) }} ><i className="fas fa-trash"></i></button>
                                                             </div>
 
