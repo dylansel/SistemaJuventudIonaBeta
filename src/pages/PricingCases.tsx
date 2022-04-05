@@ -143,8 +143,8 @@ function PricingCases() {
         setIsSaving(true)
         setLoaded(false)
         let newPricingCases: any = [...activePricingCases]
-        newPricingCases.map((e: any) => {
-            e.pricingCaseGroups.map((el: any) => {
+        newPricingCases.forEach((e: any) => {
+            e.pricingCaseGroups.forEach((el: any) => {
                 el.groupId = el.group.id
                 delete el.group
             })
@@ -246,7 +246,7 @@ function PricingCases() {
                                                                 </a>
                                                             </div>
                                                             <div>
-                                                                <button type='button' title={(handleAddCaseActive) ? 'Guardar' : 'Editar'} disabled={isCreating && index != indexSelectCase} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className={`fas fa-${(isCreating && index == indexSelectCase)?"save":"edit"}`}></i></button>
+                                                                <button type='button' title={(handleAddCaseActive) ? 'Guardar' : 'Editar'} disabled={isCreating && index !== indexSelectCase} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className={`fas fa-${(isCreating && index === indexSelectCase)?"save":"edit"}`}></i></button>
                                                                 <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => { handleDeleteCase(element.name) }} ><i className="fas fa-trash"></i></button>
                                                             </div>
 
