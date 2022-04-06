@@ -14,14 +14,19 @@ import { getAllAreas } from '../services/areaService';
 import { getAttendanceByActivity, saveAttendance } from '../services/attendanceService';
 import { AttendanceDTO } from '../dtos/AttendanceDTO';
 import { JanijAttendanceRequestDTO } from '../dtos/JanijAttendanceRequestDTO';
+import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
+import DialogBox from '../components/UI/Modals/DialogBox';
 
 function AttendanceSelectArea() {
     const history = useNavigate();
     let { activityId } = useParams();
 
+    const [showDialog, setShowDialog] = useState(false)
+    const [showPrompt, confirmNavigation, cancelNavigation] =
+        useCallbackPrompt(showDialog)
+
     const [janijim, setJanijim] = useState<JanijDTO[]>([])
     const [searchValue, setSearchValue] = useState('')
-    const [janijimSearched, setJanijimSearched] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
     const [janijimPresents, setJanijimPresents] = useState<JanijAttendanceRequestDTO[]>([])
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
@@ -57,8 +62,8 @@ function AttendanceSelectArea() {
     }
 
     const findJanij = (janijInput: string) => {
-        if(janijInput==="") return []
-        
+        if (janijInput === "") return []
+
         return janijim.filter((janij: JanijDTO) => (janij.active && (
             janij.name.toLowerCase().startsWith(janijInput.toLowerCase()) ||
             janij.familySurname.toLowerCase().startsWith(janijInput.toLowerCase()) ||
@@ -71,9 +76,6 @@ function AttendanceSelectArea() {
             setSearchValue(e.target.value)
         } else {
             setSearchValue("")
-        }
-        if (isEmptyOrSpaces(searchValue)) {
-            setJanijimSearched([])
         }
     }
 
@@ -98,7 +100,7 @@ function AttendanceSelectArea() {
         setChanges(newPresents)
     }
 
-    const handleSaveAttendance = () => {
+    const getChanges = () => {
         let request: JanijAttendanceRequestDTO[] = []
         Object.values(changes).forEach((change: JanijAttendanceRequestDTO) => {
             const dbObject = janijimPresents.find
@@ -107,6 +109,11 @@ function AttendanceSelectArea() {
                 request.push(change)
             }
         })
+        return request
+    }
+
+    const handleSaveAttendance = () => {
+        let request: JanijAttendanceRequestDTO[] = getChanges()
         if (request.length > 0) {
             setIsSaving(true)
             setTimeout(() => {
@@ -130,6 +137,10 @@ function AttendanceSelectArea() {
         setChanges(await loadPresents())
         setLoaded(true)
     }
+
+    useEffect(() => {
+        getChanges().length > 0 ? setShowDialog(true) : setShowDialog(false)
+    }, [changes]);
 
     useEffect(() => {
         fetchData()
@@ -227,6 +238,12 @@ function AttendanceSelectArea() {
                     <Spinner animation="border" className='text-danger my-2' variant="light" />
                 </div>
             }
+            <DialogBox
+                title='Alerta'
+                showDialog={showPrompt}
+                confirmNavigation={confirmNavigation}
+                cancelNavigation={cancelNavigation}
+            />
             <Scroll showBelow={250} />
         </main >
     );
