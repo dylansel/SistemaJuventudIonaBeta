@@ -8,7 +8,7 @@ import Scroll from '../components/UI/Layout/Scroll';
 import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { Button, Input, Spinner } from 'reactstrap';
 import { reorder, move, getListStyle, getCasesStyle, getItemStyle } from '../utils/dnd/dnd-functions';
-const error = (error:any)=>{
+const error = (error: any) => {
     alert(error)
 }
 function PricingCases() {
@@ -26,31 +26,50 @@ function PricingCases() {
             setHandleAddCaseActive(false)
         }, 1);
     }
-    
+
 
     const onDragEnd = (result: any) => {
         const { source, destination } = result;
-        if (!destination) {return}
+        // dropped outside the list
+        if (!destination) {
+            return;
+        }
         const sInd = +source.droppableId;
         const dInd = +destination.droppableId;
-        const sGroup = (sInd === -1)?true:false;
+
         if (sInd === dInd) {
-            const items: any = reorder((sGroup)?filteredGroupCases:activePricingCases[sInd].pricingCaseGroups, source.index, destination.index);
-            const newState: any = [...(sGroup)?filteredGroupCases:activePricingCases];
-            (sGroup)?newState[sInd] = items:newState[sInd].pricingCaseGroups= items;
-            (sGroup)? setFilteredGroupCases(newState[-1]):setActivePricingCases(newState);
+            if (sInd === -1) {
+                const items: any = reorder(filteredGroupCases, source.index, destination.index);
+                const newState: any = [...filteredGroupCases];
+                newState[sInd] = items;
+                setFilteredGroupCases(newState[-1]);
+            } else {
+
+                const items: any = reorder(activePricingCases[sInd].pricingCaseGroups, source.index, destination.index);
+                const newState: any = [...activePricingCases];
+                newState[sInd].pricingCaseGroups = items;
+                setActivePricingCases(newState);
+            }
+
         } else {
-            
-            if (sInd === -1 || dInd === -1) {
-                const result: any = move((sGroup)?filteredGroupCases:activePricingCases[sInd].pricingCaseGroups, 
-                                    (!sGroup)?filteredGroupCases:activePricingCases[dInd].pricingCaseGroups,
-                                     source,destination);
-            let newStateGroup: any = filteredGroupCases;
-            const newStateCases: any = activePricingCases;
-            newStateGroup = result[(sGroup)?sInd:dInd];
-            newStateCases[(!sGroup)?sInd:dInd].pricingCaseGroups = result[!(sGroup)?sInd:dInd];
-            setFilteredGroupCases(newStateGroup);
-            setActivePricingCases(newStateCases);
+
+            if (sInd === -1) {
+                const result: any = move(filteredGroupCases, activePricingCases[dInd].pricingCaseGroups, source, destination);
+                let newStateGroup: any = filteredGroupCases;
+                const newStateCases: any = activePricingCases;
+                newStateGroup = result[sInd];
+                newStateCases[dInd].pricingCaseGroups = result[dInd];
+                setFilteredGroupCases(newStateGroup)
+                setActivePricingCases(newStateCases)
+
+            } else if (dInd === -1) {
+                const result: any = move(activePricingCases[sInd].pricingCaseGroups, filteredGroupCases, source, destination);
+                let newStateGroup: any = filteredGroupCases;
+                const newStateCases: any = activePricingCases;
+                newStateGroup = result[dInd];
+                newStateCases[sInd].pricingCaseGroups = result[sInd];
+                setFilteredGroupCases(newStateGroup)
+                setActivePricingCases(newStateCases)
             } else {
                 const result: any = move(activePricingCases[sInd].pricingCaseGroups, activePricingCases[dInd].pricingCaseGroups, source, destination);
                 const newStateCases: any = activePricingCases;
@@ -58,6 +77,7 @@ function PricingCases() {
                 newStateCases[dInd].pricingCaseGroups = result[dInd];
                 setActivePricingCases(newStateCases)
             }
+
         }
     }
 
@@ -95,19 +115,19 @@ function PricingCases() {
     const handleSaveCase = (i: any) => {
         setHandleAddCaseActive(true);
         const pricingCase = activePricingCases.find((pricingCase: PricingCaseDTO) => pricingCase.name === caseName)
-        if(pricingCase)return error("Este nombre ya existe")
+        if (pricingCase) return error("Este nombre ya existe")
         setIsCreating(true)
-        
-            const newStateCases: any = activePricingCases;
-            newStateCases[i].name = caseName;
-            console.log(newStateCases)
-            setActivePricingCases(newStateCases)
-            setIsCreating(false)
-            if(!caseName){
-                setIsCreating(true)
-                setIndexSelectCase(i)
-            }
-            refresh()
+
+        const newStateCases: any = activePricingCases;
+        newStateCases[i].name = caseName;
+        console.log(newStateCases)
+        setActivePricingCases(newStateCases)
+        setIsCreating(false)
+        if (!caseName) {
+            setIsCreating(true)
+            setIndexSelectCase(i)
+        }
+        refresh()
     }
 
     const handleAddCase = () => {
@@ -118,7 +138,7 @@ function PricingCases() {
             pricingCaseGroups: []
         })
         console.log(activePricingCases.length)
-        setIndexSelectCase(activePricingCases.length -1)
+        setIndexSelectCase(activePricingCases.length - 1)
         refresh()
     }
 
@@ -236,7 +256,7 @@ function PricingCases() {
                                                                 </a>
                                                             </div>
                                                             <div>
-                                                                <button type='button' title={(handleAddCaseActive) ? 'Guardar' : 'Editar'} disabled={isCreating && index !== indexSelectCase} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className={`fas fa-${(isCreating && index === indexSelectCase)?"save":"edit"}`}></i></button>
+                                                                <button type='button' title={(handleAddCaseActive) ? 'Guardar' : 'Editar'} disabled={isCreating && index !== indexSelectCase} className="btn btn-danger m-1 " onClick={() => { handleSaveCase(index) }} ><i className={`fas fa-${(isCreating && index === indexSelectCase) ? "save" : "edit"}`}></i></button>
                                                                 <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => { handleDeleteCase(element.name) }} ><i className="fas fa-trash"></i></button>
                                                             </div>
 
