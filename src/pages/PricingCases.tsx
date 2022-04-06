@@ -8,7 +8,9 @@ import Scroll from '../components/UI/Layout/Scroll';
 import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { Button, Input, Spinner } from 'reactstrap';
 import { reorder, move, getListStyle, getCasesStyle, getItemStyle } from '../utils/dnd/dnd-functions';
-
+const error = (error:any)=>{
+    alert(error)
+}
 function PricingCases() {
     const [filteredGroupCases, setFilteredGroupCases] = useState<PricingCaseGroupDTO[]>([])
     const [activePricingCases, setActivePricingCases] = useState<PricingCaseDTO[]>([])
@@ -24,6 +26,7 @@ function PricingCases() {
             setHandleAddCaseActive(false)
         }, 1);
     }
+    
 
     const onDragEnd = (result: any) => {
         const { source, destination } = result;
@@ -106,6 +109,8 @@ function PricingCases() {
 
     const handleSaveCase = (i: any) => {
         setHandleAddCaseActive(true);
+        const pricingCase = activePricingCases.find((pricingCase: PricingCaseDTO) => pricingCase.name === caseName)
+        if(pricingCase)return error("Este nombre ya existe")
         setIsCreating(true)
         
             const newStateCases: any = activePricingCases;
