@@ -8,7 +8,9 @@ import Scroll from '../components/UI/Layout/Scroll';
 import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { Button, Input, Spinner } from 'reactstrap';
 import { reorder, move, getListStyle, getCasesStyle, getItemStyle } from '../utils/dnd/dnd-functions';
-
+const error = (error:any)=>{
+    alert(error)
+}
 function PricingCases() {
     const [filteredGroupCases, setFilteredGroupCases] = useState<PricingCaseGroupDTO[]>([])
     const [activePricingCases, setActivePricingCases] = useState<PricingCaseDTO[]>([])
@@ -24,45 +26,31 @@ function PricingCases() {
             setHandleAddCaseActive(false)
         }, 1);
     }
+    
 
     const onDragEnd = (result: any) => {
         const { source, destination } = result;
-        if (!destination) {
-            return;
-        }
+        if (!destination) {return}
         const sInd = +source.droppableId;
         const dInd = +destination.droppableId;
-
+        const sGroup = (sInd === -1)?true:false;
         if (sInd === dInd) {
-            if (sInd === -1) {
-                const items: any = reorder(filteredGroupCases, source.index, destination.index);
-                const newState: any = [...filteredGroupCases];
-                newState[sInd] = items;
-                setFilteredGroupCases(newState[-1]);
-            } else {
-                const items: any = reorder(activePricingCases[sInd].pricingCaseGroups, source.index, destination.index);
-                const newState: any = [...activePricingCases];
-                newState[sInd].pricingCaseGroups = items;
-                setActivePricingCases(newState);
-            }
+            const items: any = reorder((sGroup)?filteredGroupCases:activePricingCases[sInd].pricingCaseGroups, source.index, destination.index);
+            const newState: any = [...(sGroup)?filteredGroupCases:activePricingCases];
+            (sGroup)?newState[sInd] = items:newState[sInd].pricingCaseGroups= items;
+            (sGroup)? setFilteredGroupCases(newState[-1]):setActivePricingCases(newState);
         } else {
-            if (sInd === -1) {
-                const result: any = move(filteredGroupCases, activePricingCases[dInd].pricingCaseGroups, source, destination);
-                let newStateGroup: any = filteredGroupCases;
-                const newStateCases: any = activePricingCases;
-                newStateGroup = result[sInd];
-                newStateCases[dInd].pricingCaseGroups = result[dInd];
-                setFilteredGroupCases(newStateGroup)
-                setActivePricingCases(newStateCases)
-
-            } else if (dInd === -1) {
-                const result: any = move(activePricingCases[sInd].pricingCaseGroups, filteredGroupCases, source, destination);
-                let newStateGroup: any = filteredGroupCases;
-                const newStateCases: any = activePricingCases;
-                newStateGroup = result[dInd];
-                newStateCases[sInd].pricingCaseGroups = result[sInd];
-                setFilteredGroupCases(newStateGroup)
-                setActivePricingCases(newStateCases)
+            
+            if (sInd === -1 || dInd === -1) {
+                const result: any = move((sGroup)?filteredGroupCases:activePricingCases[sInd].pricingCaseGroups, 
+                                    (!sGroup)?filteredGroupCases:activePricingCases[dInd].pricingCaseGroups,
+                                     source,destination);
+            let newStateGroup: any = filteredGroupCases;
+            const newStateCases: any = activePricingCases;
+            newStateGroup = result[(sGroup)?sInd:dInd];
+            newStateCases[(!sGroup)?sInd:dInd].pricingCaseGroups = result[!(sGroup)?sInd:dInd];
+            setFilteredGroupCases(newStateGroup);
+            setActivePricingCases(newStateCases);
             } else {
                 const result: any = move(activePricingCases[sInd].pricingCaseGroups, activePricingCases[dInd].pricingCaseGroups, source, destination);
                 const newStateCases: any = activePricingCases;
@@ -106,6 +94,8 @@ function PricingCases() {
 
     const handleSaveCase = (i: any) => {
         setHandleAddCaseActive(true);
+        const pricingCase = activePricingCases.find((pricingCase: PricingCaseDTO) => pricingCase.name === caseName)
+        if(pricingCase)return error("Este nombre ya existe")
         setIsCreating(true)
         
             const newStateCases: any = activePricingCases;
