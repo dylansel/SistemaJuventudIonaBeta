@@ -19,14 +19,14 @@ const DialogBox: React.FC<DialogBoxProps> = ({
                 {title}
             </ModalHeader>
             <ModalBody>
-                <p>Estás seguro que deseas salir? Hay cambios sin guardar.</p>
+                <p>¿Estás seguro que deseas salir? Hay cambios sin guardar.</p>
             </ModalBody>
             <ModalFooter>
                 <Button onClick={cancelNavigation}>
                     No
                 </Button>
                 <Button color="danger" onClick={confirmNavigation}>
-                    Yes
+                    Sí
                 </Button>
             </ModalFooter>
         </Modal>
