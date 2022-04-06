@@ -8,11 +8,12 @@ import Scroll from '../components/UI/Layout/Scroll';
 import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { Button, Input, Spinner } from 'reactstrap';
 import { reorder, move, getListStyle, getCasesStyle, getItemStyle } from '../utils/dnd/dnd-functions';
-const error = (error: any) => {
-    alert(error)
-}
+import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
+import DialogBox from '../components/UI/Modals/DialogBox';
+
 function PricingCases() {
     const [filteredGroupCases, setFilteredGroupCases] = useState<PricingCaseGroupDTO[]>([])
+    const [previousPricingCases, setPreviousPricingCases] = useState<PricingCaseDTO[]>([])
     const [activePricingCases, setActivePricingCases] = useState<PricingCaseDTO[]>([])
     const [isSaving, setIsSaving] = useState<boolean>(false)
     const [loaded, setLoaded] = useState<boolean>(false)
@@ -20,6 +21,11 @@ function PricingCases() {
     const [handleAddCaseActive, setHandleAddCaseActive] = useState<boolean>(false)
     const [isCreating, setIsCreating] = useState<boolean>(false)
     const [indexSelectCase, setIndexSelectCase] = useState(-1)
+
+    const [showDialog, setShowDialog] = useState(false)
+    const [showPrompt, confirmNavigation, cancelNavigation] =
+        useCallbackPrompt(showDialog)
+
     const refresh = () => {
         setTimeout(() => {
             setCaseName('')
@@ -27,8 +33,8 @@ function PricingCases() {
         }, 1);
     }
 
-
     const onDragEnd = (result: any) => {
+        console.log(result)
         const { source, destination } = result;
         // dropped outside the list
         if (!destination) {
@@ -65,7 +71,7 @@ function PricingCases() {
             } else if (dInd === -1) {
                 const result: any = move(activePricingCases[sInd].pricingCaseGroups, filteredGroupCases, source, destination);
                 let newStateGroup: any = filteredGroupCases;
-                const newStateCases: any = activePricingCases;
+                let newStateCases: any = activePricingCases;
                 newStateGroup = result[dInd];
                 newStateCases[sInd].pricingCaseGroups = result[sInd];
                 setFilteredGroupCases(newStateGroup)
@@ -115,12 +121,13 @@ function PricingCases() {
     const handleSaveCase = (i: any) => {
         setHandleAddCaseActive(true);
         const pricingCase = activePricingCases.find((pricingCase: PricingCaseDTO) => pricingCase.name === caseName)
-        if (pricingCase) return error("Este nombre ya existe")
+        if (pricingCase) {
+            alert("Este nombre ya existe")
+            return
+        }
         setIsCreating(true)
-
         const newStateCases: any = activePricingCases;
         newStateCases[i].name = caseName;
-        console.log(newStateCases)
         setActivePricingCases(newStateCases)
         setIsCreating(false)
         if (!caseName) {
@@ -137,16 +144,21 @@ function PricingCases() {
             name: ``,
             pricingCaseGroups: []
         })
-        console.log(activePricingCases.length)
         setIndexSelectCase(activePricingCases.length - 1)
         refresh()
     }
 
     const handleDeleteCase = (name: string) => {
-        setActivePricingCases(activePricingCases.filter(pricingCase => pricingCase.name !== name))
-        setIsCreating(false)
-        setHandleAddCaseActive(false)
-        refresh()
+        const pricingCase = activePricingCases.find((pricingCase: PricingCaseDTO) => pricingCase.name === name)
+        if (pricingCase) {
+            pricingCase.pricingCaseGroups.forEach((groupCase: PricingCaseGroupDTO) => {
+                filteredGroupCases.push(groupCase)
+            })
+            setActivePricingCases(activePricingCases.filter(pricingCase => pricingCase.name !== name))
+            setIsCreating(false)
+            setHandleAddCaseActive(false)
+            refresh()
+        }
     }
 
     async function handleSaveCases() {
@@ -166,6 +178,7 @@ function PricingCases() {
 
     async function fetchData() {
         setLoaded(false)
+        setPreviousPricingCases(await getActive())
         setActivePricingCases(await getActive())
         setFilteredGroupCases(await filterGroupCases())
         setLoaded(true)
@@ -174,6 +187,12 @@ function PricingCases() {
     useEffect(() => {
         fetchData()
     }, []);
+
+    useEffect(() => {
+        console.log(activePricingCases)
+        console.log(previousPricingCases)
+        setShowDialog(JSON.stringify(previousPricingCases) !== JSON.stringify(activePricingCases))
+    }, [activePricingCases])
 
     return (
         <main>
@@ -307,6 +326,12 @@ function PricingCases() {
                     :
                     <Loading />
             }
+            <DialogBox
+                title='Alerta'
+                showDialog={showPrompt}
+                confirmNavigation={confirmNavigation}
+                cancelNavigation={cancelNavigation}
+            />
             <Scroll showBelow={250} />
         </main >
     );
