@@ -70,7 +70,7 @@ function AddMultipleActivitiesBody(props: any) {
                     </FormGroup>
                     <FormGroup>
                         <Label for="toDate">
-                            Fecha Límite
+                            Fecha Fin
                         </Label>
                         <Input
                             id="toDate"
