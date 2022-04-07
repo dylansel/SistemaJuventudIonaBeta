@@ -116,7 +116,7 @@ function AttendanceList() {
     let i = 0
 
     useEffect(() => {
-        getChanges().length > 0 ? setShowDialog(true) : setShowDialog(false)
+        setShowDialog(getChanges().length > 0)
     }, [changes]);
 
     useEffect(() => {

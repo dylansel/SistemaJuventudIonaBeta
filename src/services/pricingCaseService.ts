@@ -31,7 +31,7 @@ export async function getGroupCases() {
     }
 }
 
-export async function save(pricingCaseRequestDTOS: PricingCaseRequestDTO[]) {
+export async function savePricingCases(pricingCaseRequestDTOS: PricingCaseRequestDTO[]) {
     try {
         const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/pricingCase/save`, pricingCaseRequestDTOS)
         const data = await response.data

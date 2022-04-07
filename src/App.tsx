@@ -14,6 +14,7 @@ import {
   Activities,
   Attendance,
   Prices,
+  PricingCases, 
   Payments,
   Grants,
   AttendanceSelectArea,
@@ -21,7 +22,6 @@ import {
   AttendanceList
 } from "./pages"
 import Navbar from './components/UI/Layout/HeaderNav';
-import PricingCases from './pages/PricingCases';
 
 function App() {
   const { isLoading, isAuthenticated } = useAuth0()
