@@ -33,13 +33,6 @@ function PricingCases() {
         }, 1);
     }
 
-    const processReorder = (list: any, source: any, destination: any) => {
-        const items: any = reorder(list, source.index, destination.index);
-        const newState: any = [...list];
-        newState[+source.droppableId] = items;
-        return newState
-    }
-
     const onDragEnd = (result: any) => {
         const { source, destination } = result;
         //El grupo se suelta fuera de cualquier droppable
@@ -52,11 +45,15 @@ function PricingCases() {
         if (sInd === dInd) {
             if (sInd === -1) {
                 //Invierto el orden de la lista de grupos
-                const newState = processReorder(filteredGroupCases, source, destination)
+                const items: any = reorder(filteredGroupCases, source.index, destination.index);
+                const newState: any = [...filteredGroupCases];
+                newState[sInd] = items;
                 setFilteredGroupCases(newState[-1]);
             } else {
                 //Invierto el orden de grupos de un caso de precio
-                const newState = processReorder(activePricingCases, source, destination)
+                const items: any = reorder(activePricingCases[sInd].pricingCaseGroups, source.index, destination.index);
+                const newState: any = [...activePricingCases];
+                newState[sInd].pricingCaseGroups = items;
                 setActivePricingCases(newState);
             }
         } else {
