@@ -60,22 +60,18 @@ function PricingCases() {
                 setActivePricingCases(newState);
             }
         } else {
-            let newStateCases: PricingCaseDTO[]
+            let newStateCases = [...activePricingCases]
             if (sInd === -1 && dInd !== -1 || sInd !== -1 && dInd === -1) {
                 //El grupo se movió entre la lista de grupos y los casos de precios
-                let newStateGroup: PricingCaseGroupDTO[]
+                let newStateGroup = filteredGroupCases
                 if (sInd === -1) {
                     //Muevo un grupo de la lista de grupos a un caso de precio
                     const result: any = move(filteredGroupCases, activePricingCases[dInd].pricingCaseGroups, source, destination);
-                    newStateGroup = filteredGroupCases;
-                    newStateCases = [...activePricingCases];
                     newStateGroup = result[sInd];
                     newStateCases[dInd].pricingCaseGroups = result[dInd];
                 } else {
                     //Muevo un grupo de un caso de precio a la lista de grupos
                     const result: any = move(activePricingCases[sInd].pricingCaseGroups, filteredGroupCases, source, destination);
-                    newStateGroup = filteredGroupCases;
-                    newStateCases = [...activePricingCases];
                     newStateGroup = result[dInd];
                     newStateCases[sInd].pricingCaseGroups = result[sInd];
                 }
@@ -84,7 +80,6 @@ function PricingCases() {
             else {
                 //Muevo un grupo de un caso de precio a otro
                 const result: any = move(activePricingCases[sInd].pricingCaseGroups, activePricingCases[dInd].pricingCaseGroups, source, destination);
-                newStateCases = [...activePricingCases];
                 newStateCases[sInd].pricingCaseGroups = result[sInd];
                 newStateCases[dInd].pricingCaseGroups = result[dInd];
             }
