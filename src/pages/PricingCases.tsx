@@ -41,7 +41,6 @@ function PricingCases() {
     }
 
     const onDragEnd = (result: any) => {
-        console.log(result)
         const { source, destination } = result;
         //El grupo se suelta fuera de cualquier droppable
         if (!destination) {
@@ -195,8 +194,6 @@ function PricingCases() {
     }, []);
 
     useEffect(() => {
-        console.log(activePricingCases)
-        console.log(previousPricingCases)
         setShowDialog(JSON.stringify(previousPricingCases) !== JSON.stringify(activePricingCases))
     }, [activePricingCases])
 
