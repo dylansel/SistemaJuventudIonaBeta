@@ -33,17 +33,9 @@ function PricingCases() {
         }, 1);
     }
 
-    const processReorder = (list: any, source: any, destination: any) => {
-        const items: any = reorder(list, source.index, destination.index);
-        const newState: any = [...list];
-        newState[+source.droppableId] = items;
-        return newState
-    }
-
     const onDragEnd = (result: any) => {
-        console.log(result)
         const { source, destination } = result;
-        // dropped outside the list
+        //El grupo se suelta fuera de cualquier droppable
         if (!destination) {
             return;
         }
@@ -53,30 +45,30 @@ function PricingCases() {
         if (sInd === dInd) {
             if (sInd === -1) {
                 //Invierto el orden de la lista de grupos
-                const newState = processReorder(filteredGroupCases, source, destination)
+                const items: any = reorder(filteredGroupCases, source.index, destination.index);
+                const newState: any = [...filteredGroupCases];
+                newState[sInd] = items;
                 setFilteredGroupCases(newState[-1]);
             } else {
-                //Invierto el orden de grupos de un caso de precio. Cambia activePricingCases
-                const newState = processReorder(activePricingCases, source, destination)
+                //Invierto el orden de grupos de un caso de precio
+                const items: any = reorder(activePricingCases[sInd].pricingCaseGroups, source.index, destination.index);
+                const newState: any = [...activePricingCases];
+                newState[sInd].pricingCaseGroups = items;
                 setActivePricingCases(newState);
             }
         } else {
-            let newStateCases: PricingCaseDTO[]
+            let newStateCases = [...activePricingCases]
             if (sInd === -1 && dInd !== -1 || sInd !== -1 && dInd === -1) {
                 //El grupo se movió entre la lista de grupos y los casos de precios
-                let newStateGroup: PricingCaseGroupDTO[]
+                let newStateGroup = filteredGroupCases
                 if (sInd === -1) {
-                    //Muevo un grupo de la lista de grupos a un caso de precio. No cambia activePricingCases
+                    //Muevo un grupo de la lista de grupos a un caso de precio.
                     const result: any = move(filteredGroupCases, activePricingCases[dInd].pricingCaseGroups, source, destination);
-                    newStateGroup = filteredGroupCases;
-                    newStateCases = [...activePricingCases];
                     newStateGroup = result[sInd];
                     newStateCases[dInd].pricingCaseGroups = result[dInd];
                 } else {
                     //Muevo un grupo de un caso de precio a la lista de grupos. No cambia activePricingCases
                     const result: any = move(activePricingCases[sInd].pricingCaseGroups, filteredGroupCases, source, destination);
-                    newStateGroup = filteredGroupCases;
-                    newStateCases = [...activePricingCases];
                     newStateGroup = result[dInd];
                     newStateCases[sInd].pricingCaseGroups = result[sInd];
                 }
@@ -85,7 +77,6 @@ function PricingCases() {
             else {
                 //Muevo un grupo de un caso de precio a otro. No cambia activePricingCases
                 const result: any = move(activePricingCases[sInd].pricingCaseGroups, activePricingCases[dInd].pricingCaseGroups, source, destination);
-                newStateCases = [...activePricingCases];
                 newStateCases[sInd].pricingCaseGroups = result[sInd];
                 newStateCases[dInd].pricingCaseGroups = result[dInd];
             }
@@ -195,8 +186,6 @@ function PricingCases() {
     }, []);
 
     useEffect(() => {
-        console.log(activePricingCases)
-        console.log(previousPricingCases)
         setShowDialog(JSON.stringify(previousPricingCases) !== JSON.stringify(activePricingCases))
     }, [activePricingCases])
 
