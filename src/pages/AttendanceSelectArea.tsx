@@ -14,14 +14,19 @@ import { getAllAreas } from '../services/areaService';
 import { getAttendanceByActivity, saveAttendance } from '../services/attendanceService';
 import { AttendanceDTO } from '../dtos/AttendanceDTO';
 import { JanijAttendanceRequestDTO } from '../dtos/JanijAttendanceRequestDTO';
+import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
+import DialogBox from '../components/UI/Modals/DialogBox';
 
 function AttendanceSelectArea() {
     const history = useNavigate();
     let { activityId } = useParams();
 
+    const [showDialog, setShowDialog] = useState(false)
+    const [showPrompt, confirmNavigation, cancelNavigation] =
+        useCallbackPrompt(showDialog)
+
     const [janijim, setJanijim] = useState<JanijDTO[]>([])
     const [searchValue, setSearchValue] = useState('')
-    const [janijimSearched, setJanijimSearched] = useState<JanijDTO[]>([])
     const [activityData, setActivityData] = useState<ActivityDTO>()
     const [janijimPresents, setJanijimPresents] = useState<JanijAttendanceRequestDTO[]>([])
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
@@ -57,23 +62,20 @@ function AttendanceSelectArea() {
     }
 
     const findJanij = (janijInput: string) => {
+        if (janijInput === "") return []
+
         return janijim.filter((janij: JanijDTO) => (janij.active && (
-            janij.name.toLowerCase().includes(janijInput.toLowerCase()) ||
-            janij.familySurname.toLowerCase().includes(janijInput.toLowerCase()) ||
-            `${janij.name.toLowerCase()} ${janij.familySurname.toLowerCase()}`.includes(janijInput.toLowerCase())))
+            janij.name.toLowerCase().startsWith(janijInput.toLowerCase()) ||
+            janij.familySurname.toLowerCase().startsWith(janijInput.toLowerCase()) ||
+            `${janij.name.toLowerCase()} ${janij.familySurname.toLowerCase()}`.startsWith(janijInput.toLowerCase())))
         )
     }
 
     const handleChange = (e?: any) => {
         if (e) {
             setSearchValue(e.target.value)
-            setJanijimSearched(findJanij(searchValue))
         } else {
             setSearchValue("")
-            setJanijimSearched([])
-        }
-        if (isEmptyOrSpaces(searchValue)) {
-            setJanijimSearched([])
         }
     }
 
@@ -98,7 +100,7 @@ function AttendanceSelectArea() {
         setChanges(newPresents)
     }
 
-    const handleSaveAttendance = () => {
+    const getChanges = () => {
         let request: JanijAttendanceRequestDTO[] = []
         Object.values(changes).forEach((change: JanijAttendanceRequestDTO) => {
             const dbObject = janijimPresents.find
@@ -107,6 +109,11 @@ function AttendanceSelectArea() {
                 request.push(change)
             }
         })
+        return request
+    }
+
+    const handleSaveAttendance = () => {
+        let request: JanijAttendanceRequestDTO[] = getChanges()
         if (request.length > 0) {
             setIsSaving(true)
             setTimeout(() => {
@@ -130,6 +137,10 @@ function AttendanceSelectArea() {
         setChanges(await loadPresents())
         setLoaded(true)
     }
+
+    useEffect(() => {
+        setShowDialog(getChanges().length > 0)
+    }, [changes]);
 
     useEffect(() => {
         fetchData()
@@ -162,7 +173,7 @@ function AttendanceSelectArea() {
 
             {loaded ?
                 <div className="justify-content-center text-center">
-                    {janijimSearched.length > 0 &&
+                    {findJanij(searchValue).length > 0 &&
                         <div>
                             <table className="table table-hover table-responsive mx-3 mb-4">
                                 <thead>
@@ -174,7 +185,7 @@ function AttendanceSelectArea() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {janijimSearched.map((janij: JanijDTO) => (
+                                    {findJanij(searchValue).map((janij: JanijDTO) => (
                                         <tr key={janij.id}>
                                             <td>{`${janij.name} ${janij.familySurname}`}</td>
                                             <td>{janij.groupName}</td>
@@ -210,7 +221,7 @@ function AttendanceSelectArea() {
                                 {isSaving ? <>Grabando...<Spinner animation="border" variant="light" size="sm" /></> : 'Grabar Asistencias'}                            </Button>
                         </div>
                     }
-                    {!isEmptyOrSpaces(searchValue) && janijimSearched.length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
+                    {!isEmptyOrSpaces(searchValue) && findJanij(searchValue).length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
 
                     {areas &&
                         <div className='mt-3 inline-grid'>
@@ -227,6 +238,12 @@ function AttendanceSelectArea() {
                     <Spinner animation="border" className='text-danger my-2' variant="light" />
                 </div>
             }
+            <DialogBox
+                title='Alerta'
+                showDialog={showPrompt}
+                confirmNavigation={confirmNavigation}
+                cancelNavigation={cancelNavigation}
+            />
             <Scroll showBelow={250} />
         </main >
     );

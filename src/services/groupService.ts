@@ -1,63 +1,26 @@
-import axios from 'axios';
-import GroupDTO from '../dtos/GroupDTO';
 import GroupRequestDTO from '../dtos/GroupRequestDTO';
+import { add, deleteOne, get, getAll, switchActive, update } from './crudService';
 
-export async function getAllGroups(orderBy?: string): Promise<GroupDTO[]> {
-    try {
-        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/getAll?${orderBy}`)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+export async function getAllGroups(orderBy?: string) {
+    return getAll("group", orderBy)
 }
 
-export async function getGroupById(ID: number): Promise<GroupDTO> {
-    try {
-        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/get/${ID}`)
-        const data = await response.data
-        return data as GroupDTO
-    } catch (error: any) {
-        throw error
-    }
+export async function getGroupById(id: number) {
+    return get("group", id)
 }
 
 export async function addGroup(groupToAdd: GroupRequestDTO) {
-    try {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/add`, groupToAdd)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return add("group", groupToAdd)
 }
 
-export async function updateGroup(ID: number, groupToUpdate: GroupRequestDTO) {
-    try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/update/${ID}`, groupToUpdate)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+export async function updateGroup(id: number, groupToUpdate: GroupRequestDTO) {
+    return update("group", id, groupToUpdate)
 }
 
 export async function switchActiveGroup(id: number, active: boolean) {
-    try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/update/${id}`, { active })
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return switchActive("group", id, active)
 }
 
-export async function deleteGroup(ID: number) {
-    try {
-        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN}/group/delete/${ID}`)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+export async function deleteGroup(id: number) {
+    return deleteOne("group", id)
 }

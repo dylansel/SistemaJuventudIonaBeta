@@ -14,6 +14,8 @@ import { getAttendanceByActivity, saveAttendance } from '../services/attendanceS
 import { dateToEsString } from '../utils/misc/strings';
 import GroupDTO from '../dtos/GroupDTO';
 import { getGroupById } from '../services/groupService';
+import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
+import DialogBox from '../components/UI/Modals/DialogBox';
 
 function AttendanceList() {
     const history = useNavigate();
@@ -25,6 +27,10 @@ function AttendanceList() {
     const [loaded, setLoaded] = useState(false)
     const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
     const [isSaving, setIsSaving] = useState(false)
+
+    const [showDialog, setShowDialog] = useState(false)
+    const [showPrompt, confirmNavigation, cancelNavigation] =
+        useCallbackPrompt(showDialog)
 
     const loadPresents = async () => {
         let presents: JanijAttendanceRequestDTO[] = []
@@ -70,7 +76,7 @@ function AttendanceList() {
         setChanges(newPresents)
     }
 
-    const handleSaveAttendance = () => {
+    const getChanges = () => {
         let request: JanijAttendanceRequestDTO[] = []
         Object.values(changes).forEach((change: JanijAttendanceRequestDTO) => {
             const dbObject = janijimPresents.find
@@ -79,6 +85,11 @@ function AttendanceList() {
                 request.push(change)
             }
         })
+        return request
+    }
+
+    const handleSaveAttendance = () => {
+        let request: JanijAttendanceRequestDTO[] = getChanges()
         if (request.length > 0) {
             setIsSaving(true)
             setTimeout(() => {
@@ -105,6 +116,10 @@ function AttendanceList() {
     let i = 0
 
     useEffect(() => {
+        setShowDialog(getChanges().length > 0)
+    }, [changes]);
+
+    useEffect(() => {
         refresh()
     }, []);
 
@@ -118,6 +133,7 @@ function AttendanceList() {
                     </div>
                     <div className="text-center">
                         <h4>{groupData?.name}</h4>
+                        <p>{janijimPresents.filter((janij: JanijAttendanceRequestDTO) => janij.present).length} Presentes</p>
                     </div>
                 </>}
             </div>
@@ -185,6 +201,12 @@ function AttendanceList() {
                     </div>
                 }
             </div>
+            <DialogBox
+                title='Alerta'
+                showDialog={showPrompt}
+                confirmNavigation={confirmNavigation}
+                cancelNavigation={cancelNavigation}
+            />
             <Scroll showBelow={250} />
         </main >
     );

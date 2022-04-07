@@ -7,8 +7,8 @@ function AddMultipleActivitiesBody(props: any) {
 
     const initialFieldsState = {
         fromDate:'',
-        toDate:''
-
+        toDate:'',
+        price: -1
     }
     const [fields, setFields] = useState(initialFieldsState)
     const [error, setError] = useState(false)
@@ -21,23 +21,21 @@ function AddMultipleActivitiesBody(props: any) {
             ...prevState,
             [name]: value
         }))
-
     }
-    
 
     const postRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.fromDate) || isEmptyOrSpaces(fields.toDate)){
+        if (isEmptyOrSpaces(fields.fromDate) || isEmptyOrSpaces(fields.toDate) || fields.price === -1){
             setError(true)
             return
         }
         setIsAdding(true)
-        const ActivityToAdd = {
+        const activityToAdd = {
             fromDate: formatDateEsToUs(fields.fromDate),
             toDate: formatDateEsToUs(fields.toDate),
-            
+            price: fields.price
         }
-        await addMultipleActivities(ActivityToAdd)
+        await addMultipleActivities(activityToAdd)
         props.toggle()
         setIsAdding(false)
         props.refresh()
@@ -72,15 +70,29 @@ function AddMultipleActivitiesBody(props: any) {
                     </FormGroup>
                     <FormGroup>
                         <Label for="toDate">
-                            Fecha Límite
+                            Fecha Fin
                         </Label>
                         <Input
                             id="toDate"
-                            disabled={ isAdding}
+                            disabled={isAdding}
                             name="toDate"
                             type="date"
                             onChange={addHandleChange}
                             autoComplete="off"
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="individualPrice">
+                            Costo invididual
+                        </Label>
+                        <Input
+                            id="price"
+                            disabled={isAdding}
+                            name="price"
+                            type="number"
+                            step="5"
+                            min="0"
+                            onChange={addHandleChange}
                         />
                     </FormGroup>
                     <ModalFooter>

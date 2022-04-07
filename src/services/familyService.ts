@@ -1,17 +1,11 @@
-import axios from 'axios';
 import FamilyRequestDTO from '../dtos/FamilyRequestDTO';
+import { add, deleteOne, get, getAll, switchActive, update } from './crudService';
 
-export async function getAllFamilies(orderBy?: string): Promise<any[]> {
-    try {
-        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/getAll?${orderBy}`)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+export async function getAllFamilies(orderBy?: string) {
+    return getAll("family", orderBy)
 }
 
-export async function getAllFamiliesWithChildren(orderBy?: string): Promise<any[]> {
+export async function getAllFamiliesWithChildren(orderBy?: string) {
     try {
         const data = await getAllFamilies(orderBy)
         data.forEach((family: any) => {
@@ -32,51 +26,21 @@ export async function getAllFamiliesWithChildren(orderBy?: string): Promise<any[
 }
 
 export async function getFamilyById(id: number): Promise<any[]> {
-    try {
-        const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/get/${id}`)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return get("family", id)
 }
 
 export async function addFamily(familyToAdd: FamilyRequestDTO) {
-    try {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/add`, familyToAdd)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return add("family", familyToAdd)
 }
 
 export async function updateFamily(id: number, familyToUpdate: FamilyRequestDTO) {
-    try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/update/${id}`, familyToUpdate)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return update("family", id, familyToUpdate)
 }
 
 export async function switchActiveFamily(id: number, active: boolean) {
-    try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/update/${id}`, { active })
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return switchActive("family", id, active)
 }
 
 export async function deleteFamily(id: number) {
-    try {
-        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN}/family/delete/${id}`)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+    return deleteOne("family", id)
 }

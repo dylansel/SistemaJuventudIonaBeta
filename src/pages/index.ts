@@ -15,6 +15,7 @@ import AttendanceList from './AttendanceList';
 import Prices from './Prices';
 import Payments from './Payments';
 import Grants from './Grants';
+import PricingCases from './PricingCases';
 
 export {
     Areas,
@@ -28,6 +29,7 @@ export {
     AttendanceSelectGroup,
     AttendanceList,
     Prices,
+    PricingCases,
     Payments,
     Grants,
     Loading,
