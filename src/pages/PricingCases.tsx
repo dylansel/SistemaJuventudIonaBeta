@@ -33,6 +33,13 @@ function PricingCases() {
         }, 1);
     }
 
+    const processReorder = (list: any, source: any, destination: any) => {
+        const items: any = reorder(list, source.index, destination.index);
+        const newState: any = [...list];
+        newState[+source.droppableId] = items;
+        return newState
+    }
+
     const onDragEnd = (result: any) => {
         console.log(result)
         const { source, destination } = result;
@@ -45,45 +52,44 @@ function PricingCases() {
 
         if (sInd === dInd) {
             if (sInd === -1) {
-                const items: any = reorder(filteredGroupCases, source.index, destination.index);
-                const newState: any = [...filteredGroupCases];
-                newState[sInd] = items;
+                //Invierto el orden de la lista de grupos
+                const newState = processReorder(filteredGroupCases, source, destination)
                 setFilteredGroupCases(newState[-1]);
             } else {
-
-                const items: any = reorder(activePricingCases[sInd].pricingCaseGroups, source.index, destination.index);
-                const newState: any = [...activePricingCases];
-                newState[sInd].pricingCaseGroups = items;
+                //Invierto el orden de grupos de un caso de precio. Cambia activePricingCases
+                const newState = processReorder(activePricingCases, source, destination)
                 setActivePricingCases(newState);
             }
-
         } else {
-
-            if (sInd === -1) {
-                const result: any = move(filteredGroupCases, activePricingCases[dInd].pricingCaseGroups, source, destination);
-                let newStateGroup: any = filteredGroupCases;
-                const newStateCases: any = activePricingCases;
-                newStateGroup = result[sInd];
-                newStateCases[dInd].pricingCaseGroups = result[dInd];
+            let newStateCases: PricingCaseDTO[]
+            if (sInd === -1 && dInd !== -1 || sInd !== -1 && dInd === -1) {
+                //El grupo se movió entre la lista de grupos y los casos de precios
+                let newStateGroup: PricingCaseGroupDTO[]
+                if (sInd === -1) {
+                    //Muevo un grupo de la lista de grupos a un caso de precio. No cambia activePricingCases
+                    const result: any = move(filteredGroupCases, activePricingCases[dInd].pricingCaseGroups, source, destination);
+                    newStateGroup = filteredGroupCases;
+                    newStateCases = [...activePricingCases];
+                    newStateGroup = result[sInd];
+                    newStateCases[dInd].pricingCaseGroups = result[dInd];
+                } else {
+                    //Muevo un grupo de un caso de precio a la lista de grupos. No cambia activePricingCases
+                    const result: any = move(activePricingCases[sInd].pricingCaseGroups, filteredGroupCases, source, destination);
+                    newStateGroup = filteredGroupCases;
+                    newStateCases = [...activePricingCases];
+                    newStateGroup = result[dInd];
+                    newStateCases[sInd].pricingCaseGroups = result[sInd];
+                }
                 setFilteredGroupCases(newStateGroup)
-                setActivePricingCases(newStateCases)
-
-            } else if (dInd === -1) {
-                const result: any = move(activePricingCases[sInd].pricingCaseGroups, filteredGroupCases, source, destination);
-                let newStateGroup: any = filteredGroupCases;
-                let newStateCases: any = activePricingCases;
-                newStateGroup = result[dInd];
-                newStateCases[sInd].pricingCaseGroups = result[sInd];
-                setFilteredGroupCases(newStateGroup)
-                setActivePricingCases(newStateCases)
-            } else {
-                const result: any = move(activePricingCases[sInd].pricingCaseGroups, activePricingCases[dInd].pricingCaseGroups, source, destination);
-                const newStateCases: any = activePricingCases;
-                newStateCases[sInd].pricingCaseGroups = result[sInd];
-                newStateCases[dInd].pricingCaseGroups = result[dInd];
-                setActivePricingCases(newStateCases)
             }
-
+            else {
+                //Muevo un grupo de un caso de precio a otro. No cambia activePricingCases
+                const result: any = move(activePricingCases[sInd].pricingCaseGroups, activePricingCases[dInd].pricingCaseGroups, source, destination);
+                newStateCases = [...activePricingCases];
+                newStateCases[sInd].pricingCaseGroups = result[sInd];
+                newStateCases[dInd].pricingCaseGroups = result[dInd];
+            }
+            setActivePricingCases(newStateCases)
         }
     }
 
