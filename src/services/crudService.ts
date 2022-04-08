@@ -20,9 +20,9 @@ export const addAll = async (model: string, requestDTO: any[]) => {
     }
 }
 
-export const deleteOne = async (model: string, id: number) => {
+export const deleteOne = async (model: string, key: any) => {
     try {
-        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/delete/${id}`)
+        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/delete/${key}`)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -60,9 +60,9 @@ export const switchActive = async (model: string, id: number, active: boolean) =
     }
 }
 
-export const update = async (model: string, id: number, requestDTO: any) => {
+export const update = async (model: string, key: any, requestDTO: any) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/update/${id}`, requestDTO)
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/update/${key}`, requestDTO)
         const data = await response.data
         return data
     } catch (error) {
