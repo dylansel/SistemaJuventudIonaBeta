@@ -1,16 +1,17 @@
 import axios from 'axios';
+import { PriceDTO } from '../dtos/PriceDTO';
 import { PriceRequestDTO } from '../dtos/PriceRequestDTO';
 import { add, deleteOne, get, getAll, update } from './crudService';
 
-export async function getAllPrices(orderBy?: string) {
+export const getAllPrices = async (orderBy?: string): Promise<PriceDTO[]> => {
     return getAll("price", orderBy)
 }
 
-export async function getPriceById(id: number) {
+export const getPriceById = async (id: number): Promise<PriceDTO> => {
     return get("price", id)
 }
 
-export async function getAllPricesByMonth(month: string){
+export const getAllPricesByMonth = async (month: string): Promise<PriceDTO[]> => {
     try {
         const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}/price/getByMonth/${month}`)
         const data = await response.data
@@ -20,14 +21,14 @@ export async function getAllPricesByMonth(month: string){
     }
 }
 
-export async function addPrice(priceToAdd: PriceRequestDTO) {
+export const addPrice = async (priceToAdd: PriceRequestDTO) => {
     return add("price", priceToAdd)
 }
 
-export async function updatePrice(id: number, priceToUpdate: PriceRequestDTO) {
+export const updatePrice = async (id: number, priceToUpdate: PriceRequestDTO) => {
     return update("price", id, priceToUpdate)
 }
 
-export async function deletePrice(id: number) {
+export const deletePrice = async (id: number) => {
     return deleteOne("price", id)
 }
