@@ -10,6 +10,7 @@ import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import SkeletonRows from './misc/SkeletonRows';
 import { getErrorByMessage } from '../utils/misc/errors';
+import { filterActive } from '../utils/misc/filter';
 
 function Janijim() {
     const [janijim, setJanijim] = useState<any[]>([])
@@ -113,7 +114,7 @@ function Janijim() {
                             {!loaded && <SkeletonRows rows={50} columns={4} />}
                             {loaded &&
                                 janijim
-                                    .filter((janij: JanijDTO) => (!((tableFilter === 'Inactivos' && janij.active) || (tableFilter === 'Activos' && !janij.active))))
+                                    .filter((janij: JanijDTO) => filterActive(tableFilter, janij))
                                     .map(janij => (
                                         <tr key={janij.id} className={!janij.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
                                             <td>{++i}</td>
@@ -146,3 +147,7 @@ function Janijim() {
 export default withAuthenticationRequired(Janijim, {
     onRedirecting: () => <Loading />,
 });
+
+function filterItem(janij: any): (value: any, index: number, array: any[]) => value is any {
+    throw new Error('Function not implemented.');
+}
