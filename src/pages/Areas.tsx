@@ -7,6 +7,7 @@ import EditAreaBody from "../components/UI/Modals/Areas/EditAreaBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import AreaDTO from "../dtos/AreaDTO";
 import { deleteArea, getAllAreas, switchActiveArea } from "../services/areaService";
+import { filterActive } from "../utils/misc/filter";
 import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
 
@@ -98,9 +99,9 @@ function Areas() {
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows rows ={50} columns={3}/>}
+                        {!loaded && <SkeletonRows rows={50} columns={3} />}
                         {loaded && areas
-                            .filter((area: AreaDTO) => (!((tableFilter === 'Inactivos' && area.active) || (tableFilter === 'Activos' && !area.active))))
+                            .filter((area: AreaDTO) => filterActive(tableFilter, area))
                             .map(area => (
                                 <tr key={area.id} className={!area.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
                                     <td>{++i}</td>

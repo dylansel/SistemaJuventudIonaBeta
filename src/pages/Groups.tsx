@@ -9,6 +9,7 @@ import GroupDTO from "../dtos/GroupDTO";
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
+import { filterActive } from "../utils/misc/filter";
 
 function Groups() {
     const [groups, setGroups] = useState<any[]>([])
@@ -100,10 +101,10 @@ function Groups() {
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows rows={50} columns={4}/>}
+                        {!loaded && <SkeletonRows rows={50} columns={4} />}
                         {loaded &&
                             groups
-                                .filter((group: GroupDTO) => (!((tableFilter === 'Inactivos' && group.active) || (tableFilter === 'Activos' && !group.active))))
+                                .filter((group: GroupDTO) => filterActive(tableFilter, group))
                                 .map(group => (
                                     <tr key={group.id} className={!group.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
                                         <td>{++i}</td>
