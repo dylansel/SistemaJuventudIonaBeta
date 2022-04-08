@@ -1,21 +1,22 @@
 import axios from 'axios';
+import ActivityDTO from '../dtos/ActivityDTO';
 import ActivityRequestDTO from '../dtos/ActivityRequestDTO';
 import MultipleActivitiesRequestDTO from '../dtos/MultipleActivitiesRequestDTO';
 import { add, deleteOne, get, getAll, update } from './crudService';
 
-export async function getAllActivities(orderBy?: string) {
+export const getAllActivities = async (orderBy?: string): Promise<ActivityDTO[]> => {
     return getAll("activity", orderBy)
 }
 
-export async function getActivityById(id: number) {
+export const getActivityById = async (id: number): Promise<ActivityDTO> => {
     return get("activity", id)
 }
 
-export async function addActivity(activityToAdd: ActivityRequestDTO) {
+export const addActivity = async (activityToAdd: ActivityRequestDTO) => {
     return add("activity", activityToAdd)
 }
 
-export async function addMultipleActivities(requestDTO: MultipleActivitiesRequestDTO) {
+export const addMultipleActivities = async (requestDTO: MultipleActivitiesRequestDTO) => {
     try {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/activity/addMultiple`, requestDTO)
         const data = await response.data
@@ -25,10 +26,10 @@ export async function addMultipleActivities(requestDTO: MultipleActivitiesReques
     }
 }
 
-export async function updateActivity(id: number, activityToUpdate: ActivityRequestDTO) {
+export const updateActivity = async (id: number, activityToUpdate: ActivityRequestDTO) => {
     return update("activity", id, activityToUpdate)
 }
 
-export async function deleteActivity(id: number) {
+export const deleteActivity = async (id: number) => {
     return deleteOne("activity", id)
 }

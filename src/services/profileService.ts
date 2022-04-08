@@ -1,7 +1,7 @@
 import axios from 'axios';
 import ProfileDTO from '../dtos/ProfileDTO';
 
-export async function getProfile(getAccessTokenSilently: any): Promise<ProfileDTO> {
+export const getProfile = async (getAccessTokenSilently: any): Promise<ProfileDTO> => {
     try {
         const token = await getAccessTokenSilently();
         const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN!}/profile/`, {

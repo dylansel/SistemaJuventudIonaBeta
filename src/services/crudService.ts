@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export async function add(model: string, requestDTO: any) {
+export const add = async (model: string, requestDTO: any) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/${model}/add`,requestDTO)
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/${model}/add`, requestDTO)
         const data = await response.data
         return data
     } catch (error) {
@@ -10,9 +10,9 @@ export async function add(model: string, requestDTO: any) {
     }
 }
 
-export async function addAll(model: string, requestDTO: any[]) {
+export const addAll = async (model: string, requestDTO: any[]) => {
     try {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/${model}/addAll`,requestDTO)
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/${model}/addAll`, requestDTO)
         const data = await response.data
         return data
     } catch (error) {
@@ -20,9 +20,9 @@ export async function addAll(model: string, requestDTO: any[]) {
     }
 }
 
-export async function deleteOne(model: string, id: number) {
+export const deleteOne = async (model: string, key: any) => {
     try {
-        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/delete/${id}`)
+        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/delete/${key}`)
         const data = await response.data
         return data
     } catch (error: any) {
@@ -30,7 +30,7 @@ export async function deleteOne(model: string, id: number) {
     }
 }
 
-export async function get(model: string, id: number){
+export const get = async (model: string, id: number): Promise<any> => {
     try {
         const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/get/${id}`)
         const data = await response.data
@@ -40,7 +40,7 @@ export async function get(model: string, id: number){
     }
 }
 
-export async function getAll(model: string, orderBy?: string) {
+export const getAll = async (model: string, orderBy?: string): Promise<any[]> => {
     try {
         const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/getAll?${orderBy}`)
         const data = await response.data
@@ -50,7 +50,7 @@ export async function getAll(model: string, orderBy?: string) {
     }
 }
 
-export async function switchActive(model: string, id: number, active: boolean) {
+export const switchActive = async (model: string, id: number, active: boolean) => {
     try {
         const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/update/${id}`, { active })
         const data = await response.data
@@ -60,9 +60,9 @@ export async function switchActive(model: string, id: number, active: boolean) {
     }
 }
 
-export async function update(model: string, id: number, requestDTO: any) {
+export const update = async (model: string, key: any, requestDTO: any) => {
     try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/update/${id}`,requestDTO)
+        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN!}/${model}/update/${key}`, requestDTO)
         const data = await response.data
         return data
     } catch (error) {

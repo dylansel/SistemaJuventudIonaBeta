@@ -1,13 +1,13 @@
 import axios from 'axios';
 import SystemVariableDTO from '../dtos/systemVariableDTO';
-import { add, getAll } from './crudService';
+import { add, deleteOne, getAll, update } from './crudService';
 
 
-export async function getAllSystemVariable(orderBy?: string): Promise<SystemVariableDTO[]> {
+export const getAllSystemVariable = async (orderBy?: string): Promise<SystemVariableDTO[]> => {
     return getAll("systemVariable", orderBy)
 }
 
-export async function getSystemVariableByKey(key: string): Promise<SystemVariableDTO> {
+export const getSystemVariableByKey = async (key: string): Promise<SystemVariableDTO> => {
     try {
         const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN!}/systemVariable/get/${key}`)
         const data = await response.data
@@ -17,26 +17,14 @@ export async function getSystemVariableByKey(key: string): Promise<SystemVariabl
     }
 }
 
-export async function addSystemVariable(systemVariableToAdd: SystemVariableDTO) {
+export const addSystemVariable = async (systemVariableToAdd: SystemVariableDTO) => {
     return add("systemVariable", systemVariableToAdd)
 }
 
-export async function updateSystemVariable(key: string, systemVariableToUpdate: SystemVariableDTO) {
-    try {
-        const response = await axios.put(`${process.env.REACT_APP_BACKEND_DOMAIN!}/systemVariable/update/${key}`, systemVariableToUpdate)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+export const updateSystemVariable = async (key: string, systemVariableToUpdate: SystemVariableDTO) => {
+    return update("systemVariable", key, systemVariableToUpdate)
 }
 
-export async function deleteSystemVariable(key: string) {
-    try {
-        const response = await axios.delete(`${process.env.REACT_APP_BACKEND_DOMAIN!}/systemVariable/delete/${key}`)
-        const data = await response.data
-        return data
-    } catch (error: any) {
-        throw error
-    }
+export const deleteSystemVariable = async (key: string) => {
+    return deleteOne("systemVariable", key)
 }
