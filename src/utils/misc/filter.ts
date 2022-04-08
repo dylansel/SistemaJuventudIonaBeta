@@ -1,3 +1,3 @@
 export const filterActive = (tableFilter: string, item: any) => {
-    return (!((tableFilter === 'Inactivos' && item.active) || (tableFilter === 'Activos' && !item.active)))
+    return (tableFilter === 'Todos' || ((tableFilter === 'Activos' && item.active) || (tableFilter === 'Inactivos' && !item.active)))
 }
