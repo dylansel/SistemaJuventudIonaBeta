@@ -1,3 +1,4 @@
+import FamilyDTO from '../dtos/FamilyDTO';
 import FamilyRequestDTO from '../dtos/FamilyRequestDTO';
 import { add, deleteOne, get, getAll, switchActive, update } from './crudService';
 
@@ -25,22 +26,22 @@ export async function getAllFamiliesWithChildren(orderBy?: string) {
     }
 }
 
-export async function getFamilyById(id: number): Promise<any[]> {
+export const getFamilyById = async (id: number): Promise<FamilyDTO> => {
     return get("family", id)
 }
 
-export async function addFamily(familyToAdd: FamilyRequestDTO) {
+export const addFamily = async (familyToAdd: FamilyRequestDTO) => {
     return add("family", familyToAdd)
 }
 
-export async function updateFamily(id: number, familyToUpdate: FamilyRequestDTO) {
+export const updateFamily = async (id: number, familyToUpdate: FamilyRequestDTO) => {
     return update("family", id, familyToUpdate)
 }
 
-export async function switchActiveFamily(id: number, active: boolean) {
+export const switchActiveFamily = async (id: number, active: boolean) => {
     return switchActive("family", id, active)
 }
 
-export async function deleteFamily(id: number) {
+export const deleteFamily = async (id: number) => {
     return deleteOne("family", id)
 }
