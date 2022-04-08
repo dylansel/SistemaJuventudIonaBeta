@@ -1,22 +1,23 @@
+import GrantDTO from '../dtos/GrantDTO';
 import GrantRequestDTO from '../dtos/GrantRequestDTO';
 import { add, deleteOne, get, getAll, update } from './crudService';
 
-export async function getAllGrants(orderBy?: string) {
+export const getAllGrants = async (orderBy?: string): Promise<GrantDTO[]> => {
     return getAll("grant", orderBy)
 }
 
-export async function getGrantById(id: number) {
+export const getGrantById = async (id: number): Promise<GrantDTO> => {
     return get("grant", id)
 }
 
-export async function addGrant(grantToAdd: GrantRequestDTO) {
+export const addGrant = async (grantToAdd: GrantRequestDTO) => {
     return add("grant", grantToAdd)
 }
 
-export async function updateGrant(id: number, grantToUpdate: GrantRequestDTO) {
+export const updateGrant = async (id: number, grantToUpdate: GrantRequestDTO) => {
     return update("grant", id, grantToUpdate)
 }
 
-export async function deleteGrant(id: number) {
+export const deleteGrant = async (id: number) => {
     return deleteOne("grant", id)
 }
