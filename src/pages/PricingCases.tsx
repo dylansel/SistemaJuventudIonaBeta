@@ -131,6 +131,7 @@ function PricingCases() {
             setIsCreating(true)
             setIndexSelectCase(i)
         }
+
         refresh()
     }
 
@@ -187,7 +188,7 @@ function PricingCases() {
 
     useEffect(() => {
         setShowDialog(JSON.stringify(previousPricingCases) !== JSON.stringify(activePricingCases))
-    }, [activePricingCases])
+    }, [activePricingCases,caseName])
 
     return (
         <main>
@@ -310,7 +311,7 @@ function PricingCases() {
                                         onClick={handleSaveCases}
                                         className='my-3'
                                         color={isSaving ? 'success' : 'danger'}
-                                        disabled={isSaving || activePricingCases.length === 0 || isCreating}
+                                        disabled={isSaving || activePricingCases.length === 0 || filteredGroupCases.length != 0 || !showDialog ||isCreating}
                                         type='button'
                                     >{isSaving ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : "Guardar Casos de Precios"}</Button>
 
