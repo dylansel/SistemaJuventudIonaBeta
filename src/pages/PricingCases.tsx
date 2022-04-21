@@ -58,7 +58,7 @@ function PricingCases() {
             }
         } else {
             let newStateCases = [...activePricingCases]
-            if (sInd === -1 && dInd !== -1 || sInd !== -1 && dInd === -1) {
+            if ((sInd === -1 && dInd !== -1) || (sInd !== -1 && dInd === -1)) {
                 //El grupo se movió entre la lista de grupos y los casos de precios
                 let newStateGroup = filteredGroupCases
                 if (sInd === -1) {
@@ -330,7 +330,7 @@ function PricingCases() {
                                         onClick={handleSaveCases}
                                         className='my-3'
                                         color={isSaving ? 'success' : 'danger'}
-                                        disabled={isSaving || activePricingCases.length === 0 || filteredGroupCases.length != 0 || !showDialog ||isCreating}
+                                        disabled={isSaving || activePricingCases.length === 0 || filteredGroupCases.length !== 0 || !showDialog ||isCreating}
                                         type='button'
                                     >{isSaving ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : "Guardar Casos de Precios"}</Button>
 
