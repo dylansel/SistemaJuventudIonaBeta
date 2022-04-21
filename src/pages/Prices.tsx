@@ -36,7 +36,7 @@ function Prices() {
             <div className="main-container row justify-content-center text-center">
                 <h3 className="mb-5">Precios</h3>
                 {loaded ? <>
-                    <div className='col-2 justify-content-center'>
+                    <div className='col-md-2 col-6 justify-content-center'>
                         <p>Selecciona un año</p>
                         <Input
                             type='select'
@@ -44,8 +44,9 @@ function Prices() {
                             id='year'
                             className='my-4'
                             onChange={(e) => setYear(e.target.value)}
+                            defaultValue={-1}
                         >
-                            <option key="-1" value="-1" selected disabled >Elija un año</option>
+                            <option key="-1" value="-1" disabled >Elija un año</option>
                             {
                                 years.map((year: number) =>
                                     <option value={year}>{year}</option>
@@ -58,8 +59,9 @@ function Prices() {
                             name='month'
                             id='month'
                             onChange={(e) => setMonth(e.target.value)}
+                            defaultValue={-1}
                         >
-                            <option key="-1" value="-1" selected disabled >Elija un mes</option>
+                            <option key="-1" value="-1" disabled >Elija un mes</option>
                             {
                                 months.map((month: number) =>
                                     <option value={month}>{month}</option>
