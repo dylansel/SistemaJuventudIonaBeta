@@ -83,7 +83,25 @@ function PricingCases() {
             setActivePricingCases(newStateCases)
         }
     }
-
+    const filterActiveCases = async () => {
+        const groupCases = await getGroupCases()
+        const pricingCases = await getActive()
+        let filteredActiveCases: PricingCaseDTO[] = pricingCases;        
+        const isInclude = (caseGroup:any)=>{
+                    for (const groupCase of groupCases) {
+                        if (caseGroup.group.name ===
+                       groupCase.group.name && caseGroup.leadersCourse === 
+                       groupCase.leadersCourse) {
+                            return true;
+                       }
+                   }
+                   return false;
+                }
+        for(let i = 0; i< pricingCases.length;i++){
+            filteredActiveCases[i].pricingCaseGroups = filteredActiveCases[i].pricingCaseGroups.filter((caseGroup)=>isInclude(caseGroup))
+        }
+        return filteredActiveCases
+    }
     const filterGroupCases = async () => {
         const groupCases = await getGroupCases()
         const pricingCases = await getActive()
@@ -176,8 +194,9 @@ function PricingCases() {
 
     async function fetchData() {
         setLoaded(false)
+        await filterActiveCases();
         setPreviousPricingCases(await getActive())
-        setActivePricingCases(await getActive())
+        setActivePricingCases(await filterActiveCases())
         setFilteredGroupCases(await filterGroupCases())
         setLoaded(true)
     }
