@@ -26,7 +26,7 @@ function Prices() {
     }
 
     useEffect(() => {
-        setYears(loadNumbers(2000, (new Date()).getFullYear()))
+        setYears(loadNumbers((new Date()).getFullYear() - 10, (new Date()).getFullYear()))
         setMonths(loadNumbers(1, 12))
         setLoaded(true)
     }, [])
@@ -37,12 +37,27 @@ function Prices() {
                 <h3 className="mb-5">Precios</h3>
                 {loaded ? <>
                     <div className='col-md-2 col-6 justify-content-center'>
+                        <p>Selecciona un mes</p>
+                        <Input
+                            type='select'
+                            name='month'
+                            id='month'
+                            className='my-4'
+                            onChange={(e) => setMonth(e.target.value)}
+                            defaultValue={-1}
+                        >
+                            <option key="-1" value="-1" disabled >Elija un mes</option>
+                            {
+                                months.map((month: number) =>
+                                    <option value={month}>{new Date(new Date().getFullYear(), month - 1, 1).toLocaleDateString('default', { month: 'long' })}</option>
+                                )
+                            }
+                        </Input>
                         <p>Selecciona un año</p>
                         <Input
                             type='select'
                             name='year'
                             id='year'
-                            className='my-4'
                             onChange={(e) => setYear(e.target.value)}
                             defaultValue={-1}
                         >
@@ -53,22 +68,7 @@ function Prices() {
                                 )
                             }
                         </Input>
-                        <p>Selecciona un mes</p>
-                        <Input
-                            type='select'
-                            name='month'
-                            id='month'
-                            onChange={(e) => setMonth(e.target.value)}
-                            defaultValue={-1}
-                        >
-                            <option key="-1" value="-1" disabled >Elija un mes</option>
-                            {
-                                months.map((month: number) =>
-                                    <option value={month}>{month}</option>
-                                )
-                            }
-                        </Input>
-                        <button type="button" disabled={month === "" && year === ""} title='Cargar Precios' className="my-4 btn btn-danger col-4" onClick={() => loadPrices(year, month)}><i className=" fas fa-arrow-right"></i></button>
+                        <button type="button" disabled={month === "" || year === ""} title='Cargar Precios' className="my-4 btn btn-danger col-4" onClick={() => loadPrices(year, month)}><i className=" fas fa-arrow-right"></i></button>
                     </div>
                 </>
                     : <Loading />
