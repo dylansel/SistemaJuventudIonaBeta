@@ -1,30 +1,105 @@
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Button, Input, Spinner } from 'reactstrap';
+import CaseCombinationDTO from '../dtos/CaseCombinationDTO';
 import { PriceDTO } from '../dtos/PriceDTO';
+import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { getAllPricesByMonth } from '../services/priceService';
+import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
 
 function PricesByMonth() {
     let { month } = useParams();
     const [pricesByMonth, setPricesByMonth] = useState<PriceDTO[]>([])
+    const [pricesLoaded, setPricesLoaded] = useState<boolean>(false)
+    const [caseCombinations, setCaseCombinations] = useState<CaseCombinationDTO[]>([])
+    const [isSaving, setIsSaving] = useState<boolean>(false)
+
+    const handleSavePrices = () => {
+        setIsSaving(true)
+        //TODO: Save
+        setIsSaving(false)
+    }
 
     useEffect(() => {
         const fetchData = async () => {
             setPricesByMonth(await getAllPricesByMonth(month!))
+            if (pricesByMonth.length > 0) {
+                setPricesLoaded(true)
+            }
+            else {
+                setCaseCombinations(await getCaseCombinations())
+            }
         }
         fetchData()
-        console.log(pricesByMonth)
-    },[])
+    }, [])
+
+    let i = 0
 
     return (
         <main>
-            <div className="main-container row justify-content-center text-center">
-                {month &&
-                    <h3>Precios de {new Date(Number(month.split("-")[0]), Number(month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long' })} {month.split("-")[0]}</h3>
-                }
-            </div>
-        </main>
+            {month &&
+                <div className="main-container row justify-content-center text-center">
+                    <h2 className='pb-3'>{new Date(Number(month.split("-")[0]), Number(month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long' })} {month.split("-")[0]}</h2>
+                    {
+                        pricesLoaded ?
+                            <>
+                                <h3>Precios</h3>
+                                {
+                                    pricesByMonth.map((price: PriceDTO) =>
+                                        <p>Precio: {price.amount}</p>
+                                    )
+                                }
+                            </>
+                            :
+
+                            caseCombinations.length > 0 ?
+                                <>
+                                    <div className="accordion" id="caseCombinations">
+                                        {caseCombinations.map((caseCombination: CaseCombinationDTO) => {
+                                            { i++ }
+                                            return <div className="accordion-item col-md-8 col-10 d-inline-block pb-3">
+                                                <p>Combinación # {i}</p>
+                                                {caseCombination.pricingCases.map((pricingCase: PricingCaseDTO) =>
+                                                    <p>{pricingCase.name}</p>
+                                                )}
+                                                <h2 className="accordion-header" id="headingOne">
+                                                    <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${i}`} aria-expanded="true" aria-controls={`#collapse${i}`}>
+                                                        Familias relacionadas
+                                                    </button>
+                                                </h2>
+                                                <div id={`collapse${i}`} className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#caseCombinations">
+                                                    <div className="accordion-body">
+                                                        {caseCombination.families.map((family: string) =>
+                                                            <p>{family}</p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="input-group flex-nowrap">
+                                                    <span className="input-group-text" id="addon-wrapping">Precio $</span>
+                                                    <input type="number" id={`priceCase${i}`} name={`priceCase${i}`} className="form-control" placeholder="3000" aria-label="Username" aria-describedby="addon-wrapping" />
+                                                </div>
+
+                                            </div>
+                                        })}
+                                    </div>
+
+                                    <Button
+                                        onClick={handleSavePrices}
+                                        className='my-3 col-md-2 col-6'
+                                        color={isSaving ? 'success' : 'danger'}
+                                        disabled={isSaving}
+                                        type='button'
+                                    >
+                                        {isSaving ? <>Grabando...<Spinner animation="border" variant="light" size="sm" /></> : 'Grabar Precios'}
+                                    </Button>
+                                </> :
+                                <Loading />
+                    }
+                </div>
+            }
+        </main >
     );
 }
 
