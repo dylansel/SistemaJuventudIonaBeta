@@ -9,6 +9,7 @@ import CaseCombinationDTO from '../dtos/CaseCombinationDTO';
 import { PriceDTO } from '../dtos/PriceDTO';
 import { PriceRequestDTO } from '../dtos/PriceRequestDTO';
 import PricingCaseDTO from '../dtos/PricingCaseDTO';
+import { PricingCasePriceDTO } from '../dtos/PricingCasePriceDTO';
 import { getAllPricesByMonth } from '../services/priceService';
 import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
@@ -19,6 +20,7 @@ function PricesByMonth() {
     const [pricesLoaded, setPricesLoaded] = useState<boolean>(false)
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false)
     const [caseCombinations, setCaseCombinations] = useState<any[]>([])
+    const [pricesToAdd, setPricesToAdd] = useState<PriceRequestDTO[]>([])
     const [completedAllPrices, setCompletedAllPrices] = useState<boolean>(false)
     const [isSaving, setIsSaving] = useState<boolean>(false)
 
@@ -26,9 +28,16 @@ function PricesByMonth() {
     const [showPrompt, confirmNavigation, cancelNavigation] =
         useCallbackPrompt(showDialog)
 
-    const handleChange = (e: any, caseCombinationId: number) => {
-        console.log(caseCombinationId)
+    const handleChange = (e: any, caseCombinationId: number, pricingCases: PricingCaseDTO[]) => {
         setHasUnsavedChanges(true)
+        const newPrice = {
+            month: month!,
+            amount: e.target.value,
+            pricingCases: [1] /*pricingCases.map((pricingCase: PricingCasePriceDTO) => pricingCase.id)*/
+        }
+        pricesToAdd[caseCombinationId] = newPrice
+        setCompletedAllPrices(pricesToAdd.every(price => price.amount > 0) && pricesToAdd.length === caseCombinations.length)
+        console.log(pricesToAdd, completedAllPrices)
     }
 
     const listCaseNames = (pricingCases: PricingCaseDTO[]) => {
@@ -105,8 +114,8 @@ function PricesByMonth() {
                                 <>
                                     <div className="accordion" id="caseCombinations">
                                         {caseCombinations.map((caseCombination, index) => {
-                                            i++
                                             caseCombination.id = i
+                                            i++
                                             return <div key={index} className="accordion-item col-md-8 col-10 d-inline-block p-3">
                                                 <div className='col-10 d-inline-block'>
                                                     <p>Combinación # {i}</p>
@@ -125,7 +134,7 @@ function PricesByMonth() {
                                                     <div className="d-inline-block col-md-6 mt-3">
                                                         <div className="input-group flex-nowrap">
                                                             <span className="input-group-text" id="addon-wrapping">Precio $</span>
-                                                            <input type="number" id={`priceCase${i}`} name={`priceCase${i}`} onChange={(e) => handleChange(e, caseCombination.id)} className="form-control" placeholder="3000" aria-label="Username" aria-describedby="addon-wrapping" />
+                                                            <input type="number" id={`priceCase${i}`} name={`priceCase${i}`} onChange={(e) => handleChange(e, caseCombination.id, caseCombination.pricingCases)} className="form-control" placeholder="3000" aria-label="Username" aria-describedby="addon-wrapping" />
                                                         </div>
                                                     </div>
                                                 </div>
