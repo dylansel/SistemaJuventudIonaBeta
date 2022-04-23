@@ -5,12 +5,11 @@ import { Button, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import DialogBox from '../components/UI/Modals/DialogBox';
 import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
-import CaseCombinationDTO from '../dtos/CaseCombinationDTO';
 import { PriceDTO } from '../dtos/PriceDTO';
 import { PriceRequestDTO } from '../dtos/PriceRequestDTO';
 import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { PricingCasePriceDTO } from '../dtos/PricingCasePriceDTO';
-import { getAllPricesByMonth } from '../services/priceService';
+import { addAllPrices, getAllPricesByMonth } from '../services/priceService';
 import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
 
@@ -37,7 +36,6 @@ function PricesByMonth() {
         }
         pricesToAdd[caseCombinationId] = newPrice
         setCompletedAllPrices(pricesToAdd.every(price => price.amount > 0) && pricesToAdd.length === caseCombinations.length)
-        console.log(pricesToAdd, completedAllPrices)
     }
 
     const listCaseNames = (pricingCases: PricingCaseDTO[]) => {
@@ -67,23 +65,26 @@ function PricesByMonth() {
         return string
     }
 
-    const handleSavePrices = () => {
+    const handleSavePrices = async () => {
         setIsSaving(true)
-        //TODO: Save
+        await addAllPrices(pricesToAdd)
         setHasUnsavedChanges(false)
         setIsSaving(false)
+        fetchData()
+    }
+
+    const fetchData = async () => {
+        const data = await getAllPricesByMonth(month!)
+        if (data.length > 0) {
+            setPricesByMonth(data)
+            setPricesLoaded(true)
+        }
+        else {
+            setCaseCombinations(await getCaseCombinations())
+        }
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            setPricesByMonth(await getAllPricesByMonth(month!))
-            if (pricesByMonth.length > 0) {
-                setPricesLoaded(true)
-            }
-            else {
-                setCaseCombinations(await getCaseCombinations())
-            }
-        }
         fetchData()
     }, [])
 
@@ -101,10 +102,19 @@ function PricesByMonth() {
                     {
                         pricesLoaded ?
                             <>
-                                <h3>Precios</h3>
                                 {
                                     pricesByMonth.map((price: PriceDTO) =>
-                                        <p>Precio: {price.amount}</p>
+                                        <div className='my-3 border border-secondary rounded col-md-8 col-10 p-3'>
+                                            <p>Id: {price.id}</p>
+                                            <p>Casos de Precio:</p>
+                                            {
+                                                price.pricingCasePrices.map((price: PricingCasePriceDTO) =>
+                                                    <p>{price.pricingCase.name}</p>
+                                                )
+                                            }
+                                            <p>------</p>
+                                            <p className='fw-bold'>Precio: ${price.amount}</p>
+                                        </div>
                                     )
                                 }
                             </>
