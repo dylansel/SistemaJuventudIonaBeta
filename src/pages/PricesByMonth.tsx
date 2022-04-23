@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Button, Spinner } from 'reactstrap';
 import CaseCombinationDTO from '../dtos/CaseCombinationDTO';
 import { PriceDTO } from '../dtos/PriceDTO';
+import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { getAllPricesByMonth } from '../services/priceService';
 import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
@@ -20,26 +21,22 @@ function PricesByMonth() {
         //TODO: Save
         setIsSaving(false)
     }
-    const countRepeated = (array: any[], elemento: any) => {
-        let cant = 0;
-        for (let i = 0; i < array.length; i++) {
-            if (array[i] == elemento) {
-                cant++;
+    const listCaseNames = (pricingCases: PricingCaseDTO[]) => {
+        let groupPricingCases: any = {}
+        pricingCases.forEach((pricingCase: PricingCaseDTO) => {
+            if (!groupPricingCases[pricingCase.name]) {
+                groupPricingCases[pricingCase.name] = 0
             }
+            groupPricingCases[pricingCase.name]++
+        })
+        let result: string = ""
+        const keysLength: number = Object.keys(groupPricingCases).length
+        let i = 0
+        for (const pricingCase in groupPricingCases) {
+            i++
+            result += (i === keysLength && keysLength > 1 ? " y " : "") + pricingCase + " x" + groupPricingCases[pricingCase] + (i < keysLength - 1 ? ", " : "")
         }
-        return cant;
-    }
-    const listCaseNames = (caseNamesE: any[]) => {
-        let caseNames: any = []
-        caseNamesE.map((e) => caseNames.push(e.name))
-        let result: any = new Set(caseNames)
-        let caseNamesLimpio: any[] = [...result]
-
-        for (let i = 0; i < caseNamesLimpio.length; i++) {
-            let cant = countRepeated(caseNames, caseNamesLimpio[i])
-            caseNamesLimpio[i] = caseNamesLimpio[i] + ((cant > 1) ? ` X ${cant}` : ``);
-        }
-        return caseNamesLimpio
+        return result
     }
     const listFamilyToString = (families: string[]) => {
         let string = "";
@@ -70,7 +67,7 @@ function PricesByMonth() {
         <main>
             {month &&
                 <div className="main-container row justify-content-center text-center">
-                    <h2 className='pb-3'>{new Date(Number(month.split("-")[0]), Number(month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long' })} {month.split("-")[0]}</h2>
+                    <h2 className='pb-3'>Precios de {new Date(Number(month.split("-")[0]), Number(month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long' })} {month.split("-")[0]}</h2>
                     {
                         pricesLoaded ?
                             <>
@@ -87,28 +84,29 @@ function PricesByMonth() {
                                 <>
                                     <div className="accordion" id="caseCombinations">
                                         {caseCombinations.map((caseCombination: CaseCombinationDTO, index) => {
-                                            { i++ }
-                                            return <div key={index} className="accordion-item col-md-8 col-10 d-inline-block pb-3">
-                                                <p>Combinación # {i}</p>
-                                                {listCaseNames(caseCombination.pricingCases).map((element: string) =>
-                                                    <p>{element}</p>
-                                                )}
+                                            i++
+                                            return <div key={index} className="accordion-item col-md-8 col-10 d-inline-block p-3">
+                                                <div className='col-10 d-inline-block'>
+                                                    <p>Combinación # {i}</p>
+                                                    <p className='fw-bold'>{listCaseNames(caseCombination.pricingCases)}</p>
 
-                                                <h2 className="accordion-header" id="headingOne">
-                                                    <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${i}`} aria-expanded="false" aria-controls={`#collapse${i}`}>
-                                                        Familias relacionadas ({caseCombination.families.length})
-                                                    </button>
-                                                </h2>
-                                                <div id={`collapse${i}`} className="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#caseCombinations">
-                                                    <div className="accordion-body">
-                                                        {listFamilyToString(caseCombination.families)}
+                                                    <h2 className="accordion-header" id="headingOne">
+                                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${i}`} aria-expanded="false" aria-controls={`#collapse${i}`}>
+                                                            Familias relacionadas ({caseCombination.families.length})
+                                                        </button>
+                                                    </h2>
+                                                    <div id={`collapse${i}`} className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#caseCombinations">
+                                                        <div className="accordion-body">
+                                                            {listFamilyToString(caseCombination.families)}
+                                                        </div>
+                                                    </div>
+                                                    <div className="d-inline-block col-md-6 mt-3">
+                                                        <div className="input-group flex-nowrap">
+                                                            <span className="input-group-text" id="addon-wrapping">Precio $</span>
+                                                            <input type="number" id={`priceCase${i}`} name={`priceCase${i}`} className="form-control" placeholder="3000" aria-label="Username" aria-describedby="addon-wrapping" />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="input-group flex-nowrap">
-                                                    <span className="input-group-text" id="addon-wrapping">Precio $</span>
-                                                    <input type="number" id={`priceCase${i}`} name={`priceCase${i}`} className="form-control" placeholder="3000" aria-label="Username" aria-describedby="addon-wrapping" />
-                                                </div>
-
                                             </div>
                                         })}
                                     </div>
