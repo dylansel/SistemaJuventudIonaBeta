@@ -33,9 +33,14 @@ function PricesByMonth() {
             month: month!,
             amount: e.target.value,
             pricingCases: [1] /*pricingCases.map((pricingCase: PricingCasePriceDTO) => pricingCase.id)*/
+            //TODO: Problema con los DTOs... No conocemos los id de los pricing cases acá. Debe estar mal algún formato de DTO respecto de lo que viene del backend. 
         }
         pricesToAdd[caseCombinationId] = newPrice
         setCompletedAllPrices(pricesToAdd.every(price => price.amount > 0) && pricesToAdd.length === caseCombinations.length)
+    }
+
+    const handleEdit = (id: number) => {
+        //TODO: Abrir el modal para editar este precio. (Crear dicho modal.)
     }
 
     const listCaseNames = (pricingCases: PricingCaseDTO[]) => {
@@ -114,6 +119,8 @@ function PricesByMonth() {
                                             }
                                             <p>------</p>
                                             <p className='fw-bold'>Precio: ${price.amount}</p>
+                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => handleEdit(price.id)} > <i className="fas fa-edit"></i></button>
+
                                         </div>
                                     )
                                 }
