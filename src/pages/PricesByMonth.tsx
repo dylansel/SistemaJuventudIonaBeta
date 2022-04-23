@@ -2,8 +2,12 @@ import { withAuthenticationRequired } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, Spinner } from 'reactstrap';
+import Scroll from '../components/UI/Layout/Scroll';
+import DialogBox from '../components/UI/Modals/DialogBox';
+import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
 import CaseCombinationDTO from '../dtos/CaseCombinationDTO';
 import { PriceDTO } from '../dtos/PriceDTO';
+import { PriceRequestDTO } from '../dtos/PriceRequestDTO';
 import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { getAllPricesByMonth } from '../services/priceService';
 import { getCaseCombinations } from '../services/pricingCaseService';
@@ -13,14 +17,20 @@ function PricesByMonth() {
     let { month } = useParams();
     const [pricesByMonth, setPricesByMonth] = useState<PriceDTO[]>([])
     const [pricesLoaded, setPricesLoaded] = useState<boolean>(false)
-    const [caseCombinations, setCaseCombinations] = useState<CaseCombinationDTO[]>([])
+    const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false)
+    const [caseCombinations, setCaseCombinations] = useState<any[]>([])
+    const [completedAllPrices, setCompletedAllPrices] = useState<boolean>(false)
     const [isSaving, setIsSaving] = useState<boolean>(false)
 
-    const handleSavePrices = () => {
-        setIsSaving(true)
-        //TODO: Save
-        setIsSaving(false)
+    const [showDialog, setShowDialog] = useState(false)
+    const [showPrompt, confirmNavigation, cancelNavigation] =
+        useCallbackPrompt(showDialog)
+
+    const handleChange = (e: any, caseCombinationId: number) => {
+        console.log(caseCombinationId)
+        setHasUnsavedChanges(true)
     }
+
     const listCaseNames = (pricingCases: PricingCaseDTO[]) => {
         let groupPricingCases: any = {}
         pricingCases.forEach((pricingCase: PricingCaseDTO) => {
@@ -48,6 +58,13 @@ function PricesByMonth() {
         return string
     }
 
+    const handleSavePrices = () => {
+        setIsSaving(true)
+        //TODO: Save
+        setHasUnsavedChanges(false)
+        setIsSaving(false)
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             setPricesByMonth(await getAllPricesByMonth(month!))
@@ -60,6 +77,10 @@ function PricesByMonth() {
         }
         fetchData()
     }, [])
+
+    useEffect(() => {
+        setShowDialog(hasUnsavedChanges)
+    }, [hasUnsavedChanges])
 
     let i = 0
 
@@ -83,8 +104,9 @@ function PricesByMonth() {
                             caseCombinations.length > 0 ?
                                 <>
                                     <div className="accordion" id="caseCombinations">
-                                        {caseCombinations.map((caseCombination: CaseCombinationDTO, index) => {
+                                        {caseCombinations.map((caseCombination, index) => {
                                             i++
+                                            caseCombination.id = i
                                             return <div key={index} className="accordion-item col-md-8 col-10 d-inline-block p-3">
                                                 <div className='col-10 d-inline-block'>
                                                     <p>Combinación # {i}</p>
@@ -103,7 +125,7 @@ function PricesByMonth() {
                                                     <div className="d-inline-block col-md-6 mt-3">
                                                         <div className="input-group flex-nowrap">
                                                             <span className="input-group-text" id="addon-wrapping">Precio $</span>
-                                                            <input type="number" id={`priceCase${i}`} name={`priceCase${i}`} className="form-control" placeholder="3000" aria-label="Username" aria-describedby="addon-wrapping" />
+                                                            <input type="number" id={`priceCase${i}`} name={`priceCase${i}`} onChange={(e) => handleChange(e, caseCombination.id)} className="form-control" placeholder="3000" aria-label="Username" aria-describedby="addon-wrapping" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -115,7 +137,7 @@ function PricesByMonth() {
                                         onClick={handleSavePrices}
                                         className='my-3 col-md-2 col-6'
                                         color={isSaving ? 'success' : 'danger'}
-                                        disabled={isSaving}
+                                        disabled={isSaving || !completedAllPrices}
                                         type='button'
                                     >
                                         {isSaving ? <>Grabando...<Spinner animation="border" variant="light" size="sm" /></> : 'Grabar Precios'}
@@ -125,6 +147,13 @@ function PricesByMonth() {
                     }
                 </div>
             }
+            <DialogBox
+                title='Alerta'
+                showDialog={showPrompt}
+                confirmNavigation={confirmNavigation}
+                cancelNavigation={cancelNavigation}
+            />
+            <Scroll showBelow={250} />
         </main >
     );
 }
