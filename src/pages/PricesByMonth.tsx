@@ -1,10 +1,9 @@
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Input, Spinner } from 'reactstrap';
+import { Button, Spinner } from 'reactstrap';
 import CaseCombinationDTO from '../dtos/CaseCombinationDTO';
 import { PriceDTO } from '../dtos/PriceDTO';
-import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { getAllPricesByMonth } from '../services/priceService';
 import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
@@ -21,33 +20,34 @@ function PricesByMonth() {
         //TODO: Save
         setIsSaving(false)
     }
-    const countRepeated = (array:any[], elemento:any) =>{
-            let cant=0;
-            for(let i=0;i<array.length;i++){
-            if(array[i] == elemento){
-            cant++;
-            }}
-            return cant;
+    const countRepeated = (array: any[], elemento: any) => {
+        let cant = 0;
+        for (let i = 0; i < array.length; i++) {
+            if (array[i] == elemento) {
+                cant++;
+            }
+        }
+        return cant;
     }
-    const listCaseNames = (caseNamesE:any[])=>{
-        let caseNames:any = []
-        caseNamesE.map((e)=>caseNames.push(e.name))
-        let result:any = new Set(caseNames)
-        let caseNamesLimpio:any[] = [...result]
+    const listCaseNames = (caseNamesE: any[]) => {
+        let caseNames: any = []
+        caseNamesE.map((e) => caseNames.push(e.name))
+        let result: any = new Set(caseNames)
+        let caseNamesLimpio: any[] = [...result]
 
-        for(let i = 0; i<caseNamesLimpio.length;i++){
-            let cant =  countRepeated(caseNames,caseNamesLimpio[i])
-            caseNamesLimpio[i] =  caseNamesLimpio[i] + ((cant>1)?` X ${cant}`:``);
+        for (let i = 0; i < caseNamesLimpio.length; i++) {
+            let cant = countRepeated(caseNames, caseNamesLimpio[i])
+            caseNamesLimpio[i] = caseNamesLimpio[i] + ((cant > 1) ? ` X ${cant}` : ``);
         }
         return caseNamesLimpio
     }
-    const listFamilyToString =  (families:string[])=>{
+    const listFamilyToString = (families: string[]) => {
         let string = "";
-        for (let i = 0; i < families.length; i++) {
-            families[i] = families[i][0].toUpperCase() + families[i].slice(1);
+        for (let family in families) {
+            family = family[0].toUpperCase() + family.slice(1);
         }
         families.sort();
-        families.map((n,i)=>string += n + ((i!=families.length-1)?" | ":""))
+        families.map((n, i) => string += n + ((i !== families.length - 1) ? " | " : ""))
         return string
     }
 
@@ -86,12 +86,12 @@ function PricesByMonth() {
                             caseCombinations.length > 0 ?
                                 <>
                                     <div className="accordion" id="caseCombinations">
-                                        {caseCombinations.map((caseCombination: CaseCombinationDTO,index) => {
+                                        {caseCombinations.map((caseCombination: CaseCombinationDTO, index) => {
                                             { i++ }
-                                            return <div key={index}className="accordion-item col-md-8 col-10 d-inline-block pb-3">
+                                            return <div key={index} className="accordion-item col-md-8 col-10 d-inline-block pb-3">
                                                 <p>Combinación # {i}</p>
-                                                {listCaseNames(caseCombination.pricingCases).map((element:any,ind:number) =>
-                                                    <p>{element}</p> 
+                                                {listCaseNames(caseCombination.pricingCases).map((element: string) =>
+                                                    <p>{element}</p>
                                                 )}
 
                                                 <h2 className="accordion-header" id="headingOne">
