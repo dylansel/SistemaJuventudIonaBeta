@@ -1,9 +1,10 @@
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Button, Spinner } from 'reactstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, Modal, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import DialogBox from '../components/UI/Modals/DialogBox';
+import EditPriceBody from '../components/UI/Modals/Prices/EditPriceBody';
 import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
 import PriceCombinationCaseDTO from '../dtos/PriceCombinationCaseDTO';
 import { PriceDTO } from '../dtos/PriceDTO';
@@ -13,8 +14,10 @@ import { PricingCasePriceDTO } from '../dtos/PricingCasePriceDTO';
 import { addAllPrices, getAllPricesByMonth } from '../services/priceService';
 import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
+import SkeletonRows from './misc/SkeletonRows';
 
 function PricesByMonth() {
+    const history = useNavigate();
     let { month } = useParams();
     const [pricesByMonth, setPricesByMonth] = useState<PriceDTO[]>([])
     const [pricesLoaded, setPricesLoaded] = useState<boolean>(false)
@@ -23,6 +26,8 @@ function PricesByMonth() {
     const [pricesToAdd, setPricesToAdd] = useState<PriceRequestDTO[]>([])
     const [completedAllPrices, setCompletedAllPrices] = useState<boolean>(false)
     const [isSaving, setIsSaving] = useState<boolean>(false)
+    const [editModal, setEditModal] = useState<boolean>(false)
+    const [itemSelected, setItemSelected] = useState<number>(-1)
 
     const [showDialog, setShowDialog] = useState(false)
     const [showPrompt, confirmNavigation, cancelNavigation] =
@@ -39,8 +44,9 @@ function PricesByMonth() {
         setCompletedAllPrices(pricesToAdd.every(price => price.amount > 0) && pricesToAdd.length === caseCombinations.length)
     }
 
-    const handleEdit = (id: number) => {
-        //TODO: Abrir el modal para editar este precio. (Crear dicho modal.)
+    const toggleEditModal = (id?: any) => {
+        setItemSelected(id!)
+        setEditModal(!editModal)
     }
 
     const listCaseNames = (pricingCases: PricingCaseDTO[]) => {
@@ -101,28 +107,50 @@ function PricesByMonth() {
         <main>
             {month &&
                 <div className="main-container row justify-content-center text-center">
-                    <h2 className='pb-3'>Precios de {new Date(Number(month.split("-")[0]), Number(month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long' })} {month.split("-")[0]}</h2>
+                    <div className="d-flex align-items-center justify-content-center mb-4">
+                        <button type="button" title='Volver' className="btn btn-danger mx-3" onClick={() => history('/prices')}><i className=" fas fa-arrow-left"></i></button>
+                        <h3>Precios de {new Date(Number(month.split("-")[0]), Number(month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long' })} {month.split("-")[0]}</h3>
+                    </div>
                     {
                         pricesLoaded ?
                             <>
-                                {
-                                    pricesByMonth.map((price: PriceDTO) =>
-                                        <div className='my-3 border border-secondary rounded col-md-8 col-10 p-3'>
-                                            <p>Id: {price.id}</p>
-                                            <p>Casos de Precio:</p>
-                                            {
-                                                price.pricingCasePrices!.map((pricingCase: PricingCasePriceDTO) =>
-                                                    <p>{pricingCase.pricingCase.name}</p>
-                                                )
-                                                //TODO: Reutilizar la función de listCaseName acá.
-                                            }
-                                            <p>------</p>
-                                            <p className='fw-bold'>Precio: ${price.amount}</p>
-                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => handleEdit(price.id)} > <i className="fas fa-edit"></i></button>
+                                <div className="justify-content-center table-content mx-3 mt-4 col-10">
 
-                                        </div>
-                                    )
-                                }
+                                    <table className={`table ${pricesLoaded && 'table-hover'} table-responsive`}>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Combinación</th>
+                                                <th scope="col">Precio</th>
+                                                <th scope="col">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {!pricesLoaded && <SkeletonRows rows={50} columns={3} />}
+                                            {pricesLoaded &&
+                                                pricesByMonth
+                                                    .map((price: PriceDTO, index: number) => (
+                                                        <tr key={price.id}>
+                                                            <td>{index + 1}</td>
+                                                            <td className="w-50">
+                                                                <span>{price.pricingCasePrices!.map((pricingCase: PricingCasePriceDTO) =>
+                                                                    <p>{pricingCase.pricingCase.name}</p>
+                                                                )}</span>
+                                                            </td>
+                                                            <td><p className='fw-bold'>${price.amount}</p></td>
+                                                            <td>
+                                                                <span className="actions d-flex justify-content-center">
+                                                                    <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: price.id })}><i className=" fas fa-edit"></i></button>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                    )}
+                                        </tbody>
+                                        <Modal isOpen={editModal} toggle={toggleEditModal}><EditPriceBody title='Editar' refresh={fetchData} toggle={toggleEditModal} item={itemSelected} /></Modal>
+                                    </table>
+
+                                </div>
                             </>
                             :
 
