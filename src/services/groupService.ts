@@ -1,26 +1,27 @@
+import GroupDTO from '../dtos/GroupDTO';
 import GroupRequestDTO from '../dtos/GroupRequestDTO';
 import { add, deleteOne, get, getAll, switchActive, update } from './crudService';
 
-export async function getAllGroups(orderBy?: string) {
+export const getAllGroups = async (orderBy?: string): Promise<GroupDTO[]> => {
     return getAll("group", orderBy)
 }
 
-export async function getGroupById(id: number) {
+export const getGroupById = async (id: number): Promise<GroupDTO> => {
     return get("group", id)
 }
 
-export async function addGroup(groupToAdd: GroupRequestDTO) {
+export const addGroup = async (groupToAdd: GroupRequestDTO) => {
     return add("group", groupToAdd)
 }
 
-export async function updateGroup(id: number, groupToUpdate: GroupRequestDTO) {
+export const updateGroup = async (id: number, groupToUpdate: GroupRequestDTO) => {
     return update("group", id, groupToUpdate)
 }
 
-export async function switchActiveGroup(id: number, active: boolean) {
+export const switchActiveGroup = async (id: number, active: boolean) => {
     return switchActive("group", id, active)
 }
 
-export async function deleteGroup(id: number) {
+export const deleteGroup = async (id: number) => {
     return deleteOne("group", id)
 }

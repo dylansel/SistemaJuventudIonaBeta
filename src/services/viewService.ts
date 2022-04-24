@@ -3,7 +3,7 @@ import { getAllFamiliesWithChildren } from './familyService';
 import { getAllGroups, getGroupById } from './groupService';
 import { getJanijById } from './janijService';
 
-export async function getAddJanijData(): Promise<any> {
+export const getAddJanijData = async () => {
     try {
         const groups = await getAllGroups("sort=ordinal,asc")
         const families = await getAllFamiliesWithChildren("sort=surname,asc")
@@ -16,7 +16,7 @@ export async function getAddJanijData(): Promise<any> {
     }
 }
 
-export async function getEditJanijData(id: number): Promise<any> {
+export const getEditJanijData = async (id: number) => {
     try {
         const groups = await getAllGroups("sort=ordinal,asc")
         const families = await getAllFamiliesWithChildren("sort=surname,asc")
@@ -31,7 +31,7 @@ export async function getEditJanijData(id: number): Promise<any> {
     }
 }
 
-export async function getAddGroupData(): Promise<any> {
+export const getAddGroupData = async () => {
     try {
         const areas = await getAllAreas("sort=ordinal,asc")
         return {
@@ -42,7 +42,7 @@ export async function getAddGroupData(): Promise<any> {
     }
 }
 
-export async function getEditGroupData(id: number): Promise<any> {
+export const getEditGroupData = async (id: number) => {
     try {
         const areas = await getAllAreas("sort=ordinal,asc")
         const groupData = await getGroupById(id)

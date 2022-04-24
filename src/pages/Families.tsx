@@ -1,12 +1,13 @@
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
-import { Button, Card, CardBody, Collapse, FormGroup, Input, Modal, Spinner } from "reactstrap";
+import { Button, FormGroup, Input, Modal } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import EditFamilyBody from "../components/UI/Modals/Families/EditFamilyBody";
 import FamilyDTO from "../dtos/FamilyDTO";
 import JanijDTO from "../dtos/JanijDTO";
 import { getAllFamilies, deleteFamily, switchActiveFamily } from "../services/familyService";
+import { filterActive } from "../utils/misc/filter";
 import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
 
@@ -98,10 +99,10 @@ function Families() {
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows rows={50} columns={3}/>}
+                        {!loaded && <SkeletonRows rows={50} columns={3} />}
                         {loaded &&
                             families
-                                .filter((family: FamilyDTO) => (!((tableFilter === 'Inactivos' && family.active) || (tableFilter === 'Activos' && !family.active))))
+                                .filter((family: FamilyDTO) => filterActive(tableFilter, family))
                                 .map(family => (
                                     <tr key={family.id} className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
                                         <td>{++i}</td>
@@ -129,7 +130,7 @@ function Families() {
                     </tbody>
                     <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Familia' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteFamily} /></Modal>
                 </table>
-                
+
             </div>
             <Scroll showBelow={250} />
         </main >

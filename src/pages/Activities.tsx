@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Modal, Spinner } from 'reactstrap';
+import { Button, Modal } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import AddActivityBody from "../components/UI/Modals/Activities/AddActivityBody";
 import AddMultipleActivitiesBody from "../components/UI/Modals/Activities/AddMultipleActivitiesBody";

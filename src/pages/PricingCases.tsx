@@ -58,16 +58,16 @@ function PricingCases() {
             }
         } else {
             let newStateCases = [...activePricingCases]
-            if (sInd === -1 && dInd !== -1 || sInd !== -1 && dInd === -1) {
+            if ((sInd === -1 && dInd !== -1) || (sInd !== -1 && dInd === -1)) {
                 //El grupo se movió entre la lista de grupos y los casos de precios
                 let newStateGroup = filteredGroupCases
                 if (sInd === -1) {
-                    //Muevo un grupo de la lista de grupos a un caso de precio.
+                    //Muevo un grupo de la lista de grupos a un caso de precio
                     const result: any = move(filteredGroupCases, activePricingCases[dInd].pricingCaseGroups, source, destination);
                     newStateGroup = result[sInd];
                     newStateCases[dInd].pricingCaseGroups = result[dInd];
                 } else {
-                    //Muevo un grupo de un caso de precio a la lista de grupos. No cambia activePricingCases
+                    //Muevo un grupo de un caso de precio a la lista de grupos
                     const result: any = move(activePricingCases[sInd].pricingCaseGroups, filteredGroupCases, source, destination);
                     newStateGroup = result[dInd];
                     newStateCases[sInd].pricingCaseGroups = result[sInd];
@@ -75,7 +75,7 @@ function PricingCases() {
                 setFilteredGroupCases(newStateGroup)
             }
             else {
-                //Muevo un grupo de un caso de precio a otro. No cambia activePricingCases
+                //Muevo un grupo de un caso de precio a otro
                 const result: any = move(activePricingCases[sInd].pricingCaseGroups, activePricingCases[dInd].pricingCaseGroups, source, destination);
                 newStateCases[sInd].pricingCaseGroups = result[sInd];
                 newStateCases[dInd].pricingCaseGroups = result[dInd];
@@ -83,7 +83,25 @@ function PricingCases() {
             setActivePricingCases(newStateCases)
         }
     }
-
+    const filterActiveCases = async () => {
+        const groupCases = await getGroupCases()
+        const pricingCases = await getActive()
+        let filteredActiveCases: PricingCaseDTO[] = pricingCases;        
+        const isInclude = (caseGroup:any)=>{
+                    for (const groupCase of groupCases) {
+                        if (caseGroup.group.name ===
+                       groupCase.group.name && caseGroup.leadersCourse === 
+                       groupCase.leadersCourse) {
+                            return true;
+                       }
+                   }
+                   return false;
+                }
+        for(let i = 0; i< pricingCases.length;i++){
+            filteredActiveCases[i].pricingCaseGroups = filteredActiveCases[i].pricingCaseGroups.filter((caseGroup)=>isInclude(caseGroup))
+        }
+        return filteredActiveCases
+    }
     const filterGroupCases = async () => {
         const groupCases = await getGroupCases()
         const pricingCases = await getActive()
@@ -131,6 +149,7 @@ function PricingCases() {
             setIsCreating(true)
             setIndexSelectCase(i)
         }
+
         refresh()
     }
 
@@ -175,8 +194,9 @@ function PricingCases() {
 
     async function fetchData() {
         setLoaded(false)
+        await filterActiveCases();
         setPreviousPricingCases(await getActive())
-        setActivePricingCases(await getActive())
+        setActivePricingCases(await filterActiveCases())
         setFilteredGroupCases(await filterGroupCases())
         setLoaded(true)
     }
@@ -187,7 +207,7 @@ function PricingCases() {
 
     useEffect(() => {
         setShowDialog(JSON.stringify(previousPricingCases) !== JSON.stringify(activePricingCases))
-    }, [activePricingCases])
+    }, [activePricingCases,caseName])
 
     return (
         <main>
@@ -310,7 +330,7 @@ function PricingCases() {
                                         onClick={handleSaveCases}
                                         className='my-3'
                                         color={isSaving ? 'success' : 'danger'}
-                                        disabled={isSaving || activePricingCases.length === 0 || isCreating}
+                                        disabled={isSaving || activePricingCases.length === 0 || filteredGroupCases.length !== 0 || !showDialog ||isCreating}
                                         type='button'
                                     >{isSaving ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : "Guardar Casos de Precios"}</Button>
 

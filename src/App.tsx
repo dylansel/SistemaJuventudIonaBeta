@@ -14,6 +14,7 @@ import {
   Activities,
   Attendance,
   Prices,
+  PricesByMonth,
   PricingCases, 
   Payments,
   Grants,
@@ -50,6 +51,7 @@ function App() {
             <Route path="attendance/:activityId/:areaId" element={<AttendanceSelectGroup />} />
             <Route path="attendance/:activityId/:areaId/:groupId" element={<AttendanceList />} />
             <Route path="prices" element={<Prices />} />
+            <Route path="prices/:month" element={<PricesByMonth />} />
             <Route path="payments" element={<Payments />} />
             <Route path="grants" element={<Grants />} />
             <Route path="pricingCases" element={<PricingCases />} />
