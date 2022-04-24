@@ -25,6 +25,16 @@ export const addPrice = async (priceToAdd: PriceRequestDTO) => {
     return add("price", priceToAdd)
 }
 
+export const addAllPrices = async (pricesToAdd: PriceRequestDTO[]) => {
+    try {
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_DOMAIN}/price/addAll`, pricesToAdd)
+        const data = await response.data
+        return data
+    } catch (error: any) {
+        throw error
+    }
+}
+
 export const updatePrice = async (id: number, priceToUpdate: PriceRequestDTO) => {
     return update("price", id, priceToUpdate)
 }
