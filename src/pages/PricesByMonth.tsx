@@ -49,14 +49,7 @@ function PricesByMonth() {
         setEditModal(!editModal)
     }
 
-    const listCaseNames = (pricingCases: PricingCaseDTO[]) => {
-        let groupPricingCases: any = {}
-        pricingCases.forEach((pricingCase: PricingCaseDTO) => {
-            if (!groupPricingCases[pricingCase.name]) {
-                groupPricingCases[pricingCase.name] = 0
-            }
-            groupPricingCases[pricingCase.name]++
-        })
+    const getCountByCasePrice = (groupPricingCases : any) => {
         let result: string = ""
         const keysLength: number = Object.keys(groupPricingCases).length
         let i = 0
@@ -65,6 +58,28 @@ function PricesByMonth() {
             result += (i === keysLength && keysLength > 1 ? " y " : "") + pricingCase + " x" + groupPricingCases[pricingCase] + (i < keysLength - 1 ? ", " : "")
         }
         return result
+    }
+
+    const listPricingCasePrices = (pricingCases: PricingCasePriceDTO[]) => {
+        let groupPricingCases: any = {}
+        pricingCases.forEach((pricingCase: PricingCasePriceDTO) => {
+            if (!groupPricingCases[pricingCase.pricingCase.name]) {
+                groupPricingCases[pricingCase.pricingCase.name] = 0
+            }
+            groupPricingCases[pricingCase.pricingCase.name]++
+        })
+        return getCountByCasePrice(groupPricingCases)
+    }
+
+    const listCaseNames = (pricingCases: PricingCaseDTO[]) => {
+        let groupPricingCases: any = {}
+        pricingCases.forEach((pricingCase: PricingCaseDTO) => {
+            if (!groupPricingCases[pricingCase.name]) {
+                groupPricingCases[pricingCase.name] = 0
+            }
+            groupPricingCases[pricingCase.name]++
+        })
+        return getCountByCasePrice(groupPricingCases)
     }
     const listFamilyToString = (families: string[]) => {
         let string = "";
@@ -133,9 +148,7 @@ function PricesByMonth() {
                                                         <tr key={price.id}>
                                                             <td>{index + 1}</td>
                                                             <td className="w-50">
-                                                                <span>{price.pricingCasePrices!.map((pricingCase: PricingCasePriceDTO) =>
-                                                                    <p>{pricingCase.pricingCase.name}</p>
-                                                                )}</span>
+                                                                {listPricingCasePrices(price.pricingCasePrices!)}
                                                             </td>
                                                             <td><p className='fw-bold'>${price.amount}</p></td>
                                                             <td>
