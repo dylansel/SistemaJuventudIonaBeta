@@ -11,7 +11,7 @@ import { PriceDTO } from '../dtos/PriceDTO';
 import { PriceRequestDTO } from '../dtos/PriceRequestDTO';
 import PricingCaseDTO from '../dtos/PricingCaseDTO';
 import { PricingCasePriceDTO } from '../dtos/PricingCasePriceDTO';
-import { addAllPrices, getAllPricesByMonth } from '../services/priceService';
+import { addAllPrices, deletePricesByMonth, getAllPricesByMonth } from '../services/priceService';
 import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
 import SkeletonRows from './misc/SkeletonRows';
@@ -26,8 +26,10 @@ function PricesByMonth() {
     const [pricesToAdd, setPricesToAdd] = useState<PriceRequestDTO[]>([])
     const [completedAllPrices, setCompletedAllPrices] = useState<boolean>(false)
     const [isSaving, setIsSaving] = useState<boolean>(false)
+    const [isDeleting, setIsDeleting] = useState<boolean>(false)
     const [editModal, setEditModal] = useState<boolean>(false)
     const [itemSelected, setItemSelected] = useState<number>(-1)
+
 
     const [showDialog, setShowDialog] = useState(false)
     const [showPrompt, confirmNavigation, cancelNavigation] =
@@ -41,7 +43,7 @@ function PricesByMonth() {
             pricingCases: pricingCases.map((pricingCase: PriceCombinationCaseDTO) => pricingCase.id)
         }
         pricesToAdd[caseCombinationId] = newPrice
-        setCompletedAllPrices(pricesToAdd.every(price => price.amount > 0) && pricesToAdd.length === caseCombinations.length)
+        setCompletedAllPrices(pricesToAdd.filter(price => price.amount > 0).length === caseCombinations.length)
     }
 
     const toggleEditModal = (id?: any) => {
@@ -49,7 +51,7 @@ function PricesByMonth() {
         setEditModal(!editModal)
     }
 
-    const getCountByCasePrice = (groupPricingCases : any) => {
+    const getCountByCasePrice = (groupPricingCases: any) => {
         let result: string = ""
         const keysLength: number = Object.keys(groupPricingCases).length
         let i = 0
@@ -99,8 +101,21 @@ function PricesByMonth() {
         fetchData()
     }
 
+    const handleDeleteAllPrices = async () => {
+        setIsDeleting(true)
+        setTimeout(async () => {
+            await deletePricesByMonth(pricesByMonth)
+            setIsDeleting(false)
+            setPricesByMonth([])
+            fetchData()
+        }, 1500);
+    }
+
     const fetchData = async () => {
+        setPricesLoaded(false)
+        setPricesByMonth([])
         const data = await getAllPricesByMonth(month!)
+        console.log(data)
         if (data.length > 0) {
             setPricesByMonth(data)
             setPricesLoaded(true)
@@ -162,8 +177,17 @@ function PricesByMonth() {
                                         </tbody>
                                         <Modal isOpen={editModal} toggle={toggleEditModal}><EditPriceBody title='Editar' refresh={fetchData} toggle={toggleEditModal} item={itemSelected} /></Modal>
                                     </table>
-
                                 </div>
+                                <Button
+                                    onClick={handleDeleteAllPrices}
+                                    className='my-3 col-md-2 col-6'
+                                    color={isDeleting ? 'success' : 'danger'}
+                                    disabled={isDeleting}
+                                    hidden={new Date(Number(month.split("-")[0]), Number(month.split("-")[1]) - 1, 1) <= new Date()}
+                                    type='button'
+                                >
+                                    {isDeleting ? <>Eliminando...<Spinner animation="border" variant="light" size="sm" /></> : 'Eliminar Precios'}
+                                </Button>
                             </>
                             :
 
