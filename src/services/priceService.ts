@@ -42,3 +42,9 @@ export const updatePrice = async (id: number, priceToUpdate: PriceRequestDTO) =>
 export const deletePrice = async (id: number) => {
     return deleteOne("price", id)
 }
+
+export const deletePricesByMonth = async (pricesByMonth: PriceDTO[]) => {
+    for(const price of pricesByMonth){
+        deleteOne("price", price.id)
+    }
+}
