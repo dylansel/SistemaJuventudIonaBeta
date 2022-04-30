@@ -86,6 +86,7 @@ function HeaderNav(props: any) {
                                 <Link className="dropdown-item" to="/payments" onClick={handleToggle}>Pagos</Link>
                                 <Link className="dropdown-item" to="/pricingCases" onClick={handleToggle}>Casos de precios</Link>
                                 <Link className="dropdown-item" to="/prices" onClick={handleToggle}>Precios</Link>
+                                <Link className="dropdown-item" to="/specialPrice" onClick={handleToggle}>Precios Especiales</Link>
                                 <Link className="dropdown-item" to="/grants" onClick={handleToggle}>Becas</Link>
                             </DropdownMenu>
                         </UncontrolledDropdown>
