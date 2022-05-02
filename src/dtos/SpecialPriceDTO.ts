@@ -1,6 +1,6 @@
 export default interface SpecialPriceDTO {
     id: number,
-    familyId: string,
+    familyId: number,
     familySurname: string,
     janijim:string[],
     month: string,

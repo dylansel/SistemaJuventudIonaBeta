@@ -17,7 +17,7 @@ import PricesByMonth from './PricesByMonth';
 import Payments from './Payments';
 import Grants from './Grants';
 import PricingCases from './PricingCases';
-import SpecialPrice from './SpecialPrice';
+import SpecialPrices from './SpecialPrices';
 
 export {
     Areas,
@@ -35,7 +35,7 @@ export {
     PricingCases,
     Payments,
     Grants,
-    SpecialPrice,
+    SpecialPrices,
     Loading,
     Login,
     NotFound,
