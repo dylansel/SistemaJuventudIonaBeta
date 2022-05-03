@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
+import { capitalizeAllWords, isEmptyOrSpaces,listArrToString} from "../../../../utils/misc/strings";
 import { getAreaById, updateArea } from "../../../../services/areaService";
+import { getSpecialPriceById, updateSpecialPrice } from "../../../../services/specialPriceService";
+import { getAllSpecialPricebyid} from "../../../../dtos/EjemploSpecialPriceDATOS";
+
+
+
+
 
 function EditSpecialPricesBody(props: any) {
     const [loaded, setLoaded] = useState(false)
@@ -13,7 +19,7 @@ function EditSpecialPricesBody(props: any) {
 
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getAreaById(props.item.id))
+        setViewData(await getAllSpecialPricebyid(props.item.id))
         setLoaded(true)
     }
 
@@ -22,15 +28,17 @@ function EditSpecialPricesBody(props: any) {
     }, []);
 
     let initialFieldsState = {
-        name: "",
-        ordinal: -1,
+        familyId:-1,
+        month: '',
+        amount: -1,
     }
     const [fields, setFields] = useState(initialFieldsState)
 
     if (loaded && !firstLoad) {
         initialFieldsState = {
-            name: viewData.name,
-            ordinal: viewData.ordinal,
+            familyId:viewData.familyId,
+            month: viewData.month,
+            amount: viewData.amount
         }
         setNotEditedFields(initialFieldsState)
         setFields(initialFieldsState)
@@ -56,18 +64,18 @@ function EditSpecialPricesBody(props: any) {
 
     const editRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal <= 0) {
+        if (isEmptyOrSpaces(fields.month) || fields.amount <= 0) {
             setError(true)
             return
         }
         setIsUpdating(true)
-        const name = capitalizeAllWords(fields.name)
-        const areaToUpdate = {
-            name,
-            ordinal: fields.ordinal,
+        const specialPriceToUpdate = {
+            familyId: fields.familyId,
+            month: fields.month,
+            amount: fields.amount
         }
-        if (JSON.stringify(areaToUpdate) != JSON.stringify(notEditedFields)) {
-            await updateArea(props.item.id, areaToUpdate)
+        if (JSON.stringify(specialPriceToUpdate) != JSON.stringify(notEditedFields)) {
+            await updateSpecialPrice(props.item.id, specialPriceToUpdate)
         }
         setIsUpdating(false)
         props.toggle()
@@ -77,38 +85,51 @@ function EditSpecialPricesBody(props: any) {
     return (
         <>
             <ModalHeader toggle={props.toggle} charcode="close">
-                {props.title} Shijva
+                {props.title} Precio Especial
             </ModalHeader>
             <ModalBody>
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
-                        <Label for="name">
-                            Nombre
+                        {loaded && viewData && firstLoad ? 
+                        <>
+                        <h5>Familia  {viewData.familySurname} ({listArrToString(viewData.janijim,", ")})</h5>
+                        
+                        </>
+                        
+                        
+                        : "Cargando..."}
+                        
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="month">
+                            Fecha
                         </Label>
                         <Input
-                            id="name"
+                            id="month"
+                            type="month"
                             disabled={isUpdating || !firstLoad}
-                            name="name"
+                            name="month"
                             onChange={handleChange}
                             autoComplete="off"
-                            placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
-                            value={loaded && viewData && firstLoad ? fields.name : "Cargando..."}
+                            Value={loaded && viewData && firstLoad ? fields.month : ""}
+                            
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="ordinal">
-                            Ordinal
+                        <Label for="amount">
+                            Precio
                         </Label>
                         <Input
-                            id="ordinal"
+                            id="amount"
                             disabled={isUpdating || !firstLoad}
-                            name="ordinal"
+                            name="amount"
                             type="number"
                             onChange={handleChange}
                             autoComplete="off"
+                            min="0"
                             placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
-                            value={loaded && viewData && firstLoad ? fields.ordinal : "Cargando..."}
+                            value={loaded && viewData && firstLoad ? fields.amount : "Cargando..."}
                         />
                     </FormGroup>
 

@@ -15,6 +15,7 @@ import { addAllPrices, deletePricesByMonth, getAllPricesByMonth } from '../servi
 import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
 import SkeletonRows from './misc/SkeletonRows';
+import {listArrToString} from '../utils/misc/strings'
 
 function PricesByMonth() {
     const history = useNavigate();
@@ -83,15 +84,7 @@ function PricesByMonth() {
         })
         return getCountByCasePrice(groupPricingCases)
     }
-    const listFamilyToString = (families: string[]) => {
-        let string = "";
-        for (let family in families) {
-            family = family[0].toUpperCase() + family.slice(1);
-        }
-        families.sort();
-        families.map((n, i) => string += n + ((i !== families.length - 1) ? " | " : ""))
-        return string
-    }
+    
 
     const handleSavePrices = async () => {
         setIsSaving(true)
@@ -208,7 +201,7 @@ function PricesByMonth() {
                                                     </h2>
                                                     <div id={`collapse${index + 1}`} className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#caseCombinations">
                                                         <div className="accordion-body">
-                                                            {listFamilyToString(caseCombination.families)}
+                                                            {listArrToString(caseCombination.families," | ")}
                                                         </div>
                                                     </div>
                                                     <div className="d-inline-block col-md-6 mt-3">

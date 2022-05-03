@@ -12,6 +12,9 @@ import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
 import {getAllSpecialPriceEjemplo} from '../dtos/EjemploSpecialPriceDATOS'
 import SpecialPriceDTO from "../dtos/SpecialPriceDTO";
+import { dateToEsString,dateToUsString} from "../utils/misc/strings";
+import { getAllSpecialPrice,deleteSpecialPrice } from "../services/specialPriceService";
+
 function SpecialPrices() {
     const [specialPrice, setSpecialPrice] = useState<SpecialPriceDTO[]>([])
     const [loaded, setLoaded] = useState(false)
@@ -86,7 +89,7 @@ function SpecialPrices() {
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{specialP.month}</td>
+                                    <td> {new Date(Number(specialP.month.split("-")[0]),Number(specialP.month.split("-")[1])-1 , 1).toLocaleDateString('default', { month: 'long', year: 'numeric' })}</td>
                                     <td>${specialP.amount}</td>
                                     <td>
                                         <span className="actions d-flex">
@@ -98,7 +101,7 @@ function SpecialPrices() {
                             )
                             )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Shijva' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteArea} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Precio Especial' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteSpecialPrice} /></Modal>
                 </table>
             </div>
             <Scroll showBelow={250} />
