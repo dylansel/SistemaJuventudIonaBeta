@@ -138,8 +138,8 @@ function AddJanijBody(props: any) {
                             {(loaded) &&
                             <option key="-1" value="-1" selected disabled >Elija un grupo</option>
                             }
-                            {loaded && viewData && viewData["groups"].map((grupo: any) => (
-                                <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
+                            {loaded && viewData && viewData["groups"].map((group: any) => (
+                                <option key={group.id} value={group.id}>{group.name}</option>
                             ))}
                         </Input>
                     </FormGroup>

@@ -4,8 +4,7 @@ import { Button, FormGroup, Input, Modal } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import EditFamilyBody from "../components/UI/Modals/Families/EditFamilyBody";
-import FamilyDTO from "../dtos/FamilyDTO";
-import JanijDTO from "../dtos/JanijDTO";
+import FamilyDTO, { JanijDTO } from "../dtos/FamilyDTO";
 import { getAllFamilies, deleteFamily, switchActiveFamily } from "../services/familyService";
 import { filterActive } from "../utils/misc/filter";
 import Loading from "./misc/Loading";
@@ -103,7 +102,7 @@ function Families() {
                         {loaded &&
                             families
                                 .filter((family: FamilyDTO) => filterActive(tableFilter, family))
-                                .map(family => (
+                                .map((family: FamilyDTO) => (
                                     <tr key={family.id} className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
                                         <td>{++i}</td>
                                         <td className="w-50">
@@ -112,7 +111,7 @@ function Families() {
                                             <div className="collapse" id={`collapse${family.id}`}>
                                                 <div className="card card-body">
                                                     {family.janijim.map((janij: JanijDTO) => (
-                                                        <p>{janij.name} {` (${janij.groupName})`} </p>
+                                                        <p>{janij.name} {` (${janij.group.name})`} </p>
                                                     ))}
                                                 </div>
                                             </div>

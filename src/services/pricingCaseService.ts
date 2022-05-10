@@ -1,7 +1,6 @@
 import axios from "axios"
 import CaseCombinationDTO from "../dtos/CaseCombinationDTO"
-import PricingCaseDTO from "../dtos/PricingCaseDTO"
-import PricingCaseGroupDTO from "../dtos/PricingCaseGroupDTO"
+import PricingCaseDTO , { PricingCaseGroupDTO } from "../dtos/PricingCaseDTO"
 import PricingCaseRequestDTO from "../dtos/PricingCaseRequestDTO"
 
 export const getActive = async (): Promise<PricingCaseDTO[]> => {

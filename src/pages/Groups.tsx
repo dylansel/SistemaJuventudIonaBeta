@@ -105,11 +105,11 @@ function Groups() {
                         {loaded &&
                             groups
                                 .filter((group: GroupDTO) => filterActive(tableFilter, group))
-                                .map(group => (
+                                .map((group: GroupDTO) => (
                                     <tr key={group.id} className={!group.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
                                         <td>{++i}</td>
                                         <td>{group.name}</td>
-                                        <td>{group.areaName}</td>
+                                        <td>{group.area.name}</td>
                                         <td>
                                             <span className="actions d-flex">
                                                 <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: group.id })}><i className=" fas fa-edit"></i></button>
