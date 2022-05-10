@@ -106,7 +106,7 @@ function Families() {
                                     <tr key={family.id} className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
                                         <td>{++i}</td>
                                         <td className="w-50">
-                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id}><span className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>{family.surname}</span></button>
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id.toString()}><span className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>{family.surname}</span></button>
 
                                             <div className="collapse" id={`collapse${family.id}`}>
                                                 <div className="card card-body">
