@@ -5,6 +5,7 @@ import CreatableSelectSearch from "../../Selects/CreatableSelect";
 import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
 import { addFamily } from '../../../../services/familyService';
 import { updateJanij } from '../../../../services/janijService';
+import GroupDTO from "../../../../dtos/GroupDTO";
 
 function EditJanijBody(props: any) {
 
@@ -161,7 +162,7 @@ function EditJanijBody(props: any) {
                                 <option disabled selected>Cargando...</option>
                             }
 
-                            {loaded && viewData && viewData["groups"].map((group: any) => (
+                            {loaded && viewData && viewData["groups"].map((group: GroupDTO) => (
                                 <option key={group.id} value={group.id}>{group.name}</option>
                             ))}
                         </Input>
