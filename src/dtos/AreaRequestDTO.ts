@@ -1,4 +1,4 @@
-import AreaDTO from "./AreaDTO";
-
-type AreaRequestDTO = Omit<AreaDTO, "id" | "active">
-export default AreaRequestDTO
+export default interface AreaRequestDTO {
+    name: string,
+    ordinal: number,
+}
