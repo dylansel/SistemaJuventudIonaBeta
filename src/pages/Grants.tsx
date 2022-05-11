@@ -121,7 +121,7 @@ function Grants() {
                             .map((grant:GrantDTO) => (
                                 <tr key={grant.id}>
                                     <td>{++i}</td>
-                                    <td>{grant.familySurname}</td>
+                                    <td>{grant.family.surname}</td>
                                     <td>{grant.percentile}</td>
                                     <td>{grant.since} - {grant.until}</td>
                                     <td>
