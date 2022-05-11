@@ -1,10 +1,16 @@
-import PriceCombinationCaseDTO from "./PriceCombinationCaseDTO";
-import { PricingCasePriceDTO } from "./PricingCasePriceDTO";
-
-export interface PriceDTO {
+export default interface PriceDTO {
     id: number,
     amount: number,
     month: string,
-    pricingCasePrices?: PricingCasePriceDTO[],
-    pricingCombinations?: PriceCombinationCaseDTO[]
+    pricingCasePrices: PricingCasePriceDTO[]
+}
+
+export interface PricingCasePriceDTO {
+    pricingCase: PricingCaseDTO
+}
+
+interface PricingCaseDTO {
+    id: number,
+    name: string,
+    active: boolean
 }

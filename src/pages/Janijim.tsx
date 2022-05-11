@@ -115,16 +115,16 @@ function Janijim() {
                             {loaded &&
                                 janijim
                                     .filter((janij: JanijDTO) => filterActive(tableFilter, janij))
-                                    .map(janij => (
+                                    .map((janij: JanijDTO) => (
                                         <tr key={janij.id} className={!janij.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
                                             <td>{++i}</td>
-                                            <td>{`${janij.name} ${janij.familySurname}`}</td>
-                                            <td>{janij.groupName}</td>
+                                            <td>{`${janij.name} ${janij.family.surname}`}</td>
+                                            <td>{janij.group.name}</td>
                                             <td>
                                                 <span className="actions d-flex">
                                                     <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: janij.id })}><i className=" fas fa-edit"></i></button>
                                                     <button type="button" title={janij.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: janij.id, active: !janij.active })}><i className={`fas ${janij.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
-                                                    <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.familySurname}`, active: janij.active })} ><i className="fas fa-trash"></i></button>
+                                                    <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.family.surname}`, active: janij.active })} ><i className="fas fa-trash"></i></button>
                                                 </span>
                                             </td>
                                         </tr>
