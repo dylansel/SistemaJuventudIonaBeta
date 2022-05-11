@@ -5,6 +5,7 @@ import CreatableSelectSearch from "../../Selects/CreatableSelect";
 import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
 import { addFamily } from '../../../../services/familyService';
 import { addJanij } from '../../../../services/janijService';
+import GroupDTO from "../../../../dtos/GroupDTO";
 
 function AddJanijBody(props: any) {
 
@@ -138,8 +139,8 @@ function AddJanijBody(props: any) {
                             {(loaded) &&
                             <option key="-1" value="-1" selected disabled >Elija un grupo</option>
                             }
-                            {loaded && viewData && viewData["groups"].map((grupo: any) => (
-                                <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
+                            {loaded && viewData && viewData["groups"].map((group: GroupDTO) => (
+                                <option key={group.id} value={group.id}>{group.name}</option>
                             ))}
                         </Input>
                     </FormGroup>

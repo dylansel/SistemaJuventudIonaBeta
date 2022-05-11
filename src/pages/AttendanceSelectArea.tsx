@@ -66,8 +66,8 @@ function AttendanceSelectArea() {
 
         return janijim.filter((janij: JanijDTO) => (janij.active && (
             janij.name.toLowerCase().startsWith(janijInput.toLowerCase()) ||
-            janij.familySurname.toLowerCase().startsWith(janijInput.toLowerCase()) ||
-            `${janij.name.toLowerCase()} ${janij.familySurname.toLowerCase()}`.startsWith(janijInput.toLowerCase())))
+            janij.family.surname.toLowerCase().startsWith(janijInput.toLowerCase()) ||
+            `${janij.name.toLowerCase()} ${janij.family.surname.toLowerCase()}`.startsWith(janijInput.toLowerCase())))
         )
     }
 
@@ -187,8 +187,8 @@ function AttendanceSelectArea() {
                                 <tbody>
                                     {findJanij(searchValue).map((janij: JanijDTO) => (
                                         <tr key={janij.id}>
-                                            <td>{`${janij.name} ${janij.familySurname}`}</td>
-                                            <td>{janij.groupName}</td>
+                                            <td>{`${janij.name} ${janij.family.surname}`}</td>
+                                            <td>{janij.group.name}</td>
                                             <td>
                                                 <Input
                                                     type='checkbox'

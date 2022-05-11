@@ -1,8 +1,11 @@
 export default interface GrantDTO {
     id: number,
-    familyId: number,
-    familySurname: string, 
+    family: FamilyDTO,
     percentile: number,
     since: string,
     until: string
+}
+interface FamilyDTO { 
+    id: number,
+    surname: string
 }

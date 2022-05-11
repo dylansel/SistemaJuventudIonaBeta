@@ -6,11 +6,9 @@ import Scroll from '../components/UI/Layout/Scroll';
 import DialogBox from '../components/UI/Modals/DialogBox';
 import EditPriceBody from '../components/UI/Modals/Prices/EditPriceBody';
 import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
-import PriceCombinationCaseDTO from '../dtos/PriceCombinationCaseDTO';
-import { PriceDTO } from '../dtos/PriceDTO';
+import PriceDTO, { PricingCasePriceDTO } from '../dtos/PriceDTO';
 import { PriceRequestDTO } from '../dtos/PriceRequestDTO';
-import PricingCaseDTO from '../dtos/PricingCaseDTO';
-import { PricingCasePriceDTO } from '../dtos/PricingCasePriceDTO';
+import { PricingCaseDTO } from '../dtos/CaseCombinationDTO';
 import { addAllPrices, deletePricesByMonth, getAllPricesByMonth } from '../services/priceService';
 import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
@@ -35,12 +33,12 @@ function PricesByMonth() {
     const [showPrompt, confirmNavigation, cancelNavigation] =
         useCallbackPrompt(showDialog)
 
-    const handleChange = (e: any, caseCombinationId: number, pricingCases: PriceCombinationCaseDTO[]) => {
+    const handleChange = (e: any, caseCombinationId: number, pricingCases: PricingCaseDTO[]) => {
         setHasUnsavedChanges(true)
         const newPrice = {
             month: month!,
             amount: e.target.value,
-            pricingCases: pricingCases.map((pricingCase: PriceCombinationCaseDTO) => pricingCase.id)
+            pricingCases: pricingCases.map((pricingCase: PricingCaseDTO) => pricingCase.id)
         }
         pricesToAdd[caseCombinationId] = newPrice
         setCompletedAllPrices(pricesToAdd.filter(price => price.amount > 0).length === caseCombinations.length)
