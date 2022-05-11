@@ -33,7 +33,7 @@ function EditGroupBody(props: any) {
         initialFieldsState = {
             name: viewData["groupData"].name,
             ordinal: viewData["groupData"].ordinal,
-            areaId: viewData["groupData"].areaId
+            areaId: viewData["groupData"].area.id
         }
         setNotEditedFields(initialFieldsState)
         setFields(initialFieldsState)

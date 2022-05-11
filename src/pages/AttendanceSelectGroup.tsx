@@ -58,7 +58,7 @@ function AttendanceSelectGroup() {
                 <div className="justify-content-center mx-3 text-center">
                     {groups &&
                         <div className='mt-3 inline-grid'>
-                            {groups?.filter((group: GroupDTO) => group.active && group.areaId === areaData?.id)
+                            {groups?.filter((group: GroupDTO) => group.active && group.area.id === areaData?.id)
                                 .map((group: GroupDTO) =>
                                     <Button key={group.id} color="danger" size='lg' className="mx-5" title={group.name} onClick={() => loadAttendance(activityData?.id!, areaData?.id!, group.id)}>{group.name}</Button>
                                 )}

@@ -3,6 +3,10 @@ export default interface GroupDTO {
     active: boolean,
     name: string,
     ordinal: number,
-    areaId: number,
-    areaName: string,
+    area: AreaDTO
+}
+
+interface AreaDTO {
+    id: number,
+    name: string
 }

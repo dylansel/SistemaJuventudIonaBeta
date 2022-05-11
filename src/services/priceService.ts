@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PriceDTO } from '../dtos/PriceDTO';
+import PriceDTO from '../dtos/PriceDTO';
 import { PriceRequestDTO } from '../dtos/PriceRequestDTO';
 import { add, deleteOne, get, getAll, update } from './crudService';
 
