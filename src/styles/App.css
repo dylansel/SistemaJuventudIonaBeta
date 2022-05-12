@@ -219,12 +219,14 @@ input[type="checkbox"]:checked {
 }
 
 .padrepricingCasesActive-custom {
-  background-color: #9202245d;
+  background-color: #F7B2B2;
+  border-radius: 10px;
+  margin-bottom: 2vh;
 }
 
 .pricingCasesActive-custom {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 3fr);
   grid-gap: 10px;
 }
 
