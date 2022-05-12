@@ -23,14 +23,19 @@ export const move = (source: any, destination: any, droppableSource: any, droppa
 const grid = 8;
 
 export const getListStyle = (isDraggingOver: any) => ({
-    background: isDraggingOver ? "#c7002f71" : "#9202245d",
+    background: isDraggingOver ? "#c7002f71" : "#FFFFFF",
+    border: '1px solid',
+    borderRadius: '10px',
     padding: grid,
     margin: `0 0 20px 0`,
     width: "100%",
+    alignItems: "center"
 });
 
 export const getCasesStyle = (isDraggingOver: any) => ({
-    background: isDraggingOver ? "#FF7F7F" : "lightgrey",
+    background: isDraggingOver ? "#FF7F7F" : "#FFFFFF",
+    border: '1px solid',
+    borderRadius: '10px',
     padding: grid,
     margin: `0 0 20px 0`,
     width: "100%",
@@ -38,11 +43,11 @@ export const getCasesStyle = (isDraggingOver: any) => ({
 
 export const getItemStyle = (isDragging: any, draggableStyle: any) => ({
     userSelect: "none",
-    padding: grid * 3,
+    padding: grid * 2,
     margin: `0 0 ${grid}px 0`,
-
-    background: isDragging ? "lightgreen" : "#EED3D3",
+    borderRadius: '10px',
+    width: isDragging ? '20%' : '100%',
+    background: isDragging ? "#DD5041" : "#EED3D3",
     fontWeight: isDragging ? "bold" : "normal",
-
     ...draggableStyle
 });
