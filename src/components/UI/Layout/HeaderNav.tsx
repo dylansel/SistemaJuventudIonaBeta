@@ -90,7 +90,7 @@ function HeaderNav() {
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/payments" onClick={handleToggle}>Pagos</NavLink>
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/pricingCases" onClick={handleToggle}>Casos de precios</NavLink>
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/prices" onClick={handleToggle}>Precios</NavLink>
-                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/specialPrice" onClick={handleToggle}>Precios Especiales</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/specialPrices" onClick={handleToggle}>Precios Especiales</NavLink>
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/grants" onClick={handleToggle}>Becas</NavLink>
                             </DropdownMenu>
                         </UncontrolledDropdown>
