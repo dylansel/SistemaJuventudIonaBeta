@@ -37,7 +37,7 @@ function AttendanceList() {
         const janijim = await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc")
         const attendanceLoaded = await getAttendanceByActivity(parseInt(activityId!))
         const janijimFiltered = janijim
-            .filter((janij: JanijDTO) => janij.active && janij.groupId === parseInt(groupId!))
+            .filter((janij: JanijDTO) => janij.active && janij.group.id === parseInt(groupId!))
         janijimFiltered.forEach((janij: JanijDTO) => {
             const attendance = attendanceLoaded?.find((attendance: AttendanceDTO) => attendance.janijId === janij.id)
             presents.push({
@@ -153,12 +153,12 @@ function AttendanceList() {
                             <tbody>
                                 {janijim
                                     .filter((janij: JanijDTO) => (
-                                        janij.active && janij.groupId === parseInt(groupId!)
+                                        janij.active && janij.group.id === parseInt(groupId!)
                                     ))
-                                    .map(janij => (
+                                    .map((janij: JanijDTO) => (
                                         <tr key={janij.id}>
                                             <td>{++i}</td>
-                                            <td>{`${janij.name} ${janij.familySurname}`}</td>
+                                            <td>{`${janij.name} ${janij.family.surname}`}</td>
                                             <td>
                                                 <Input
                                                     type='checkbox'
@@ -203,6 +203,7 @@ function AttendanceList() {
             </div>
             <DialogBox
                 title='Alerta'
+                text='¿Estás seguro que deseas salir? Hay cambios sin guardar.'
                 showDialog={showPrompt}
                 confirmNavigation={confirmNavigation}
                 cancelNavigation={cancelNavigation}

@@ -3,8 +3,16 @@ export default interface JanijDTO {
     active: boolean,
     name: string,
     leadersCourse: boolean,
-    familyId: number,
-    familySurname: string,
-    groupId: number,
-    groupName: string
+    family: FamilyDTO,
+    group: GroupDTO
+}
+
+interface FamilyDTO {
+    id: number,
+    surname: string
+}
+
+interface GroupDTO {
+    id: number,
+    name: string
 }

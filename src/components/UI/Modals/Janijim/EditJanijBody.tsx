@@ -5,6 +5,7 @@ import CreatableSelectSearch from "../../Selects/CreatableSelect";
 import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
 import { addFamily } from '../../../../services/familyService';
 import { updateJanij } from '../../../../services/janijService';
+import GroupDTO from "../../../../dtos/GroupDTO";
 
 function EditJanijBody(props: any) {
 
@@ -38,10 +39,10 @@ function EditJanijBody(props: any) {
     if (loaded && !firstLoad) {
         initialFieldsState = {
             name: viewData["janijData"].name,
-            groupId: viewData["janijData"].groupId,
+            groupId: viewData["janijData"].group.id,
             leadersCourse: viewData["janijData"].leadersCourse,
-            familyId: viewData["janijData"].familyId,
-            familySurname: viewData["janijData"].familySurname
+            familyId: viewData["janijData"].family.id,
+            familySurname: viewData["janijData"].family.surname
         }
         setNotEditedFields(initialFieldsState)
         setFields(initialFieldsState)
@@ -161,8 +162,8 @@ function EditJanijBody(props: any) {
                                 <option disabled selected>Cargando...</option>
                             }
 
-                            {loaded && viewData && viewData["groups"].map((grupo: any) => (
-                                <option key={grupo.id} value={grupo.id}>{grupo.name}</option>
+                            {loaded && viewData && viewData["groups"].map((group: GroupDTO) => (
+                                <option key={group.id} value={group.id}>{group.name}</option>
                             ))}
                         </Input>
                     </FormGroup>

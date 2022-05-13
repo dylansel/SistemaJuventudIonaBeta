@@ -1,4 +1,3 @@
-import FamilyDTO from "./FamilyDTO";
-
-type FamilyRequestDTO = Pick<FamilyDTO, "surname">
-export default FamilyRequestDTO;
+export default interface FamilyRequestDTO {
+    surname: string
+}

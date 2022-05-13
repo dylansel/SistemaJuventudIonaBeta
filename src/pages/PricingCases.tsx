@@ -2,10 +2,9 @@ import { withAuthenticationRequired } from '@auth0/auth0-react';
 import Loading from './misc/Loading';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';
-import PricingCaseGroupDTO from '../dtos/PricingCaseGroupDTO';
 import { getGroupCases, getActive, savePricingCases } from '../services/pricingCaseService';
 import Scroll from '../components/UI/Layout/Scroll';
-import PricingCaseDTO from '../dtos/PricingCaseDTO';
+import PricingCaseDTO, { PricingCaseGroupDTO } from '../dtos/PricingCaseDTO';
 import { Button, Input, Spinner } from 'reactstrap';
 import { reorder, move, getListStyle, getCasesStyle, getItemStyle } from '../utils/dnd/dnd-functions';
 import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
@@ -86,19 +85,19 @@ function PricingCases() {
     const filterActiveCases = async () => {
         const groupCases = await getGroupCases()
         const pricingCases = await getActive()
-        let filteredActiveCases: PricingCaseDTO[] = pricingCases;        
-        const isInclude = (caseGroup:any)=>{
-                    for (const groupCase of groupCases) {
-                        if (caseGroup.group.name ===
-                       groupCase.group.name && caseGroup.leadersCourse === 
-                       groupCase.leadersCourse) {
-                            return true;
-                       }
-                   }
-                   return false;
+        let filteredActiveCases: PricingCaseDTO[] = pricingCases;
+        const isInclude = (caseGroup: any) => {
+            for (const groupCase of groupCases) {
+                if (caseGroup.group.name ===
+                    groupCase.group.name && caseGroup.leadersCourse ===
+                    groupCase.leadersCourse) {
+                    return true;
                 }
-        for(let i = 0; i< pricingCases.length;i++){
-            filteredActiveCases[i].pricingCaseGroups = filteredActiveCases[i].pricingCaseGroups.filter((caseGroup)=>isInclude(caseGroup))
+            }
+            return false;
+        }
+        for (let i = 0; i < pricingCases.length; i++) {
+            filteredActiveCases[i].pricingCaseGroups = filteredActiveCases[i].pricingCaseGroups.filter((caseGroup) => isInclude(caseGroup))
         }
         return filteredActiveCases
     }
@@ -207,7 +206,7 @@ function PricingCases() {
 
     useEffect(() => {
         setShowDialog(JSON.stringify(previousPricingCases) !== JSON.stringify(activePricingCases))
-    }, [activePricingCases,caseName])
+    }, [activePricingCases, caseName])
 
     return (
         <main>
@@ -253,7 +252,7 @@ function PricingCases() {
                             {activePricingCases &&
                                 <div className='col-12 col-md-7 padrepricingCasesActive-custom mx-auto'>
                                     <div className='justify-content-center d-flex py-3'>
-                                        <h2 className='px-5'>Casos</h2>
+                                        <h2 className='px-3'>Casos Activos</h2>
                                         <button type='button' title='Agregar' className="btn btn-danger mx-2" onClick={handleAddCase} disabled={isCreating}><i className="fas fa-plus"></i> Agregar Nuevo Caso</button>
                                     </div>
                                     <div className='pricingCasesActive-custom'>
@@ -266,8 +265,8 @@ function PricingCases() {
                                                         className="bodyPricingCases"
                                                         {...provided.droppableProps}
                                                     >
-                                                        <div className='justify-content-center d-flex flex-row py-3 '>
-                                                            <div className='d-flex flex-row'>
+                                                        <div className='justify-content-center d-flex flex-row py-3'>
+                                                            <div className='flex-row w-75'>
                                                                 {element.name !== "" ?
                                                                     <a data-bs-toggle="collapse" href={`#case${index}`} role="button" aria-expanded="false" aria-controls={`#case${index}`}>
                                                                         <h3 className='px-5'>{element.name}</h3>
@@ -330,7 +329,7 @@ function PricingCases() {
                                         onClick={handleSaveCases}
                                         className='my-3'
                                         color={isSaving ? 'success' : 'danger'}
-                                        disabled={isSaving || activePricingCases.length === 0 || filteredGroupCases.length !== 0 || !showDialog ||isCreating}
+                                        disabled={isSaving || activePricingCases.length === 0 || filteredGroupCases.length !== 0 || !showDialog || isCreating}
                                         type='button'
                                     >{isSaving ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : "Guardar Casos de Precios"}</Button>
 
@@ -343,6 +342,7 @@ function PricingCases() {
             }
             <DialogBox
                 title='Alerta'
+                text='¿Estás seguro que deseas salir? Hay cambios sin guardar.'
                 showDialog={showPrompt}
                 confirmNavigation={confirmNavigation}
                 cancelNavigation={cancelNavigation}

@@ -1,4 +1,6 @@
-import JanijDTO from "./JanijDTO";
-
-type JanijRequestDTO = Pick<JanijDTO, "familyId" | "groupId" | "leadersCourse" | "name">
-export default JanijRequestDTO
+export default interface JanijRequestDTO {
+    name: string,
+    leadersCourse: boolean,
+    familyId: number,
+    groupId: number
+}
