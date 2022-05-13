@@ -64,6 +64,12 @@
   color: white;
 }
 
+.dropdown-item.active, .dropdown-item:active {
+  text-decoration: none;
+  background-color: #F7B2B2;
+  color: black;
+}
+
 .dropdown:hover .dropdown-menu {
   display: block;
 }
