@@ -147,7 +147,3 @@ function Janijim() {
 export default withAuthenticationRequired(Janijim, {
     onRedirecting: () => <Loading />,
 });
-
-function filterItem(janij: any): (value: any, index: number, array: any[]) => value is any {
-    throw new Error('Function not implemented.');
-}

@@ -236,6 +236,7 @@ function PricesByMonth() {
             }
             <DialogBox
                 title='Alerta'
+                text='¿Estás seguro que deseas salir? Hay cambios sin guardar.'
                 showDialog={showPrompt}
                 confirmNavigation={confirmNavigation}
                 cancelNavigation={cancelNavigation}

@@ -4,7 +4,8 @@ interface DialogBoxProps {
     showDialog: boolean
     cancelNavigation: any
     confirmNavigation: any
-    title: string
+    title: string,
+    text: string
 }
 
 const DialogBox: React.FC<DialogBoxProps> = ({
@@ -12,6 +13,7 @@ const DialogBox: React.FC<DialogBoxProps> = ({
     cancelNavigation,
     confirmNavigation,
     title,
+    text
 }) => {
     return (
         <Modal isOpen={showDialog}>
@@ -19,7 +21,7 @@ const DialogBox: React.FC<DialogBoxProps> = ({
                 {title}
             </ModalHeader>
             <ModalBody>
-                <p>¿Estás seguro que deseas salir? Hay cambios sin guardar.</p>
+                <p>{text}</p>
             </ModalBody>
             <ModalFooter>
                 <Button onClick={cancelNavigation}>
