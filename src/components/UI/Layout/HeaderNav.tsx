@@ -1,16 +1,20 @@
 import { useAuth0, User } from '@auth0/auth0-react';
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Collapse, DropdownMenu, DropdownToggle, Nav, Navbar, NavbarText, NavbarToggler, UncontrolledDropdown, } from 'reactstrap';
 import logo from '../../../assets/logo/logo-solo.png';
+import DialogBox from '../Modals/DialogBox';
 
-function HeaderNav(props: any) {
+function HeaderNav() {
     const { logout } = useAuth0()
     const { isAuthenticated, user } = useAuth0<User>()
+
+    const [showPrompt, setShowPrompt] = useState(false)
 
     const [isRedirecting, setIsRedirecting] = useState(false)
 
     const handleLogout = () => {
+        setShowPrompt(false)
         setIsRedirecting(true)
         logout({ returnTo: window.location.origin })
     }
@@ -30,7 +34,7 @@ function HeaderNav(props: any) {
                 expand="lg"
                 fixed='top'
             >
-                <Link to="/"><img src={logo} className="navbar-logo" alt="logo-navbar" /></Link>
+                <Link to="/" onClick={() => setToggle(false)}><img src={logo} className="navbar-logo" alt="logo-navbar" /></Link>
                 <NavbarToggler onClick={handleToggle} className='navbar-dark' />
                 <Collapse
                     navbar
@@ -51,10 +55,10 @@ function HeaderNav(props: any) {
                                 Datos
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <Link className="dropdown-item" to="/janijim" onClick={handleToggle}>Janijim</Link>
-                                <Link className="dropdown-item" to="/families" onClick={handleToggle}>Familias</Link>
-                                <Link className="dropdown-item" to="/groups" onClick={handleToggle}>Grupos</Link>
-                                <Link className="dropdown-item" to="/areas" onClick={handleToggle}>Shijvot</Link>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/janijim" onClick={handleToggle}>Janijim</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/families" onClick={handleToggle}>Familias</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/groups" onClick={handleToggle}>Grupos</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/areas" onClick={handleToggle}>Shijvot</NavLink>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                         <UncontrolledDropdown
@@ -68,8 +72,8 @@ function HeaderNav(props: any) {
                                 Actividades
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <Link className="dropdown-item" to="/activities" onClick={handleToggle}>Actividades</Link>
-                                <Link className="dropdown-item" to="/attendance" onClick={handleToggle}>Asistencia</Link>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/activities" onClick={handleToggle}>Actividades</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/attendance" onClick={handleToggle}>Asistencia</NavLink>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                         <UncontrolledDropdown
@@ -83,11 +87,11 @@ function HeaderNav(props: any) {
                                 Pagos
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <Link className="dropdown-item" to="/payments" onClick={handleToggle}>Pagos</Link>
-                                <Link className="dropdown-item" to="/pricingCases" onClick={handleToggle}>Casos de precios</Link>
-                                <Link className="dropdown-item" to="/prices" onClick={handleToggle}>Precios</Link>
-                                <Link className="dropdown-item" to="/specialPrices" onClick={handleToggle}>Precios Especiales</Link>
-                                <Link className="dropdown-item" to="/grants" onClick={handleToggle}>Becas</Link>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/payments" onClick={handleToggle}>Pagos</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/pricingCases" onClick={handleToggle}>Casos de precios</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/prices" onClick={handleToggle}>Precios</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/specialPrice" onClick={handleToggle}>Precios Especiales</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/grants" onClick={handleToggle}>Becas</NavLink>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                         <UncontrolledDropdown
@@ -101,9 +105,9 @@ function HeaderNav(props: any) {
                                 Reportes
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <Link className="dropdown-item" to="#" onClick={handleToggle}>Reporte 01</Link>
-                                <Link className="dropdown-item" to="#" onClick={handleToggle}>Reporte 02</Link>
-                                <Link className="dropdown-item" to="#" onClick={handleToggle}>Reporte 03</Link>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="reports/1" onClick={handleToggle}>Reporte 01</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="reports/2" onClick={handleToggle}>Reporte 02</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="reports/3" onClick={handleToggle}>Reporte 03</NavLink>
                             </DropdownMenu>
                         </UncontrolledDropdown>
                     </Nav>
@@ -115,13 +119,20 @@ function HeaderNav(props: any) {
                                 </div>
                                 <div className='d-flex flex-row justify-content-center align-items-center text-center'>
                                     <p>{user?.name?.split(' ')[0]}</p>
-                                    <Link className="dropdown-item user" to="" onClick={handleLogout}>{isRedirecting ? "Cerrando Sesión..." : "Cerrar Sesión"}</Link>
+                                    <Link className="dropdown-item user" to="" onClick={() => setShowPrompt(!showPrompt)}>{isRedirecting ? "Cerrando Sesión..." : "Cerrar Sesión"}</Link>
                                 </div>
                             </div>
                         }
                     </NavbarText>
                 </Collapse>
             </Navbar>
+            <DialogBox
+                title='Cerrar Sesión'
+                text={`${user?.name?.split(' ')[0]}, ¿estás seguro que deseas cerrar sesión?`}
+                showDialog={showPrompt}
+                confirmNavigation={handleLogout}
+                cancelNavigation={() => setShowPrompt(false)}
+            />
         </header>
     )
 }
