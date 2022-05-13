@@ -1,8 +1,20 @@
 export default interface SpecialPriceDTO {
     id: number,
-    familyId: number,
-    familySurname: string,
-    janijim:string[],
+    payments:PaymentsDTO[],
     month: string,
     amount: number,
+}
+
+interface PaymentsDTO{
+    family:FamilyDTO
+}
+
+interface FamilyDTO{
+    id:number,
+    surname:String,
+    janijim:JanijimDTO[]
+}
+
+interface JanijimDTO{
+    name:String
 }
