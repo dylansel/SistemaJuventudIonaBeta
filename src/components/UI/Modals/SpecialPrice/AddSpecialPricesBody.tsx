@@ -57,7 +57,7 @@ function AddSpecialPricesBody(props: any) {
             month: fields.month,
             amount: fields.amount,
         }
-        await addSpecialPrice(specialPriceToAdd)
+        //await addSpecialPrice(specialPriceToAdd)
         props.toggle()
         setIsAdding(false)
         props.refresh()

@@ -1,4 +1,19 @@
-import SpecialPriceDTO from './SpecialPriceDTO';
+export default interface SpecialPriceRequestDTO {
+    payments:PaymentsDTO[],
+    month: string,
+    amount: number,
+}
 
-type SpecialPriceRequestDTO = Omit<SpecialPriceDTO, "id" |"familySurname" |"janijim" >
-export default SpecialPriceRequestDTO
+interface PaymentsDTO{
+    family:FamilyDTO
+}
+
+interface FamilyDTO{
+    id:number,
+    surname:String,
+    janijim:JanijimDTO[]
+}
+
+interface JanijimDTO{
+    name:String
+}

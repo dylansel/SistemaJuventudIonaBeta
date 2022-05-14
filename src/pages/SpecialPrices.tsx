@@ -12,7 +12,7 @@ import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
 import {getAllSpecialPriceEjemplo} from '../dtos/EjemploSpecialPriceDATOS'
 import SpecialPriceDTO from "../dtos/SpecialPriceDTO";
-import { dateToEsString,dateToUsString} from "../utils/misc/strings";
+import { dateToEsString,dateToUsString,listArrToString} from "../utils/misc/strings";
 import { getAllSpecialPrice,deleteSpecialPrice } from "../services/specialPriceService";
 
 function SpecialPrices() {
@@ -37,6 +37,11 @@ function SpecialPrices() {
     const handleDelete = (item: any) => {
         setItemSelected(item)
         toggleDeleteModal()
+    }
+    const objToArr = (arr:any[])=>{
+        let arrF:string[] = []
+        arr.map((p)=>{arrF.push(p.name)})
+        return arrF
     }
 
     const refresh = () => {
@@ -76,15 +81,15 @@ function SpecialPrices() {
                     <tbody>
                         {!loaded && <SkeletonRows rows={50} columns={4} />}
                         {loaded && specialPrice
-                            .map(specialP => (
+                            .map((specialP: SpecialPriceDTO) => (
                                 <tr key={specialP.id} >
                                     <td>{++i}</td>
-                                    <td className="w-2">
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${specialP.familyId}`} aria-expanded="false" >{specialP.familySurname}</button>
-                                        <div className="collapse" id={`collapse${specialP.familyId}`}>
+                                    <td className="w-50">
+                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${specialP.id}`} aria-expanded="false" >Familias</button>
+                                        <div className="collapse" id={`collapse${specialP.id}`}>
                                             <div className="card card-body">
-                                                {specialP.janijim.map(janij => (
-                                                    <p>{janij}</p>
+                                                {specialP.payments.map(payment => (
+                                                    <p>{`${payment.family.surname} (${listArrToString(objToArr(payment.family.janijim),", ")})`}</p>
                                                 ))}
                                             </div>
                                         </div>
@@ -94,7 +99,7 @@ function SpecialPrices() {
                                     <td>
                                         <span className="actions d-flex">
                                             <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: specialP.id })}><i className=" fas fa-edit"></i></button>
-                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: specialP.id, name: specialP.familySurname })} ><i className="fas fa-trash"></i></button>
+                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: specialP.id, name: specialP.payments })} ><i className="fas fa-trash"></i></button>
                                         </span>
                                     </td>
                                 </tr>

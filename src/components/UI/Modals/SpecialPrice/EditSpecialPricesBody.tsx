@@ -4,16 +4,24 @@ import { capitalizeAllWords, isEmptyOrSpaces,listArrToString} from "../../../../
 import { getAreaById, updateArea } from "../../../../services/areaService";
 import { getSpecialPriceById, updateSpecialPrice } from "../../../../services/specialPriceService";
 import { getAllSpecialPricebyid} from "../../../../dtos/EjemploSpecialPriceDATOS";
+import SpecialPriceDTO from "../../../../dtos/SpecialPriceDTO";
+import SpecialPriceRequestDTO from "../../../../dtos/SpecialPriceRequestDTO";
 
 
 
 
 
 function EditSpecialPricesBody(props: any) {
+    let initialviewDataState:SpecialPriceDTO =  {
+        id:-1,
+        payments:[],
+        month: "",
+        amount: -1,
+    }
     const [loaded, setLoaded] = useState(false)
     const [notEditedFields, setNotEditedFields] = useState<any>()
     const [firstLoad, setFirstLoad] = useState(false)
-    const [viewData, setViewData] = useState<any>(null)
+    const [viewData, setViewData] = useState<SpecialPriceDTO>(initialviewDataState)
     const [error, setError] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
 
@@ -27,18 +35,18 @@ function EditSpecialPricesBody(props: any) {
         fetchData()
     }, []);
 
-    let initialFieldsState = {
-        familyId:-1,
-        month: '',
+    let initialFieldsState:SpecialPriceRequestDTO =  {
+        payments:[],
+        month: "",
         amount: -1,
     }
     const [fields, setFields] = useState(initialFieldsState)
 
-    if (loaded && !firstLoad) {
+    if (loaded && !firstLoad ) {
         initialFieldsState = {
-            familyId:viewData.familyId,
+            payments:viewData.payments,
             month: viewData.month,
-            amount: viewData.amount
+            amount: viewData.amount,
         }
         setNotEditedFields(initialFieldsState)
         setFields(initialFieldsState)
@@ -70,12 +78,12 @@ function EditSpecialPricesBody(props: any) {
         }
         setIsUpdating(true)
         const specialPriceToUpdate = {
-            familyId: fields.familyId,
+            payments:fields.payments,
             month: fields.month,
             amount: fields.amount
         }
         if (JSON.stringify(specialPriceToUpdate) != JSON.stringify(notEditedFields)) {
-            await updateSpecialPrice(props.item.id, specialPriceToUpdate)
+            //await updateSpecialPrice(props.item.id, specialPriceToUpdate)
         }
         setIsUpdating(false)
         props.toggle()
@@ -93,7 +101,7 @@ function EditSpecialPricesBody(props: any) {
                     <FormGroup>
                         {loaded && viewData && firstLoad ? 
                         <>
-                        <h5>Familia  {viewData.familySurname} ({listArrToString(viewData.janijim,", ")})</h5>
+                        <h5>Familia  <p>{`${viewData.payments}`}</p></h5>
                         
                         </>
                         
