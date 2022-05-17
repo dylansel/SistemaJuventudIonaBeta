@@ -82,7 +82,7 @@ function AddSpecialPricesBody(props: any) {
                     <FormGroup>
                         <Label for="familyId">
                             Familia
-                        </Label>
+                        </Label>git 
                         <CreatableSelectSearch
                             data={(loaded && viewData && viewData["families"]) ? viewData["families"] : []}
                             disabled={!(loaded && viewData && viewData["families"]) || isAdding}

@@ -3,7 +3,6 @@ import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, La
 import { capitalizeAllWords, isEmptyOrSpaces,listArrToString} from "../../../../utils/misc/strings";
 import { getAreaById, updateArea } from "../../../../services/areaService";
 import { getSpecialPriceById, updateSpecialPrice } from "../../../../services/specialPriceService";
-import { getAllSpecialPricebyid} from "../../../../dtos/EjemploSpecialPriceDATOS";
 import SpecialPriceDTO from "../../../../dtos/SpecialPriceDTO";
 import SpecialPriceRequestDTO from "../../../../dtos/SpecialPriceRequestDTO";
 
@@ -27,7 +26,7 @@ function EditSpecialPricesBody(props: any) {
 
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getAllSpecialPricebyid(props.item.id))
+        setViewData(await getSpecialPriceById(props.item.id))
         setLoaded(true)
     }
 

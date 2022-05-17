@@ -5,12 +5,8 @@ import Scroll from "../components/UI/Layout/Scroll";
 import AddSpecialPricesBody from "../components/UI/Modals/SpecialPrice/AddSpecialPricesBody";
 import EditSpecialPriceBody from "../components/UI/Modals/SpecialPrice/EditSpecialPricesBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
-import AreaDTO from "../dtos/AreaDTO";
-import { deleteArea} from "../services/areaService";
-import { filterActive } from "../utils/misc/filter";
 import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
-import {getAllSpecialPriceEjemplo} from '../dtos/EjemploSpecialPriceDATOS'
 import SpecialPriceDTO from "../dtos/SpecialPriceDTO";
 import { dateToEsString,dateToUsString,listArrToString} from "../utils/misc/strings";
 import { getAllSpecialPrice,deleteSpecialPrice } from "../services/specialPriceService";
@@ -38,7 +34,7 @@ function SpecialPrices() {
         setItemSelected(item)
         toggleDeleteModal()
     }
-    const objToArr = (arr:any[])=>{
+    const objToArr = (arr:any[])=>{ //Revisar y borrar 
         let arrF:string[] = []
         arr.map((p)=>{arrF.push(p.name)})
         return arrF
@@ -49,7 +45,7 @@ function SpecialPrices() {
     }
     async function fetchData() {
         setLoaded(false)
-        setSpecialPrice(await getAllSpecialPriceEjemplo())
+        setSpecialPrice(await getAllSpecialPrice("sort=month,desc"))
         setLoaded(true)
     }
 
@@ -72,24 +68,24 @@ function SpecialPrices() {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Familias</th>
+                            <th scope="col">Familia</th>
                             <th scope="col">Mes</th>
                             <th scope="col">Precio</th>
                             <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows rows={50} columns={4} />}
+                        {!loaded && <SkeletonRows rows={50} columns={5} />}
                         {loaded && specialPrice
                             .map((specialP: SpecialPriceDTO) => (
                                 <tr key={specialP.id} >
                                     <td>{++i}</td>
                                     <td className="w-50">
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${specialP.id}`} aria-expanded="false" >Familias</button>
+                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${specialP.id}`} aria-expanded="false" >{specialP.payments[0].family.surname}</button>
                                         <div className="collapse" id={`collapse${specialP.id}`}>
                                             <div className="card card-body">
-                                                {specialP.payments.map(payment => (
-                                                    <p>{`${payment.family.surname} (${listArrToString(objToArr(payment.family.janijim),", ")})`}</p>
+                                                {specialP.payments[0].family.janijim.map(janij => (
+                                                    <p>{janij.name}</p>
                                                 ))}
                                             </div>
                                         </div>
