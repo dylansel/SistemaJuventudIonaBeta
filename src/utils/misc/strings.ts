@@ -27,3 +27,12 @@ export const formatDateEsToUs = (date: string) => {
     const dArr = date.split("-");
     return dArr[0] + "-" + dArr[1] + "-" + dArr[2]
 }
+export const listArrToString = (arr: string[],connector:string) => {
+    let string = "";
+    for (let e in arr) {
+        e = e[0].toUpperCase() + e.slice(1);
+    }
+    arr.sort();
+    arr.map((n, i) => string += n + ((i !== arr.length - 1) ? connector : ""))
+    return string
+}

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PriceDTO } from '../dtos/PriceDTO';
+import PriceDTO from '../dtos/PriceDTO';
 import { PriceRequestDTO } from '../dtos/PriceRequestDTO';
 import { add, deleteOne, get, getAll, update } from './crudService';
 
@@ -41,4 +41,10 @@ export const updatePrice = async (id: number, priceToUpdate: PriceRequestDTO) =>
 
 export const deletePrice = async (id: number) => {
     return deleteOne("price", id)
+}
+
+export const deletePricesByMonth = async (pricesByMonth: PriceDTO[]) => {
+    for(const price of pricesByMonth){
+        deleteOne("price", price.id)
+    }
 }

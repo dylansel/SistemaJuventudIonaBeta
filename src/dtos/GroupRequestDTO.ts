@@ -1,4 +1,5 @@
-import GroupDTO from "./GroupDTO";
-
-type GroupRequestDTO = Omit<GroupDTO, "id" | "active" | "areaName" >
-export default GroupRequestDTO
+export default interface GroupRequestDTO {
+    name: string,
+    ordinal: number,
+    areaId: number
+}

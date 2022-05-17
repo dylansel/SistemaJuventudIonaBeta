@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { updateGroup } from "../../../../services/groupService";
-import { getEditGroupData } from "../../../../services/viewService";
+import { getAreaById, updateArea } from "../../../../services/areaService";
 
-function EditGroupBody(props: any) {
+function EditGrantsBody(props: any) {
     const [loaded, setLoaded] = useState(false)
     const [notEditedFields, setNotEditedFields] = useState<any>()
     const [firstLoad, setFirstLoad] = useState(false)
@@ -14,7 +13,7 @@ function EditGroupBody(props: any) {
 
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getEditGroupData(props.item.id))
+        setViewData(await getAreaById(props.item.id))
         setLoaded(true)
     }
 
@@ -25,15 +24,13 @@ function EditGroupBody(props: any) {
     let initialFieldsState = {
         name: "",
         ordinal: -1,
-        areaId: -1,
     }
     const [fields, setFields] = useState(initialFieldsState)
 
     if (loaded && !firstLoad) {
         initialFieldsState = {
-            name: viewData["groupData"].name,
-            ordinal: viewData["groupData"].ordinal,
-            areaId: viewData["groupData"].area.id
+            name: viewData.name,
+            ordinal: viewData.ordinal,
         }
         setNotEditedFields(initialFieldsState)
         setFields(initialFieldsState)
@@ -43,7 +40,7 @@ function EditGroupBody(props: any) {
     const handleChange = (e: any) => {
         setError(false)
         let { name, value } = e.target
-        if (name === "ordinal" || name === "areaId") {
+        if (name === "ordinal") {
             value = parseInt(value)
         }
         setFields(prevState => ({
@@ -59,19 +56,18 @@ function EditGroupBody(props: any) {
 
     const editRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal <= 0 || fields.areaId === -1) {
+        if (isEmptyOrSpaces(fields.name) || fields.ordinal <= 0) {
             setError(true)
             return
         }
         setIsUpdating(true)
         const name = capitalizeAllWords(fields.name)
-        const groupToUpdate = {
+        const areaToUpdate = {
             name,
-            areaId: fields.areaId,
             ordinal: fields.ordinal,
         }
-        if (JSON.stringify(groupToUpdate) != JSON.stringify(notEditedFields)) {
-            await updateGroup(props.item.id, groupToUpdate)
+        if (JSON.stringify(areaToUpdate) != JSON.stringify(notEditedFields)) {
+            await updateArea(props.item.id, areaToUpdate)
         }
         setIsUpdating(false)
         props.toggle()
@@ -81,7 +77,7 @@ function EditGroupBody(props: any) {
     return (
         <>
             <ModalHeader toggle={props.toggle} charcode="close">
-                {props.title} Grupo
+                {props.title} Shijva
             </ModalHeader>
             <ModalBody>
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
@@ -92,12 +88,12 @@ function EditGroupBody(props: any) {
                         </Label>
                         <Input
                             id="name"
+                            disabled={isUpdating || !firstLoad}
                             name="name"
                             onChange={handleChange}
-                            disabled={!(loaded && viewData && viewData["areas"] && viewData["groupData"]) || isUpdating || !firstLoad}
                             autoComplete="off"
-                            placeholder={(!(loaded && viewData && viewData["areas"] && viewData["groupData"]) || !firstLoad) ? "Cargando..." : ""}
-                            value={loaded && viewData && viewData["areas"] && viewData["groupData"] && firstLoad ? fields.name : "Cargando..."}
+                            placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
+                            value={loaded && viewData && firstLoad ? fields.name : "Cargando..."}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -106,37 +102,16 @@ function EditGroupBody(props: any) {
                         </Label>
                         <Input
                             id="ordinal"
+                            disabled={isUpdating || !firstLoad}
                             name="ordinal"
                             type="number"
-                            disabled={!(loaded && viewData && viewData["areas"] && viewData["groupData"]) || isUpdating}
                             onChange={handleChange}
                             autoComplete="off"
-                            placeholder={(!(loaded && viewData && viewData["areas"] && viewData["groupData"])) ? "Cargando..." : ""}
-                            value={loaded && viewData && viewData["groupData"] && fields.ordinal}
+                            placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
+                            value={loaded && viewData && firstLoad ? fields.ordinal : "Cargando..."}
                         />
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="areaId">Area</Label>
-                        <Input
-                            id="areaId"
-                            name="areaId"
-                            className="mb-3"
-                            type="select"
-                            disabled={!(loaded && viewData && viewData["areas"] && viewData["groupData"]) || isUpdating || !firstLoad}
-                            onChange={handleChange}
-                            placeholder={(!(loaded && viewData && viewData["areas"] && viewData["groupData"])) ? "Cargando..." : ""}
-                            value={viewData && viewData["areas"] && fields.areaId}
 
-                        >
-                            {(!(loaded && viewData && viewData["areas"])) &&
-                                <option disabled selected>Cargando...</option>
-                            }
-                            {loaded && viewData && viewData["areas"].map((area: any) => (
-                                <option key={area.id} value={area.id}>{area.name}</option>
-                            ))}
-
-                        </Input>
-                    </FormGroup>
                     <ModalFooter>
                         <Button
                             onClick={handleCancel}
@@ -146,7 +121,7 @@ function EditGroupBody(props: any) {
                         </Button>
                         <Button
                             color={isUpdating ? "warning" : "danger"}
-                            disabled={!(loaded && viewData && viewData["areas"]) || isUpdating}
+                            disabled={isUpdating || !firstLoad}
                             onClick={editRequest}
                         >
                             {isUpdating ? <div>Editando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}
@@ -159,4 +134,4 @@ function EditGroupBody(props: any) {
     );
 }
 
-export default EditGroupBody
+export default EditGrantsBody

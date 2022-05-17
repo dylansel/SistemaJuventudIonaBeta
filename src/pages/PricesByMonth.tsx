@@ -6,15 +6,14 @@ import Scroll from '../components/UI/Layout/Scroll';
 import DialogBox from '../components/UI/Modals/DialogBox';
 import EditPriceBody from '../components/UI/Modals/Prices/EditPriceBody';
 import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
-import PriceCombinationCaseDTO from '../dtos/PriceCombinationCaseDTO';
-import { PriceDTO } from '../dtos/PriceDTO';
+import PriceDTO, { PricingCasePriceDTO } from '../dtos/PriceDTO';
 import { PriceRequestDTO } from '../dtos/PriceRequestDTO';
-import PricingCaseDTO from '../dtos/PricingCaseDTO';
-import { PricingCasePriceDTO } from '../dtos/PricingCasePriceDTO';
-import { addAllPrices, getAllPricesByMonth } from '../services/priceService';
+import { PricingCaseDTO } from '../dtos/CaseCombinationDTO';
+import { addAllPrices, deletePricesByMonth, getAllPricesByMonth } from '../services/priceService';
 import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
 import SkeletonRows from './misc/SkeletonRows';
+import {listArrToString} from '../utils/misc/strings'
 
 function PricesByMonth() {
     const history = useNavigate();
@@ -26,22 +25,24 @@ function PricesByMonth() {
     const [pricesToAdd, setPricesToAdd] = useState<PriceRequestDTO[]>([])
     const [completedAllPrices, setCompletedAllPrices] = useState<boolean>(false)
     const [isSaving, setIsSaving] = useState<boolean>(false)
+    const [isDeleting, setIsDeleting] = useState<boolean>(false)
     const [editModal, setEditModal] = useState<boolean>(false)
     const [itemSelected, setItemSelected] = useState<number>(-1)
+
 
     const [showDialog, setShowDialog] = useState(false)
     const [showPrompt, confirmNavigation, cancelNavigation] =
         useCallbackPrompt(showDialog)
 
-    const handleChange = (e: any, caseCombinationId: number, pricingCases: PriceCombinationCaseDTO[]) => {
+    const handleChange = (e: any, caseCombinationId: number, pricingCases: PricingCaseDTO[]) => {
         setHasUnsavedChanges(true)
         const newPrice = {
             month: month!,
             amount: e.target.value,
-            pricingCases: pricingCases.map((pricingCase: PriceCombinationCaseDTO) => pricingCase.id)
+            pricingCases: pricingCases.map((pricingCase: PricingCaseDTO) => pricingCase.id)
         }
         pricesToAdd[caseCombinationId] = newPrice
-        setCompletedAllPrices(pricesToAdd.every(price => price.amount > 0) && pricesToAdd.length === caseCombinations.length)
+        setCompletedAllPrices(pricesToAdd.filter(price => price.amount > 0).length === caseCombinations.length)
     }
 
     const toggleEditModal = (id?: any) => {
@@ -49,7 +50,7 @@ function PricesByMonth() {
         setEditModal(!editModal)
     }
 
-    const getCountByCasePrice = (groupPricingCases : any) => {
+    const getCountByCasePrice = (groupPricingCases: any) => {
         let result: string = ""
         const keysLength: number = Object.keys(groupPricingCases).length
         let i = 0
@@ -81,15 +82,7 @@ function PricesByMonth() {
         })
         return getCountByCasePrice(groupPricingCases)
     }
-    const listFamilyToString = (families: string[]) => {
-        let string = "";
-        for (let family in families) {
-            family = family[0].toUpperCase() + family.slice(1);
-        }
-        families.sort();
-        families.map((n, i) => string += n + ((i !== families.length - 1) ? " | " : ""))
-        return string
-    }
+    
 
     const handleSavePrices = async () => {
         setIsSaving(true)
@@ -99,8 +92,21 @@ function PricesByMonth() {
         fetchData()
     }
 
+    const handleDeleteAllPrices = async () => {
+        setIsDeleting(true)
+        setTimeout(async () => {
+            await deletePricesByMonth(pricesByMonth)
+            setIsDeleting(false)
+            setPricesByMonth([])
+            fetchData()
+        }, 1500);
+    }
+
     const fetchData = async () => {
+        setPricesLoaded(false)
+        setPricesByMonth([])
         const data = await getAllPricesByMonth(month!)
+        console.log(data)
         if (data.length > 0) {
             setPricesByMonth(data)
             setPricesLoaded(true)
@@ -162,8 +168,17 @@ function PricesByMonth() {
                                         </tbody>
                                         <Modal isOpen={editModal} toggle={toggleEditModal}><EditPriceBody title='Editar' refresh={fetchData} toggle={toggleEditModal} item={itemSelected} /></Modal>
                                     </table>
-
                                 </div>
+                                <Button
+                                    onClick={handleDeleteAllPrices}
+                                    className='my-3 col-md-2 col-6'
+                                    color={isDeleting ? 'success' : 'danger'}
+                                    disabled={isDeleting}
+                                    hidden={new Date(Number(month.split("-")[0]), Number(month.split("-")[1]) - 1, 1) <= new Date()}
+                                    type='button'
+                                >
+                                    {isDeleting ? <>Eliminando...<Spinner animation="border" variant="light" size="sm" /></> : 'Eliminar Precios'}
+                                </Button>
                             </>
                             :
 
@@ -184,7 +199,7 @@ function PricesByMonth() {
                                                     </h2>
                                                     <div id={`collapse${index + 1}`} className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#caseCombinations">
                                                         <div className="accordion-body">
-                                                            {listFamilyToString(caseCombination.families)}
+                                                            {listArrToString(caseCombination.families," | ")}
                                                         </div>
                                                     </div>
                                                     <div className="d-inline-block col-md-6 mt-3">
@@ -214,6 +229,7 @@ function PricesByMonth() {
             }
             <DialogBox
                 title='Alerta'
+                text='¿Estás seguro que deseas salir? Hay cambios sin guardar.'
                 showDialog={showPrompt}
                 confirmNavigation={confirmNavigation}
                 cancelNavigation={cancelNavigation}

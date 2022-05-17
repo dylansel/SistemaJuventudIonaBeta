@@ -1,4 +1,4 @@
-import ActivityDTO from "./ActivityDTO"
-
-type ActivityRequestDTO = Omit<ActivityDTO, "id">
-export default ActivityRequestDTO;
+export default interface ActivityRequestDTO {
+    date: string,
+    individualPrice: number,
+}
