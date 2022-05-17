@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react"
 import { getAddJanijData } from "../../../../services/viewService";
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
 import CreatableSelectSearch from "../../Selects/CreatableSelect";
-import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
+import { isEmptyOrSpaces } from "../../../../utils/misc/strings";
 import { addSpecialPrice } from "../../../../services/specialPriceService";
 
 function AddSpecialPricesBody(props: any) {

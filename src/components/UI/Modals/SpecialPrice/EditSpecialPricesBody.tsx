@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import { capitalizeAllWords, isEmptyOrSpaces,listArrToString} from "../../../../utils/misc/strings";
-import { getAreaById, updateArea } from "../../../../services/areaService";
 import { getSpecialPriceById, updateSpecialPrice } from "../../../../services/specialPriceService";
 import SpecialPriceDTO from "../../../../dtos/SpecialPriceDTO";
 import SpecialPriceRequestDTO from "../../../../dtos/SpecialPriceRequestDTO";
@@ -36,7 +34,6 @@ function EditSpecialPricesBody(props: any) {
 
     let initialFieldsState:SpecialPriceRequestDTO =  {
         familyId:-1,
-        month: "",
         amount: -1,
     }
     const [fields, setFields] = useState(initialFieldsState)
@@ -44,7 +41,6 @@ function EditSpecialPricesBody(props: any) {
     if (loaded && !firstLoad ) {
         initialFieldsState = {
             familyId:viewData.payments[0].family.id,
-            month: viewData.month,
             amount: viewData.amount,
         }
         setNotEditedFields(initialFieldsState)
@@ -71,7 +67,7 @@ function EditSpecialPricesBody(props: any) {
 
     const editRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.month) || fields.amount <= 0) {
+        if (fields.amount <= 0) {
             setError(true)
             return
         }
@@ -102,21 +98,6 @@ function EditSpecialPricesBody(props: any) {
                         
                         : "Cargando..."}
                         
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="month">
-                            Fecha
-                        </Label>
-                        <Input
-                            id="month"
-                            type="month"
-                            disabled={isUpdating || !firstLoad}
-                            name="month"
-                            onChange={handleChange}
-                            autoComplete="off"
-                            Value={loaded && viewData && firstLoad ? fields.month : ""}
-                            
-                        />
                     </FormGroup>
                     <FormGroup>
                         <Label for="amount">

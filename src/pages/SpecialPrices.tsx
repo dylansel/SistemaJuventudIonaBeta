@@ -1,6 +1,6 @@
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
-import { Button, FormGroup, Input, Modal, Spinner } from "reactstrap";
+import { Button, Modal} from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
 import AddSpecialPricesBody from "../components/UI/Modals/SpecialPrice/AddSpecialPricesBody";
 import EditSpecialPriceBody from "../components/UI/Modals/SpecialPrice/EditSpecialPricesBody";
@@ -8,7 +8,6 @@ import DeleteBody from "../components/UI/Modals/DeleteBody";
 import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
 import SpecialPriceDTO from "../dtos/SpecialPriceDTO";
-import { dateToEsString,dateToUsString,listArrToString} from "../utils/misc/strings";
 import { getAllSpecialPrice,deleteSpecialPrice } from "../services/specialPriceService";
 
 function SpecialPrices() {

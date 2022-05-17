@@ -1,5 +1,5 @@
 export default interface SpecialPriceRequestDTO {
     familyId:number,
-    amount: number,
-    month: string,
+    amount: number ,
+    month?: string,
 }
