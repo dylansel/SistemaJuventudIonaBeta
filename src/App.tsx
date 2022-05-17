@@ -18,6 +18,7 @@ import {
   PricingCases, 
   Payments,
   Grants,
+  SpecialPrices,
   AttendanceSelectArea,
   AttendanceSelectGroup,
   AttendanceList
@@ -55,6 +56,7 @@ function App() {
             <Route path="payments" element={<Payments />} />
             <Route path="grants" element={<Grants />} />
             <Route path="pricingCases" element={<PricingCases />} />
+            <Route path="specialPrices" element={<SpecialPrices />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
