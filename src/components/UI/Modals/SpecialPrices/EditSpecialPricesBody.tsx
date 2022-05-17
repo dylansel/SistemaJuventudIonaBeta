@@ -4,14 +4,10 @@ import { getSpecialPriceById, updateSpecialPrice } from "../../../../services/sp
 import SpecialPriceDTO from "../../../../dtos/SpecialPriceDTO";
 import SpecialPriceRequestDTO from "../../../../dtos/SpecialPriceRequestDTO";
 
-
-
-
-
 function EditSpecialPricesBody(props: any) {
-    let initialviewDataState:SpecialPriceDTO =  {
-        id:-1,
-        payments:[],
+    let initialviewDataState: SpecialPriceDTO = {
+        id: -1,
+        payments: [],
         month: "",
         amount: -1,
     }
@@ -32,15 +28,15 @@ function EditSpecialPricesBody(props: any) {
         fetchData()
     }, []);
 
-    let initialFieldsState:SpecialPriceRequestDTO =  {
-        familyId:-1,
+    let initialFieldsState: SpecialPriceRequestDTO = {
+        familyId: -1,
         amount: -1,
     }
     const [fields, setFields] = useState(initialFieldsState)
 
-    if (loaded && !firstLoad ) {
+    if (loaded && !firstLoad) {
         initialFieldsState = {
-            familyId:viewData.payments[0].family.id,
+            familyId: viewData.payments[0].family.id,
             amount: viewData.amount,
         }
         setNotEditedFields(initialFieldsState)
@@ -72,7 +68,7 @@ function EditSpecialPricesBody(props: any) {
             return
         }
         setIsUpdating(true)
-        if (JSON.stringify(fields) != JSON.stringify(notEditedFields)) {
+        if (JSON.stringify(fields) !== JSON.stringify(notEditedFields)) {
             await updateSpecialPrice(props.item.id, fields)
         }
         setIsUpdating(false)
@@ -89,15 +85,12 @@ function EditSpecialPricesBody(props: any) {
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
-                        {loaded && viewData && firstLoad ? 
-                        <>
-                        <h5>Familia {viewData.payments[0].family.surname}</h5>
-                        
-                        </>
-                        
-                        
-                        : "Cargando..."}
-                        
+                        {loaded && viewData && firstLoad ?
+                            <>
+                                <h5>Familia {viewData.payments[0].family.surname}</h5>
+                            </>
+                            : "Cargando..."}
+
                     </FormGroup>
                     <FormGroup>
                         <Label for="amount">
@@ -116,7 +109,6 @@ function EditSpecialPricesBody(props: any) {
                             value={loaded && viewData && firstLoad ? fields.amount : "Cargando..."}
                         />
                     </FormGroup>
-
                     <ModalFooter>
                         <Button
                             onClick={handleCancel}
@@ -134,7 +126,6 @@ function EditSpecialPricesBody(props: any) {
                     </ModalFooter>
                 </Form>
             </ModalBody>
-
         </>
     );
 }
