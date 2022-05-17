@@ -11,7 +11,7 @@ import SpecialPriceDTO from "../dtos/SpecialPriceDTO";
 import { getAllSpecialPrice, deleteSpecialPrice } from "../services/specialPriceService";
 
 function SpecialPrices() {
-    const [specialPrice, setSpecialPrice] = useState<SpecialPriceDTO[]>([])
+    const [specialPrices, setSpecialPrices] = useState<SpecialPriceDTO[]>([])
     const [loaded, setLoaded] = useState(false)
     const [addModal, setAddModal] = useState(false)
     const [editModal, setEditModal] = useState(false)
@@ -43,7 +43,7 @@ function SpecialPrices() {
     }
     async function fetchData() {
         setLoaded(false)
-        setSpecialPrice(await getAllSpecialPrice("sort=month,desc"))
+        setSpecialPrices(await getAllSpecialPrice("sort=month,desc;payments.family.surname,asc"))
         setLoaded(true)
     }
 
@@ -72,31 +72,32 @@ function SpecialPrices() {
                     </thead>
                     <tbody>
                         {!loaded && <SkeletonRows rows={50} columns={5} />}
-                        {loaded && specialPrice
-                            .map((specialP: SpecialPriceDTO, index: number) => (
-                                <tr key={specialP.id} >
+                        {loaded && specialPrices
+                            .filter((specialPrice: SpecialPriceDTO) => Number(specialPrice.month.split("-")[0]) >= new Date().getFullYear())
+                            .map((specialPrice: SpecialPriceDTO, index: number) => (
+                                <tr key={specialPrice.id} >
                                     <td>{index + 1}</td>
                                     <td className="w-50">
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${specialP.id}`} aria-expanded="false" >{specialP.payments[0].family.surname}</button>
-                                        <div className="collapse" id={`collapse${specialP.id}`}>
+                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${specialPrice.id}`} aria-expanded="false" >{specialPrice.payments[0].family.surname}</button>
+                                        <div className="collapse" id={`collapse${specialPrice.id}`}>
                                             <div className="card card-body">
-                                                {specialP.payments[0].family.janijim.map(janij => (
+                                                {specialPrice.payments[0].family.janijim.map(janij => (
                                                     <p>{janij.name}</p>
                                                 ))}
                                             </div>
                                         </div>
                                     </td>
-                                    <td> {new Date(Number(specialP.month.split("-")[0]), Number(specialP.month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long', year: 'numeric' }).replace('de','')}</td>
-                                    <td>${specialP.amount}</td>
+                                    <td> {new Date(Number(specialPrice.month.split("-")[0]), Number(specialPrice.month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long', year: 'numeric' }).replace('de', '')}</td>
+                                    <td>${specialPrice.amount}</td>
                                     <td>
                                         <span className="actions d-flex">
-                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: specialP.id })}><i className=" fas fa-edit"></i></button>
-                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: specialP.id, name: specialP.payments })} ><i className="fas fa-trash"></i></button>
+                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: specialPrice.id })}><i className=" fas fa-edit"></i></button>
+                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: specialPrice.id, name: specialPrice.payments })} ><i className="fas fa-trash"></i></button>
                                         </span>
                                     </td>
                                 </tr>
-                            )
-                            )}
+                            ))
+                        }
                     </tbody>
                     <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Precio Especial' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteSpecialPrice} /></Modal>
                 </table>

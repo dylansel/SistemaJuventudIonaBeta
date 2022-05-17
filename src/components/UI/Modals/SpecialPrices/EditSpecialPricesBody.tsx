@@ -14,13 +14,13 @@ function EditSpecialPricesBody(props: any) {
     const [loaded, setLoaded] = useState(false)
     const [notEditedFields, setNotEditedFields] = useState<any>()
     const [firstLoad, setFirstLoad] = useState(false)
-    const [viewData, setViewData] = useState<SpecialPriceDTO>(initialviewDataState)
+    const [specialPriceLoaded, setSpecialPriceLoaded] = useState<SpecialPriceDTO>(initialviewDataState)
     const [error, setError] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
 
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getSpecialPriceById(props.item.id))
+        setSpecialPriceLoaded(await getSpecialPriceById(props.item.id))
         setLoaded(true)
     }
 
@@ -31,13 +31,15 @@ function EditSpecialPricesBody(props: any) {
     let initialFieldsState: SpecialPriceRequestDTO = {
         familyId: -1,
         amount: -1,
+        month: ""
     }
     const [fields, setFields] = useState(initialFieldsState)
 
     if (loaded && !firstLoad) {
         initialFieldsState = {
-            familyId: viewData.payments[0].family.id,
-            amount: viewData.amount,
+            familyId: specialPriceLoaded.payments[0].family.id,
+            amount: specialPriceLoaded.amount,
+            month: specialPriceLoaded.month
         }
         setNotEditedFields(initialFieldsState)
         setFields(initialFieldsState)
@@ -85,10 +87,8 @@ function EditSpecialPricesBody(props: any) {
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
-                        {loaded && viewData && firstLoad ?
-                            <>
-                                <h5>Familia {viewData.payments[0].family.surname}</h5>
-                            </>
+                        {loaded && specialPriceLoaded && firstLoad ?
+                            <h5>Familia {specialPriceLoaded.payments[0].family.surname}</h5>
                             : "Cargando..."}
 
                     </FormGroup>
@@ -105,8 +105,8 @@ function EditSpecialPricesBody(props: any) {
                             autoComplete="off"
                             min="0"
                             step={50}
-                            placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
-                            value={loaded && viewData && firstLoad ? fields.amount : "Cargando..."}
+                            placeholder={(!(loaded && specialPriceLoaded)) ? "Cargando..." : ""}
+                            value={loaded && specialPriceLoaded && firstLoad ? fields.amount : "Cargando..."}
                         />
                     </FormGroup>
                     <ModalFooter>
