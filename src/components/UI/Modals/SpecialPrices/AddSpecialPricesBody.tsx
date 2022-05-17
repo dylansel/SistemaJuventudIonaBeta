@@ -4,7 +4,7 @@ import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, La
 import CreatableSelectSearch from "../../Selects/CreatableSelect";
 import { isEmptyOrSpaces } from "../../../../utils/misc/strings";
 import { addSpecialPrice } from "../../../../services/specialPriceService";
-import { getAllFamilies } from "../../../../services/familyService";
+import { getAllFamiliesWithChildren } from "../../../../services/familyService";
 
 function AddSpecialPricesBody(props: any) {
     const today = new Date();
@@ -22,7 +22,7 @@ function AddSpecialPricesBody(props: any) {
 
     async function fetchData() {
         setLoaded(false)
-        setFamilies(await getAllFamilies("sort=surname,asc"))
+        setFamilies(await getAllFamiliesWithChildren("sort=surname,asc"))
         setLoaded(true)
     }
 
@@ -86,7 +86,7 @@ function AddSpecialPricesBody(props: any) {
                         <CreatableSelectSearch
                             data={(loaded && families) ? families : []}
                             disabled={!(loaded && families) || isAdding}
-                            display="surname"
+                            display="fullFamily"
                             label="No se encontró"
                             id="family"
                             name="family"
