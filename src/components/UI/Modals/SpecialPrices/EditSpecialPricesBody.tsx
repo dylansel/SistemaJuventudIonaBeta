@@ -65,7 +65,7 @@ function EditSpecialPricesBody(props: any) {
 
     const editRequest = async () => {
         setError(false)
-        if (fields.amount <= 0) {
+        if (fields.amount < 0) {
             setError(true)
             return
         }

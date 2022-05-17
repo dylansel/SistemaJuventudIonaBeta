@@ -47,7 +47,7 @@ function AddSpecialPricesBody(props: any) {
 
     const postRequest = async () => {
         setError(false)
-        if (fields.familyId === -1 || isEmptyOrSpaces(fields.month) || fields.amount === -1) {
+        if (fields.familyId === -1 || isEmptyOrSpaces(fields.month) || fields.amount < 0) {
             setError(true)
             return
         }
