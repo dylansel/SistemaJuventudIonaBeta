@@ -5,7 +5,7 @@ import SpecialPriceDTO from "../../../../dtos/SpecialPriceDTO";
 import SpecialPriceRequestDTO from "../../../../dtos/SpecialPriceRequestDTO";
 
 function EditSpecialPricesBody(props: any) {
-    let initialviewDataState: SpecialPriceDTO = {
+    let initialSpecialPrice: SpecialPriceDTO = {
         id: -1,
         payments: [],
         month: "",
@@ -14,7 +14,7 @@ function EditSpecialPricesBody(props: any) {
     const [loaded, setLoaded] = useState(false)
     const [notEditedFields, setNotEditedFields] = useState<any>()
     const [firstLoad, setFirstLoad] = useState(false)
-    const [specialPriceLoaded, setSpecialPriceLoaded] = useState<SpecialPriceDTO>(initialviewDataState)
+    const [specialPriceLoaded, setSpecialPriceLoaded] = useState<SpecialPriceDTO>(initialSpecialPrice)
     const [error, setError] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
 
