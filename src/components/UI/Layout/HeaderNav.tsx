@@ -119,7 +119,7 @@ function HeaderNav() {
                                 </div>
                                 <div className='d-flex flex-row justify-content-center align-items-center text-center'>
                                     <p>{user?.name?.split(' ')[0]}</p>
-                                    <Link className="dropdown-item user" to="" onClick={() => setShowPrompt(!showPrompt)}>{isRedirecting ? "Cerrando Sesión..." : "Cerrar Sesión"}</Link>
+                                    <Link className="dropdown-item user" to="#" onClick={() => setShowPrompt(!showPrompt)}>{isRedirecting ? "Cerrando Sesión..." : "Cerrar Sesión"}</Link>
                                 </div>
                             </div>
                         }

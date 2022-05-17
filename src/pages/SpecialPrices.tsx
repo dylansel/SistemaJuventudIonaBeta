@@ -1,6 +1,6 @@
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
-import { Button, Modal} from "reactstrap";
+import { Button, Modal } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
 import AddSpecialPricesBody from "../components/UI/Modals/SpecialPrice/AddSpecialPricesBody";
 import EditSpecialPriceBody from "../components/UI/Modals/SpecialPrice/EditSpecialPricesBody";
@@ -8,7 +8,7 @@ import DeleteBody from "../components/UI/Modals/DeleteBody";
 import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
 import SpecialPriceDTO from "../dtos/SpecialPriceDTO";
-import { getAllSpecialPrice,deleteSpecialPrice } from "../services/specialPriceService";
+import { getAllSpecialPrice, deleteSpecialPrice } from "../services/specialPriceService";
 
 function SpecialPrices() {
     const [specialPrice, setSpecialPrice] = useState<SpecialPriceDTO[]>([])
@@ -31,13 +31,13 @@ function SpecialPrices() {
 
     const handleDelete = (item: any) => {
         const fItem = {
-            id:item.id,
+            id: item.id,
             name: item.name[0].family.surname
-        } 
+        }
         setItemSelected(fItem)
         toggleDeleteModal()
     }
-    
+
     const refresh = () => {
         fetchData()
     }
@@ -46,8 +46,6 @@ function SpecialPrices() {
         setSpecialPrice(await getAllSpecialPrice("sort=month,desc"))
         setLoaded(true)
     }
-
-    let i = 0
 
     useEffect(() => {
         refresh()
@@ -75,9 +73,9 @@ function SpecialPrices() {
                     <tbody>
                         {!loaded && <SkeletonRows rows={50} columns={5} />}
                         {loaded && specialPrice
-                            .map((specialP: SpecialPriceDTO) => (
+                            .map((specialP: SpecialPriceDTO, index: number) => (
                                 <tr key={specialP.id} >
-                                    <td>{++i}</td>
+                                    <td>{index + 1}</td>
                                     <td className="w-50">
                                         <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${specialP.id}`} aria-expanded="false" >{specialP.payments[0].family.surname}</button>
                                         <div className="collapse" id={`collapse${specialP.id}`}>
@@ -88,7 +86,7 @@ function SpecialPrices() {
                                             </div>
                                         </div>
                                     </td>
-                                    <td> {new Date(Number(specialP.month.split("-")[0]),Number(specialP.month.split("-")[1])-1 , 1).toLocaleDateString('default', { month: 'long', year: 'numeric' })}</td>
+                                    <td> {new Date(Number(specialP.month.split("-")[0]), Number(specialP.month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long', year: 'numeric' }).replace('de','')}</td>
                                     <td>${specialP.amount}</td>
                                     <td>
                                         <span className="actions d-flex">
