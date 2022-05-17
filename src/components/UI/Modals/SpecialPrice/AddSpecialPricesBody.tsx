@@ -57,7 +57,7 @@ function AddSpecialPricesBody(props: any) {
             month: fields.month,
             amount: fields.amount,
         }
-        //await addSpecialPrice(specialPriceToAdd)
+        await addSpecialPrice(specialPriceToAdd)
         props.toggle()
         setIsAdding(false)
         props.refresh()
@@ -82,7 +82,7 @@ function AddSpecialPricesBody(props: any) {
                     <FormGroup>
                         <Label for="familyId">
                             Familia
-                        </Label>git 
+                        </Label>
                         <CreatableSelectSearch
                             data={(loaded && viewData && viewData["families"]) ? viewData["families"] : []}
                             disabled={!(loaded && viewData && viewData["families"]) || isAdding}
@@ -122,7 +122,7 @@ function AddSpecialPricesBody(props: any) {
                             disabled={!(loaded && viewData && viewData["families"]) || isAdding}
                             name="amount"
                             type="number"
-                            step="5"
+                            step="50"
                             min="0"
                             onChange={addHandleChange}
                         />

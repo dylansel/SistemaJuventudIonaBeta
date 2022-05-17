@@ -35,7 +35,7 @@ function EditSpecialPricesBody(props: any) {
     }, []);
 
     let initialFieldsState:SpecialPriceRequestDTO =  {
-        payments:[],
+        familyId:-1,
         month: "",
         amount: -1,
     }
@@ -43,7 +43,7 @@ function EditSpecialPricesBody(props: any) {
 
     if (loaded && !firstLoad ) {
         initialFieldsState = {
-            payments:viewData.payments,
+            familyId:viewData.payments[0].family.id,
             month: viewData.month,
             amount: viewData.amount,
         }
@@ -76,13 +76,8 @@ function EditSpecialPricesBody(props: any) {
             return
         }
         setIsUpdating(true)
-        const specialPriceToUpdate = {
-            payments:fields.payments,
-            month: fields.month,
-            amount: fields.amount
-        }
-        if (JSON.stringify(specialPriceToUpdate) != JSON.stringify(notEditedFields)) {
-            //await updateSpecialPrice(props.item.id, specialPriceToUpdate)
+        if (JSON.stringify(fields) != JSON.stringify(notEditedFields)) {
+            await updateSpecialPrice(props.item.id, fields)
         }
         setIsUpdating(false)
         props.toggle()
@@ -100,7 +95,7 @@ function EditSpecialPricesBody(props: any) {
                     <FormGroup>
                         {loaded && viewData && firstLoad ? 
                         <>
-                        <h5>Familia  <p>{`${viewData.payments}`}</p></h5>
+                        <h5>Familia {viewData.payments[0].family.surname}</h5>
                         
                         </>
                         
@@ -135,6 +130,7 @@ function EditSpecialPricesBody(props: any) {
                             onChange={handleChange}
                             autoComplete="off"
                             min="0"
+                            step={50}
                             placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
                             value={loaded && viewData && firstLoad ? fields.amount : "Cargando..."}
                         />

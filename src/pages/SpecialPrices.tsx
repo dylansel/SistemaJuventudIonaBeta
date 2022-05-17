@@ -31,15 +31,14 @@ function SpecialPrices() {
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
     const handleDelete = (item: any) => {
-        setItemSelected(item)
+        const fItem = {
+            id:item.id,
+            name: item.name[0].family.surname
+        } 
+        setItemSelected(fItem)
         toggleDeleteModal()
     }
-    const objToArr = (arr:any[])=>{ //Revisar y borrar 
-        let arrF:string[] = []
-        arr.map((p)=>{arrF.push(p.name)})
-        return arrF
-    }
-
+    
     const refresh = () => {
         fetchData()
     }
