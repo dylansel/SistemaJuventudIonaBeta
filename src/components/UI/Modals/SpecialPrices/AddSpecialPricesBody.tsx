@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import CreatableSelectSearch from "../../Selects/CreatableSelect";
+import SearchSelect from "../../Selects/SearchSelect";
 import { isEmptyOrSpaces } from "../../../../utils/misc/strings";
 import { addSpecialPrice } from "../../../../services/specialPriceService";
 import { getAllFamiliesWithChildren } from "../../../../services/familyService";
@@ -83,7 +83,7 @@ function AddSpecialPricesBody(props: any) {
                         <Label for="familyId">
                             Familia
                         </Label>
-                        <CreatableSelectSearch
+                        <SearchSelect
                             data={(loaded && families) ? families : []}
                             disabled={!(loaded && families) || isAdding}
                             display="fullFamily"
@@ -91,7 +91,6 @@ function AddSpecialPricesBody(props: any) {
                             id="family"
                             name="family"
                             className="mb-3"
-                            isValidNewOption={false}
                             onChange={addChangeFamily}
                             placeholder={(loaded && families) ? "Busca apellido" : "Cargando..."}
                         />
