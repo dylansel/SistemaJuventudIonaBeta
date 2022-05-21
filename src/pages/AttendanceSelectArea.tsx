@@ -233,10 +233,7 @@ function AttendanceSelectArea() {
                     }
                 </div>
                 :
-                <div className="table-content text-center mx-3">
-                    <h2>Cargando...</h2>
-                    <Spinner animation="border" className='text-danger my-2' variant="light" />
-                </div>
+                <Loading />
             }
             <DialogBox
                 title='Alerta'

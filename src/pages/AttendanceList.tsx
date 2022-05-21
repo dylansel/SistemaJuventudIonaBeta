@@ -195,10 +195,7 @@ function AttendanceList() {
                     </div>
 
                     :
-                    <div className="text-center">
-                        <h2>Cargando...</h2>
-                        <Spinner animation="border" className='text-danger my-2' variant="light" />
-                    </div>
+                    <Loading />
                 }
             </div>
             <DialogBox

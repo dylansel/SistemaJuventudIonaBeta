@@ -66,10 +66,7 @@ function AttendanceSelectGroup() {
                     }
                 </div>
                 :
-                <div className="justify-content-center table-content text-center">
-                    <h2>Cargando...</h2>
-                    <Spinner animation="border" className='text-danger my-2' variant="light" />
-                </div>
+                <Loading />
             }
             <Scroll showBelow={250} />
         </main >
