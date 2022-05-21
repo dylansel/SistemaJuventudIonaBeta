@@ -48,7 +48,7 @@ function Attendance() {
                 <h3>Asistencias</h3>
 
                 {loaded && activities.length > 0 && today &&
-                    <div className="justify-content-center table-content p-2 mt-4 col-8 bg-warning">
+                    <div className="justify-content-center table-content p-2 mt-4 col-8 bg-warning attendanceToday">
                         <h3>Hoy!</h3>
                         <span className='d-flex justify-content-center'>
                             <h5>{dateToEsString(today.date)}</h5>
@@ -61,7 +61,7 @@ function Attendance() {
                     <Input type='checkbox' onChange={() => setCanEditPreviousAttendances(!canEditPreviousAttendances)} checked={canEditPreviousAttendances} />
                 </span>
 
-                <div className="justify-content-center table-content col-10 col-md-8">
+                <div className="justify-content-center table-content col-10 col-md-8 mb-5">
 
                     {loaded ? <>
                         {
@@ -75,7 +75,7 @@ function Attendance() {
                                     </thead>
                                     <tbody>
                                         {activities
-                                            .filter((activity: ActivityDTO) => activity.date <= new Date().toISOString().split('T')[0])
+                                            .filter((activity: ActivityDTO) => Number(activity.date.split("-")[0]) === new Date().getFullYear() && activity.date < new Date().toISOString().split('T')[0])
                                             .map((activity: ActivityDTO) => (
                                                 <tr key={activity.id}>
                                                     <td className="td-attendance">{dateToEsString(activity.date)}</td>

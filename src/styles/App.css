@@ -162,6 +162,8 @@
 .table-content {
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.301);
   overflow-x: auto;
+  border-radius: 15px;
+  margin-bottom: 30px;
 }
 
 .btn:active, .btn:focus {
@@ -214,6 +216,10 @@
 input[type="checkbox"]:checked {
   background-color: #DD5041;
   border: none;
+}
+
+.attendanceToday {
+  margin-bottom: 0;
 }
 
 .skeleton:hover {
