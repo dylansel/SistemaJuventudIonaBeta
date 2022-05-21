@@ -14,7 +14,6 @@ import {
   Activities,
   Attendance,
   Prices,
-  PricesByMonth,
   PricingCases, 
   Payments,
   Grants,
@@ -24,6 +23,7 @@ import {
   AttendanceList
 } from "./pages"
 import Navbar from './components/UI/Layout/HeaderNav';
+import SelectDate from './pages/misc/SelectDate';
 
 function App() {
   const { isLoading, isAuthenticated } = useAuth0()
@@ -51,8 +51,8 @@ function App() {
             <Route path="attendance/:activityId" element={<AttendanceSelectArea />} />
             <Route path="attendance/:activityId/:areaId" element={<AttendanceSelectGroup />} />
             <Route path="attendance/:activityId/:areaId/:groupId" element={<AttendanceList />} />
-            <Route path="prices" element={<Prices />} />
-            <Route path="prices/:month" element={<PricesByMonth />} />
+            <Route path="prices" element={<SelectDate name="Precios" goTo="prices"/>} />
+            <Route path="prices/:month" element={<Prices />} />
             <Route path="payments" element={<Payments />} />
             <Route path="grants" element={<Grants />} />
             <Route path="pricingCases" element={<PricingCases />} />

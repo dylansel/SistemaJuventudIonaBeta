@@ -13,7 +13,6 @@ import AttendanceSelectArea from './AttendanceSelectArea';
 import AttendanceSelectGroup from './AttendanceSelectGroup';
 import AttendanceList from './AttendanceList';
 import Prices from './Prices';
-import PricesByMonth from './PricesByMonth';
 import Payments from './Payments';
 import Grants from './Grants';
 import PricingCases from './PricingCases';
@@ -31,7 +30,6 @@ export {
     AttendanceSelectGroup,
     AttendanceList,
     Prices,
-    PricesByMonth,
     PricingCases,
     Payments,
     Grants,
