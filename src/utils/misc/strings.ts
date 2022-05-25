@@ -36,3 +36,7 @@ export const listArrToString = (arr: string[],connector:string) => {
     arr.map((n, i) => string += n + ((i !== arr.length - 1) ? connector : ""))
     return string
 }
+export const formatDateMonthUsToEs = (date: string) => {
+    const dArr = date.split("-");
+    return dArr[1] + "/" + dArr[0]
+}

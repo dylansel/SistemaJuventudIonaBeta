@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/strings";
-import { getAreaById, updateArea } from "../../../../services/areaService";
+import GrantDTO from "../../../../dtos/GrantDTO";
+import { getGrantById, updateGrant } from "../../../../services/grantService";
+import { isEmptyOrSpaces } from "../../../../utils/misc/strings";
 
 function EditGrantsBody(props: any) {
     const [loaded, setLoaded] = useState(false)
     const [notEditedFields, setNotEditedFields] = useState<any>()
     const [firstLoad, setFirstLoad] = useState(false)
-    const [viewData, setViewData] = useState<any>(null)
+    const [grantLoaded, setGrantLoaded] = useState<GrantDTO>()
     const [error, setError] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
 
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getAreaById(props.item.id))
+        setGrantLoaded(await getGrantById(props.item.id))
         setLoaded(true)
     }
 
@@ -22,15 +23,20 @@ function EditGrantsBody(props: any) {
     }, []);
 
     let initialFieldsState = {
-        name: "",
-        ordinal: -1,
+        familyId: -1,
+        percentile: 0,
+        since: "",
+        until: ""
     }
+
     const [fields, setFields] = useState(initialFieldsState)
 
-    if (loaded && !firstLoad) {
+    if (grantLoaded && loaded && !firstLoad) {
         initialFieldsState = {
-            name: viewData.name,
-            ordinal: viewData.ordinal,
+            familyId: grantLoaded.family.id,
+            percentile: grantLoaded.percentile * 100,
+            since: grantLoaded.since,
+            until: grantLoaded.until
         }
         setNotEditedFields(initialFieldsState)
         setFields(initialFieldsState)
@@ -40,7 +46,7 @@ function EditGrantsBody(props: any) {
     const handleChange = (e: any) => {
         setError(false)
         let { name, value } = e.target
-        if (name === "ordinal") {
+        if (name === 'percentile') {
             value = parseInt(value)
         }
         setFields(prevState => ({
@@ -56,62 +62,83 @@ function EditGrantsBody(props: any) {
 
     const editRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || fields.ordinal <= 0) {
+        if (fields.percentile <= 0 || fields.percentile > 100 || isEmptyOrSpaces(fields.since) || isEmptyOrSpaces(fields.until)) {
             setError(true)
             return
         }
-        setIsUpdating(true)
-        const name = capitalizeAllWords(fields.name)
-        const areaToUpdate = {
-            name,
-            ordinal: fields.ordinal,
+        if (grantLoaded) {
+            setIsUpdating(true)
+            const grantToUpdate = {
+                familyId: grantLoaded.family.id,
+                percentile: fields.percentile / 100,
+                since: fields.since,
+                until: fields.until
+            }
+            if (JSON.stringify(grantToUpdate) != JSON.stringify(notEditedFields)) {
+                grantToUpdate.familyId = grantLoaded.family.id
+                await updateGrant(props.item.id, grantToUpdate)
+            }
+            setIsUpdating(false)
+            props.refresh()
         }
-        if (JSON.stringify(areaToUpdate) != JSON.stringify(notEditedFields)) {
-            await updateArea(props.item.id, areaToUpdate)
-        }
-        setIsUpdating(false)
         props.toggle()
-        props.refresh()
     }
 
     return (
         <>
             <ModalHeader toggle={props.toggle} charcode="close">
-                {props.title} Shijva
+                {props.title} Beca
             </ModalHeader>
             <ModalBody>
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
-                        <Label for="name">
-                            Nombre
+                        {loaded && grantLoaded && firstLoad ?
+                            <h5>Familia {grantLoaded.family.surname}</h5>
+                            : ""}
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="percentile">
+                            Porcentaje (Entre 1 y 100)
                         </Label>
                         <Input
-                            id="name"
+                            id="percentile"
                             disabled={isUpdating || !firstLoad}
-                            name="name"
+                            name="percentile"
+                            type="number"
+                            min={1}
+                            max={100}
                             onChange={handleChange}
                             autoComplete="off"
-                            placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
-                            value={loaded && viewData && firstLoad ? fields.name : "Cargando..."}
+                            value={loaded && firstLoad ? fields.percentile : "Cargando..."}
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="ordinal">
-                            Ordinal
+                        <Label for="since">
+                            Desde
                         </Label>
                         <Input
-                            id="ordinal"
+                            id="since"
                             disabled={isUpdating || !firstLoad}
-                            name="ordinal"
-                            type="number"
+                            name="since"
+                            type="month"
                             onChange={handleChange}
-                            autoComplete="off"
-                            placeholder={(!(loaded && viewData)) ? "Cargando..." : ""}
-                            value={loaded && viewData && firstLoad ? fields.ordinal : "Cargando..."}
+                            value={loaded && firstLoad ? fields.since : "Cargando..."}
                         />
                     </FormGroup>
-
+                    <FormGroup>
+                        <Label for="until">
+                            Hasta
+                        </Label>
+                        <Input
+                            id="until"
+                            disabled={isUpdating || !firstLoad}
+                            name="until"
+                            type="month"
+                            onChange={handleChange}
+                            value={loaded && firstLoad ? fields.until : "Cargando..."}
+                        />
+                    </FormGroup>
                     <ModalFooter>
                         <Button
                             onClick={handleCancel}

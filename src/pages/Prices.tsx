@@ -106,7 +106,6 @@ function Prices() {
         setPricesLoaded(false)
         setPricesByMonth([])
         const data = await getAllPricesByMonth(month!)
-        console.log(data)
         if (data.length > 0) {
             setPricesByMonth(data)
             setPricesLoaded(true)

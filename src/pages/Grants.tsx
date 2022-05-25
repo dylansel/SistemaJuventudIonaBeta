@@ -1,14 +1,15 @@
 import { withAuthenticationRequired } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
-import { Button, FormGroup, Input, Modal, Spinner } from "reactstrap";
+import { Button, FormGroup, Input, Modal } from "reactstrap";
 import Scroll from "../components/UI/Layout/Scroll";
 import AddGrantsBody from "../components/UI/Modals/Grants/AddGrantsBody";
 import EditGrantsBody from "../components/UI/Modals/Grants/EditGrantsBody";
 import DeleteBody from "../components/UI/Modals/DeleteBody";
 import GrantDTO from "../dtos/GrantDTO";
-import { deleteGrant, getAllGrants} from "../services/grantService";
+import { deleteGrant, getAllGrants } from "../services/grantService";
 import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
+import { filterActiveToMonth, isActiveToMonth } from '../utils/misc/filter';
 
 function Grants() {
     const [grants, setGrants] = useState<GrantDTO[]>([])
@@ -19,7 +20,6 @@ function Grants() {
     const [itemSelected, setItemSelected] = useState({
         id: 0,
         familyId: 0,
-        
     })
 
     const toggleAddModal = () => setAddModal(!addModal)
@@ -27,8 +27,6 @@ function Grants() {
         setItemSelected(item)
         setEditModal(!editModal)
     }
-
-    
 
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
@@ -40,11 +38,6 @@ function Grants() {
     const [tableFilter, setTableFilter] = useState("Activos")
     const handleTableFilter = (e: any) => {
         setTableFilter(e.target.value)
-
-        /*/tener dos useState Uno para 
-        la fecha desde: sinceDate
-        la fceha hsta: untilDate
-        */
     }
 
     const refresh = () => {
@@ -56,20 +49,13 @@ function Grants() {
         setLoaded(true)
     }
 
-    let i = 0
-
     useEffect(() => {
         refresh()
     }, []);
+
     return (
         <main>
             <div className="filters d-flex mx-4 align-items-center justify-content-end">
-                {/*
-                buscar forma de filtrar por dos fechas (beca entre ds fechas)
-                poner dos input de type Date
-                relacionado con el filter
-                
-                
                 <FormGroup className="viewFilter">
                     <Input
                         id="viewFilter"
@@ -86,16 +72,11 @@ function Grants() {
                                 <option>Activos</option>
                                 <option>Inactivos</option>
                                 <option>Todos</option>
-
-                               
                             </>)
                         }
                     </Input>
-                    
+
                 </FormGroup>
-
-                */}
-
                 <Button color='danger' title='Actualizar' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Beca</Button>
                 <Modal isOpen={addModal} toggle={toggleAddModal} ><AddGrantsBody title='Agregar' refresh={refresh} toggle={toggleAddModal} /></Modal>
@@ -111,32 +92,30 @@ function Grants() {
                             <th scope="col">Porcentaje</th>
                             <th scope="col">Periodo</th>
                             <th scope="col">Acciones</th>
-                            
                         </tr>
                     </thead>
                     <tbody>
-                        {!loaded && <SkeletonRows rows={50} columns={4} />}
+                        {!loaded && <SkeletonRows rows={50} columns={5} />}
                         {loaded && grants
-                            // .filter((area: AreaDTO) => filterActive(tableFilter, area)) va el filtro de fechas//
-                            .map((grant:GrantDTO) => (
-                                <tr key={grant.id}>
-                                    <td>{++i}</td>
+                            .filter((grant: GrantDTO) => filterActiveToMonth(tableFilter, grant.since, grant.until))
+                            .map((grant: GrantDTO, index: number) => (
+                                <tr key={grant.id} className={!isActiveToMonth(grant.since, grant.until) && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                    <td>{index + 1}</td>
                                     <td>{grant.family.surname}</td>
-                                    <td>{grant.percentile}</td>
-                                    <td>{grant.since} - {grant.until}</td>
+                                    <td>{grant.percentile * 100}%</td>
+                                    <td> {new Date(Number(grant.since.split("-")[0]), Number(grant.since.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long', year: 'numeric' }).replace('de', '')} - {new Date(Number(grant.until.split("-")[0]), Number(grant.until.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long', year: 'numeric' }).replace('de', '')}</td>
                                     <td>
-                                       {/*/ <span className="actions d-flex">
-                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: area.id })}><i className=" fas fa-edit"></i></button>
-                                            <button type="button" title={area.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: area.id, active: !area.active })}><i className={`fas ${area.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
-                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: area.id, name: area.name, active: area.active })} ><i className="fas fa-trash"></i></button>
+                                        {<span className="actions d-flex">
+                                            <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: grant.id })}><i className=" fas fa-edit"></i></button>
+                                            <button type='button' className="btn btn-danger" onClick={() => handleDelete({ id: grant.id, name: grant.family.surname })} ><i className="fas fa-trash"></i></button>
                                         </span>
-                                        */}
+                                        }
                                     </td>
                                 </tr>
                             )
                             )}
                     </tbody>
-                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Shijva' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteGrant} /></Modal>
+                    <Modal isOpen={deleteModal} toggle={toggleDeleteModal} ><DeleteBody title='Eliminar Beca' refresh={refresh} toggle={toggleDeleteModal} item={itemSelected} delete={deleteGrant} /></Modal>
                 </table>
             </div>
             <Scroll showBelow={250} />
