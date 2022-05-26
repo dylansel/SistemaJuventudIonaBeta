@@ -6,7 +6,8 @@ import ActivityDTO from '../dtos/ActivityDTO';
 import { getAllActivities } from '../services/activityService';
 import Loading from './misc/Loading';
 import { useNavigate } from 'react-router-dom';
-import { dateToEsString } from '../utils/misc/strings';
+import { dateToEsString } from '../utils/misc/dates';
+
 
 function Attendance() {
     const history = useNavigate();

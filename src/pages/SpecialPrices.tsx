@@ -9,7 +9,7 @@ import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
 import SpecialPriceDTO from "../dtos/SpecialPriceDTO";
 import { getAllSpecialPrice, deleteSpecialPrice } from "../services/specialPriceService";
-
+import {formatDateToEsYearMonth} from '../utils/misc/dates'
 function SpecialPrices() {
     const [specialPrices, setSpecialPrices] = useState<SpecialPriceDTO[]>([])
     const [loaded, setLoaded] = useState(false)
@@ -87,7 +87,7 @@ function SpecialPrices() {
                                             </div>
                                         </div>
                                     </td>
-                                    <td> {new Date(Number(specialPrice.month.split("-")[0]), Number(specialPrice.month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long', year: 'numeric' }).replace('de', '')}</td>
+                                    <td> {formatDateToEsYearMonth(specialPrice.month,"")}</td>
                                     <td>${specialPrice.amount}</td>
                                     <td>
                                         <span className="actions d-flex">

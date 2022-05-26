@@ -6,7 +6,7 @@ import { Button, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import ActivityDTO from '../dtos/ActivityDTO';
 import { getActivityById } from '../services/activityService';
-import { dateToEsString } from '../utils/misc/strings';
+import { dateToEsString } from '../utils/misc/dates';
 import AreaDTO from '../dtos/AreaDTO';
 import { getAllGroups } from '../services/groupService';
 import GroupDTO from '../dtos/GroupDTO';

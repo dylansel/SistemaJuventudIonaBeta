@@ -14,7 +14,7 @@ import { getCaseCombinations } from '../services/pricingCaseService';
 import Loading from './misc/Loading';
 import SkeletonRows from './misc/SkeletonRows';
 import { listArrToString } from '../utils/misc/strings'
-
+import {formatDateToEsYearMonth} from '../utils/misc/dates'
 function Prices() {
     const history = useNavigate();
     let { month } = useParams();
@@ -129,7 +129,7 @@ function Prices() {
                 <div className="main-container row justify-content-center text-center">
                     <div className="d-flex align-items-center justify-content-center mb-4">
                         <button type="button" title='Volver' className="btn btn-danger mx-3" onClick={() => history('/prices')}><i className=" fas fa-arrow-left"></i></button>
-                        <h3>Precios de {new Date(Number(month.split("-")[0]), Number(month.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long' })} {month.split("-")[0]}</h3>
+                        <h3>Precios de {formatDateToEsYearMonth(month,"")}</h3>
                     </div>
                     {
                         pricesLoaded ?

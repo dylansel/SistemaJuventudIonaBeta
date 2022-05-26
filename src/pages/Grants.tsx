@@ -10,7 +10,7 @@ import { deleteGrant, getAllGrants } from "../services/grantService";
 import Loading from "./misc/Loading";
 import SkeletonRows from "./misc/SkeletonRows";
 import { filterActiveToMonth, isActiveToMonth } from '../utils/misc/filter';
-
+import {formatDateToEsYearMonth} from '../utils/misc/dates'
 function Grants() {
     const [grants, setGrants] = useState<GrantDTO[]>([])
     const [loaded, setLoaded] = useState<boolean>(false)
@@ -103,7 +103,7 @@ function Grants() {
                                     <td>{index + 1}</td>
                                     <td>{grant.family.surname}</td>
                                     <td>{grant.percentile * 100}%</td>
-                                    <td> {new Date(Number(grant.since.split("-")[0]), Number(grant.since.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long', year: 'numeric' }).replace('de', '')} - {new Date(Number(grant.until.split("-")[0]), Number(grant.until.split("-")[1]) - 1, 1).toLocaleDateString('default', { month: 'long', year: 'numeric' }).replace('de', '')}</td>
+                                    <td> {formatDateToEsYearMonth(grant.since,"")} - {formatDateToEsYearMonth(grant.until,"")}</td>
                                     <td>
                                         {<span className="actions d-flex">
                                             <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: grant.id })}><i className=" fas fa-edit"></i></button>

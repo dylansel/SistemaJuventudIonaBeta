@@ -1,6 +1,7 @@
 import React, { useState} from "react"
 import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
-import { isEmptyOrSpaces,formatDateEsToUs } from "../../../../utils/misc/strings";
+import { isEmptyOrSpaces} from "../../../../utils/misc/strings";
+import { formatDateEsToUs} from "../../../../utils/misc/dates";
 import { addMultipleActivities } from '../../../../services/activityService';
 
 function AddMultipleActivitiesBody(props: any) {

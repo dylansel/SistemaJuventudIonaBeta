@@ -11,7 +11,7 @@ import ActivityDTO from '../dtos/ActivityDTO';
 import { getActivityById } from '../services/activityService';
 import { AttendanceDTO } from '../dtos/AttendanceDTO';
 import { getAttendanceByActivity, saveAttendance } from '../services/attendanceService';
-import { dateToEsString } from '../utils/misc/strings';
+import { dateToEsString } from '../utils/misc/dates';
 import GroupDTO from '../dtos/GroupDTO';
 import { getGroupById } from '../services/groupService';
 import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';

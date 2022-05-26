@@ -8,7 +8,7 @@ import { deleteActivity, getAllActivities } from '../services/activityService';
 import EditActivityBody from '../components/UI/Modals/Activities/EditActivityBody';
 import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
-import { formatDateUsToEs } from "../utils/misc/strings";
+import { formatDateUsToEs } from "../utils/misc/dates";
 import SkeletonRows from './misc/SkeletonRows';
 
 function Activities() {
