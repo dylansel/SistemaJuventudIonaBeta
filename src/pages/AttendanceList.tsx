@@ -113,8 +113,6 @@ function AttendanceList() {
         setLoaded(true)
     }
 
-    let i = 0
-
     useEffect(() => {
         setShowDialog(getChanges().length > 0)
     }, [changes]);
@@ -155,9 +153,9 @@ function AttendanceList() {
                                     .filter((janij: JanijDTO) => (
                                         janij.active && janij.group.id === parseInt(groupId!)
                                     ))
-                                    .map((janij: JanijDTO) => (
+                                    .map((janij: JanijDTO, index: number) => (
                                         <tr key={janij.id}>
-                                            <td>{++i}</td>
+                                            <td>{index + 1}</td>
                                             <td>{`${janij.name} ${janij.family.surname}`}</td>
                                             <td>
                                                 <Input

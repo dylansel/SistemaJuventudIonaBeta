@@ -55,8 +55,6 @@ function Groups() {
         setLoaded(true)
     }
 
-    let i = 0
-
     useEffect(() => {
         refresh()
     }, []);
@@ -105,9 +103,9 @@ function Groups() {
                         {loaded &&
                             groups
                                 .filter((group: GroupDTO) => filterActive(tableFilter, group))
-                                .map((group: GroupDTO) => (
+                                .map((group: GroupDTO, index: number) => (
                                     <tr key={group.id} className={!group.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
-                                        <td>{++i}</td>
+                                        <td>{index + 1}</td>
                                         <td>{group.name}</td>
                                         <td>{group.area.name}</td>
                                         <td>

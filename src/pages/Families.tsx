@@ -55,8 +55,6 @@ function Families() {
         setLoaded(true)
     }
 
-    let i = 0
-
     useEffect(() => {
         refresh()
     }, []);
@@ -102,9 +100,9 @@ function Families() {
                         {loaded &&
                             families
                                 .filter((family: FamilyDTO) => filterActive(tableFilter, family))
-                                .map((family: FamilyDTO) => (
+                                .map((family: FamilyDTO, index: number) => (
                                     <tr key={family.id} className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
-                                        <td>{++i}</td>
+                                        <td>{index + 1}</td>
                                         <td className="w-50">
                                             <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${family.id}`} aria-expanded="false" aria-controls={family.id.toString()}><span className={!family.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>{family.surname}</span></button>
 

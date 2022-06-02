@@ -55,8 +55,6 @@ function Areas() {
         setLoaded(true)
     }
 
-    let i = 0
-
     useEffect(() => {
         refresh()
     }, []);
@@ -102,9 +100,9 @@ function Areas() {
                         {!loaded && <SkeletonRows rows={50} columns={3} />}
                         {loaded && areas
                             .filter((area: AreaDTO) => filterActive(tableFilter, area))
-                            .map(area => (
+                            .map((area: AreaDTO, index: number) => (
                                 <tr key={area.id} className={!area.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
-                                    <td>{++i}</td>
+                                    <td>{index + 1}</td>
                                     <td>{area.name}</td>
                                     <td>
                                         <span className="actions d-flex">

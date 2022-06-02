@@ -64,8 +64,6 @@ function Janijim() {
         setLoaded(true)
     }
 
-    let i = 0
-
     useEffect(() => {
         fetchData()
     }, []);
@@ -115,9 +113,9 @@ function Janijim() {
                             {loaded &&
                                 janijim
                                     .filter((janij: JanijDTO) => filterActive(tableFilter, janij))
-                                    .map((janij: JanijDTO) => (
+                                    .map((janij: JanijDTO, index: number) => (
                                         <tr key={janij.id} className={!janij.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
-                                            <td>{++i}</td>
+                                            <td>{index + 1}</td>
                                             <td>{`${janij.name} ${janij.family.surname}`}</td>
                                             <td>{janij.group.name}</td>
                                             <td>
