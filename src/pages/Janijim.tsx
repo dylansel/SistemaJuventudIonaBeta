@@ -5,24 +5,23 @@ import AddJanijBody from "../components/UI/Modals/Janijim/AddJanijBody";
 import DeleteBody from '../components/UI/Modals/DeleteBody';
 import { deleteJanij, getAllJanijim, switchActiveJanij } from '../services/janijService';
 import EditJanijBody from '../components/UI/Modals/Janijim/EditJanijBody';
-import JanijDTO from '../dtos/JanijDTO';
 import Loading from './misc/Loading';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import SkeletonRows from './misc/SkeletonRows';
 import { getErrorByMessage } from '../utils/misc/errors';
 import { filterActive } from '../utils/misc/filter';
+import JanijListDTO from '../dtos/JanijListDTO';
+
 
 function Janijim() {
-    const [janijim, setJanijim] = useState<any[]>([])
+    const [janijim, setJanijim] = useState<JanijListDTO[]>([])
     const [error, setError] = useState("")
     const [loaded, setLoaded] = useState(false)
     const [addModal, setAddModal] = useState(false)
     const [editModal, setEditModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState(false)
     const [itemSelected, setItemSelected] = useState({
-        id: 0,
         name: "",
-        active: false
     })
 
     const toggleAddModal = () => setAddModal(!addModal)
@@ -55,7 +54,7 @@ function Janijim() {
         setError("")
         setLoaded(false)
         try {
-            const janijim = await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc")
+            const janijim = await getAllJanijim((tableFilter=="Activos"))
             setJanijim(janijim)
         }
         catch (error: any) {
@@ -66,7 +65,7 @@ function Janijim() {
 
     useEffect(() => {
         fetchData()
-    }, []);
+    }, [tableFilter]);
 
     return (
         <main>
@@ -82,13 +81,11 @@ function Janijim() {
                         width={"20%"}
                         hidden={!loaded}
                     >
-                        {loaded && (
-                            <>
-                                <option>Activos</option>
-                                <option>Inactivos</option>
-                                <option>Todos</option>
-                            </>)
-                        }
+                    <>
+                        <option>Activos</option>
+                        <option>Todos</option>
+                    </>
+                        
                     </Input>
                 </FormGroup>
                 <Button color='danger' title='Actualizar' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
@@ -112,17 +109,16 @@ function Janijim() {
                             {!loaded && <SkeletonRows rows={50} columns={4} />}
                             {loaded &&
                                 janijim
-                                    .filter((janij: JanijDTO) => filterActive(tableFilter, janij))
-                                    .map((janij: JanijDTO, index: number) => (
-                                        <tr key={janij.id} className={!janij.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
+                                    .map((janij: JanijListDTO, index: number) => (
+                                        <tr key={index}>
                                             <td>{index + 1}</td>
-                                            <td>{`${janij.name} ${janij.family.surname}`}</td>
-                                            <td>{janij.group.name}</td>
+                                            <td>{`${janij.name} `}</td>
+                                            <td>{janij.group.split(' ')[1]}</td>
                                             <td>
                                                 <span className="actions d-flex">
-                                                    <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ id: janij.id })}><i className=" fas fa-edit"></i></button>
-                                                    <button type="button" title={janij.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: janij.id, active: !janij.active })}><i className={`fas ${janij.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button>
-                                                    <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id: janij.id, name: `${janij.name} ${janij.family.surname}`, active: janij.active })} ><i className="fas fa-trash"></i></button>
+                                                    <button type="button" title='Editar' className="btn btn-danger" onClick={() => toggleEditModal({ name: janij.name })}><i className=" fas fa-edit"></i></button>
+                                                    {/* <button type="button" title={janij.active ? 'Desactivar' : 'Activar'} className="btn btn-danger" onClick={() => handleActive({ id: janij.id, active: !janij.active })}><i className={`fas ${janij.active ? 'fa-eye-slash' : 'fa-eye'}`}></i></button> */}
+                                                    <button type='button' title='Eliminar' className="btn btn-danger" onClick={() => handleDelete({ id:janij.name, name: janij.name})} ><i className="fas fa-trash"></i></button>
                                                 </span>
                                             </td>
                                         </tr>

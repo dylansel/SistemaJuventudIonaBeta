@@ -1,21 +1,10 @@
-export default interface JanijDTO {
-    id: number,
-    active: boolean,
-    name: string,
-    leadersCourse: boolean,
-    family: FamilyDTO,
-    group: GroupDTO
+export default interface JanijListDTO {
+    name: string, 
+    group: string, 
+    common: boolean,
 }
 
-interface FamilyDTO {
-    id: number,
-    surname: string
-}
 
-interface GroupDTO {
-    id: number,
-    name: string
-}
 
 /*
 
