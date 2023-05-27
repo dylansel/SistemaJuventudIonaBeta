@@ -43,20 +43,20 @@ function App() {
               element={isAuthenticated ? <Dashboard /> : <Login />}
             />
             <Route path="janijim" element={<Janijim />} />
-            <Route path="areas" element={<Areas />} />
+            {/* <Route path="areas" element={<Areas />} /> */}
             <Route path="groups" element={<Groups />} />
             <Route path="families" element={<Families />} />
-            <Route path="activities" element={<Activities />} />
+            {/* <Route path="activities" element={<Activities />} /> */}
             <Route path="attendance" element={<Attendance />} />
             <Route path="attendance/:activityId" element={<AttendanceSelectArea />} />
             <Route path="attendance/:activityId/:areaId" element={<AttendanceSelectGroup />} />
             <Route path="attendance/:activityId/:areaId/:groupId" element={<AttendanceList />} />
-            <Route path="prices" element={<SelectDate name="Precios" goTo="prices"/>} />
-            <Route path="prices/:month" element={<Prices />} />
-            <Route path="payments" element={<Payments />} />
-            <Route path="grants" element={<Grants />} />
-            <Route path="pricingCases" element={<PricingCases />} />
-            <Route path="specialPrices" element={<SpecialPrices />} />
+            {/* <Route path="prices" element={<SelectDate name="Precios" goTo="prices"/>} /> */}
+            {/* <Route path="prices/:month" element={<Prices />} /> */}
+            {/* <Route path="payments" element={<Payments />} /> */}
+            {/* <Route path="grants" element={<Grants />} /> */}
+            {/* <Route path="pricingCases" element={<PricingCases />} /> */}
+            {/* <Route path="specialPrices" element={<SpecialPrices />} /> */}
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

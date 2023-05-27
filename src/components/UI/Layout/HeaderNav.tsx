@@ -58,7 +58,7 @@ function HeaderNav() {
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/janijim" onClick={handleToggle}>Janijim</NavLink>
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/families" onClick={handleToggle}>Familias</NavLink>
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/groups" onClick={handleToggle}>Grupos</NavLink>
-                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/areas" onClick={handleToggle}>Shijvot</NavLink>
+                                {/* <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/areas" onClick={handleToggle}>Shijvot</NavLink> */}
                             </DropdownMenu>
                         </UncontrolledDropdown>
                         <UncontrolledDropdown
@@ -72,11 +72,11 @@ function HeaderNav() {
                                 Actividades
                             </DropdownToggle>
                             <DropdownMenu right>
-                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/activities" onClick={handleToggle}>Actividades</NavLink>
+                                {/* <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/activities" onClick={handleToggle}>Actividades</NavLink> */}
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/attendance" onClick={handleToggle}>Asistencia</NavLink>
                             </DropdownMenu>
                         </UncontrolledDropdown>
-                        <UncontrolledDropdown
+                        {/* <UncontrolledDropdown
                             inNavbar
                             nav
                         >
@@ -88,13 +88,16 @@ function HeaderNav() {
                             </DropdownToggle>
                             <DropdownMenu right>
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/payments" onClick={handleToggle}>Pagos</NavLink>
+                                
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/pricingCases" onClick={handleToggle}>Casos de precios</NavLink>
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/prices" onClick={handleToggle}>Precios</NavLink>
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/specialPrices" onClick={handleToggle}>Precios Especiales</NavLink>
-                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/grants" onClick={handleToggle}>Becas</NavLink>
+                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/grants" onClick={handleToggle}>Becas</NavLink> 
+                                
+
                             </DropdownMenu>
-                        </UncontrolledDropdown>
-                        <UncontrolledDropdown
+                        </UncontrolledDropdown> */}
+                        {/* <UncontrolledDropdown
                             inNavbar
                             nav
                         >
@@ -109,7 +112,7 @@ function HeaderNav() {
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="reports/2" onClick={handleToggle}>Reporte 02</NavLink>
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="reports/3" onClick={handleToggle}>Reporte 03</NavLink>
                             </DropdownMenu>
-                        </UncontrolledDropdown>
+                        </UncontrolledDropdown> */}
                     </Nav>
                     <NavbarText >
                         {isAuthenticated &&
