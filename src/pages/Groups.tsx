@@ -103,7 +103,7 @@ function Groups() {
                         {loaded &&
                             groups
                                 .filter((group: GroupDTO) => filterActive(tableFilter, group))
-                                .map((group: GroupDTO, index: number) => (
+                                .map((group: any, index: number) => (
                                     <tr key={group.id} className={!group.active && tableFilter === 'Todos' ? "rowDisabled" : ""}>
                                         <td>{index + 1}</td>
                                         <td>{group.name}</td>

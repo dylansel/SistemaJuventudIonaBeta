@@ -1,38 +1,19 @@
 export default interface JanijDTO {
-    id: number,
-    active: boolean,
     name: string,
-    leadersCourse: boolean,
-    family: FamilyDTO,
-    group: GroupDTO
+    group: string,
+    fullName: string,
+    birthday: string,
+    nationalId: number,
+    address: string,
+    mother: {
+        name: string,
+        cellphone: string,
+        email: string
+    },
+    father: {
+        name: string,
+        cellphone: string,
+        email: string
+    }
 }
 
-interface FamilyDTO {
-    id: number,
-    surname: string
-}
-
-interface GroupDTO {
-    id: number,
-    name: string
-}
-
-/*
-
-        "name": "Nahuel Buedikman",
-        "fullName": "Nahuel Agustín Buedikman",
-        "birthdate": "2017-06-08",
-        "nationalId": 563912710,
-        "address": "Jujuy 460 13 D",
-        "mother": {
-            "name": "Laura Mejlman",
-            "cellphone": "+54 9 11 2336-8863",
-            "email": "lauramejlman83@gmail.com"
-        },
-        "father": {
-            "name": "Leonel Buedikman",
-            "cellphone": "+54 9 11 5469-6005",
-            "email": "leo.javy34@gmail.com"
-        }
-
-*/ 

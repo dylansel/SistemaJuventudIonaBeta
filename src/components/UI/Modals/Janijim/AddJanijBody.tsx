@@ -6,16 +6,28 @@ import { capitalizeAllWords, isEmptyOrSpaces } from "../../../../utils/misc/stri
 import { addFamily } from '../../../../services/familyService';
 import { addJanij } from '../../../../services/janijService';
 import GroupDTO from "../../../../dtos/GroupDTO";
+import  JanijDTO  from "../../../../dtos/JanijDTO";
 
 function AddJanijBody(props: any) {
 
-    const initialFieldsState = {
-        name: '',
-        groupId: -1,
-        leadersCourse: false,
-        familyId: -1,
-        familySurname: ''
-    }
+    let initialFieldsState:JanijDTO = {
+        name: "",
+        group: "",
+        fullName: "",
+        birthday: "",
+        nationalId: 0,
+        address: "",
+        mother: {
+          name: "",
+          cellphone: "",
+          email: "",
+        },
+        father: {
+          name: "",
+          cellphone: "",
+          email: "",
+        },
+      };
     const [fields, setFields] = useState(initialFieldsState)
     const [loaded, setLoaded] = useState(false)
     const [error, setError] = useState(false)
@@ -26,23 +38,11 @@ function AddJanijBody(props: any) {
         setViewData(await getAddJanijData())
         setLoaded(true)
     }
-    const addChangeFamily = (e: any) => {
-        const nameToFill = isNaN(e.value) ? "familySurname" : "familyId"
-        const nameToErase = !isNaN(e.value) ? "familySurname" : "familyId"
-        setFields(prevState => ({
-            ...prevState,
-            [nameToFill]: e.value,
-            [nameToErase]: ""
-        }))
-    }
+   
     const addHandleChange = (e: any) => {
         setError(false)
         let { name, value } = e.target
-        if (name === "groupId") {
-            value = parseInt(value)
-        } else if (name === "leadersCourse") {
-            value = e.target.checked
-        }
+       
         setFields(prevState => ({
             ...prevState,
             [name]: value
@@ -52,26 +52,14 @@ function AddJanijBody(props: any) {
 
     const postRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || (isEmptyOrSpaces(fields.familySurname) && fields.familyId === -1 ) || fields.groupId === -1){
+        if (isEmptyOrSpaces(fields.name) && fields.group === ""){
             setError(true)
             return
         }
         setIsAdding(true)
         const name = capitalizeAllWords(fields.name)
-        let familyId
-        if (fields.familySurname === "" && fields.familyId !== 0) {
-            familyId = fields.familyId
-        }
-        else {
-            const surname = capitalizeAllWords(fields.familySurname)
-            familyId = await addFamily({ surname })
-        }
-        const janijToAdd = {
-            groupId: fields.groupId,
-            name,
-            leadersCourse: fields.leadersCourse,
-            familyId
-        }
+       
+        const janijToAdd = fields
         await addJanij(janijToAdd)
         props.toggle()
         setIsAdding(false)
@@ -96,67 +84,37 @@ function AddJanijBody(props: any) {
                 <Form>
                     <FormGroup>
                         <Label for="name">
-                            Nombre
+                            Nombre y Apellido
                         </Label>
                         <Input
                             id="name"
-                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding}
+                            disabled={!(loaded && viewData &&  viewData["groups"]) || isAdding}
                             name="name"
                             onChange={addHandleChange}
                             autoComplete="off"
-                            placeholder={(!(loaded && viewData && viewData["families"] && viewData["groups"])) ? "Cargando..." : ""}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="familyId">
-                            Apellido
-                        </Label>
-                        <CreatableSelectSearch
-                            data={(loaded && viewData && viewData["families"]) ? viewData["families"] : []}
-                            disabled={!(loaded && viewData && viewData["families"]) || isAdding}
-                            display="fullFamily"
-                            label="Crear Familia:"
-                            id="family"
-                            name="family"
-                            className="mb-3"
-                            onChange={addChangeFamily}
-                            placeholder={(loaded && viewData && viewData["families"]) ? "Busca apellido o escribe uno nuevo..." : "Cargando..."}
+                            placeholder={(!(loaded && viewData &&  viewData["groups"])) ? "Cargando..." : ""}
                         />
                     </FormGroup>
                     <FormGroup>
                         <Label for="group">Grupo</Label>
                         <Input
                             id="group"
-                            name="groupId"
+                            name="group"
                             className="mb-3"
                             type="select"
                             onChange={addHandleChange}
                             disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
                         >
-                            {(!(loaded && viewData && viewData["families"] && viewData["groups"])) &&
+                            {(!(loaded && viewData && viewData["groups"])) &&
                                 <option disabled selected>Cargando...</option>
                             }
                             {(loaded) &&
                             <option key="-1" value="-1" selected disabled >Elija un grupo</option>
                             }
                             {loaded && viewData && viewData["groups"].map((group: GroupDTO) => (
-                                <option key={group.id} value={group.id}>{group.name}</option>
+                                <option key={group.name.split(" ")[0]} value={group.name}>{group.name.split(" ")[1]}</option>
                             ))}
                         </Input>
-                    </FormGroup>
-                    <FormGroup check>
-                        <Input
-                            type="checkbox"
-                            id="leadersCourse"
-                            name="leadersCourse"
-                            disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
-                            data-val="true"
-                            value="true"
-                            onChange={addHandleChange}
-                        />
-                        <Label for="leadersCourse" check>
-                            Curso de Madrijim
-                        </Label>
                     </FormGroup>
                     <ModalFooter>
                         <Button
@@ -167,7 +125,7 @@ function AddJanijBody(props: any) {
                         </Button>
                         <Button
                             color={isAdding ? "success" : "danger"}
-                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"]) || isAdding}
+                            disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
                             onClick={postRequest}
                         >
                             {isAdding ? <div>Guardando... <Spinner animation="border" variant="light" size="sm" /></div> : props.title}

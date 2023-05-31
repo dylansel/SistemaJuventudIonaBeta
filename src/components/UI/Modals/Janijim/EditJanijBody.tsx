@@ -18,7 +18,7 @@ function EditJanijBody(props: any) {
 
     async function fetchData() {
         setLoaded(false)
-        setViewData(await getEditJanijData(props.item.id))
+        setViewData(await getEditJanijData(props.item.name))
         setLoaded(true)
     }
 
@@ -27,46 +27,56 @@ function EditJanijBody(props: any) {
     }, []);
 
     let initialFieldsState = {
-        name: '',
-        groupId: -1,
-        leadersCourse: false,
-        familyId: -1,
-        familySurname: ''
-    }
+        name: "",
+        group: "",
+        fullName: "",
+        birthday: "",
+        nationalId: 0,
+        address: "",
+        mother: {
+          name: "",
+          cellphone: "",
+          email: "",
+        },
+        father: {
+          name: "",
+          cellphone: "",
+          email: "",
+        },
+      };
 
     const [fields, setFields] = useState(initialFieldsState)
 
     if (loaded && !firstLoad) {
+
         initialFieldsState = {
             name: viewData["janijData"].name,
-            groupId: viewData["janijData"].group.id,
-            leadersCourse: viewData["janijData"].leadersCourse,
-            familyId: viewData["janijData"].family.id,
-            familySurname: viewData["janijData"].family.surname
-        }
+            group: viewData["janijData"].group,
+            fullName: viewData["janijData"].fullName,
+            birthday: viewData["janijData"].birthday,
+            nationalId: viewData["janijData"].nationalId,
+            address: viewData["janijData"].address,
+            mother: {
+              name: viewData["janijData"].mother.name,
+              cellphone: viewData["janijData"].mother.cellphone,
+              email: viewData["janijData"].mother.email,
+            },
+            father: {
+              name: viewData["janijData"].father.name,
+              cellphone: viewData["janijData"].father.cellphone,
+              email: viewData["janijData"].father.email,
+            },
+          };
         setNotEditedFields(initialFieldsState)
         setFields(initialFieldsState)
         setFirstLoad(true)
+        
     }
 
-    const editChangeFamily = (e: any) => {
-        const nameToFill = isNaN(e.value) ? "familySurname" : "familyId"
-        const nameToErase = !isNaN(e.value) ? "familySurname" : "familyId"
-        setFields(prevState => ({
-            ...prevState,
-            [nameToFill]: e.value,
-            [nameToErase]: ""
-        }))
-    }
 
     const editHandleChange = (e: any) => {
         setError(false)
         let { name, value } = e.target
-        if (name === "groupId") {
-            value = parseInt(value)
-        } else if (name === "leadersCourse") {
-            value = e.target.checked
-        }
         setFields(prevState => ({
             ...prevState,
             [name]: value
@@ -80,28 +90,21 @@ function EditJanijBody(props: any) {
 
     const updateRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) || (isEmptyOrSpaces(fields.familySurname) && fields.familyId === -1)) {
+        if (isEmptyOrSpaces(fields.name)) {
             setError(true)
             return
         }
         setIsUpdating(true)
         const name = capitalizeAllWords(fields.name)
         let familyId
-        if (fields.familySurname === "" && fields.familyId !== 0) {
-            familyId = fields.familyId
-        }
-        else {
-            const surname = capitalizeAllWords(fields.familySurname)
-            familyId = await addFamily({ surname })
-        }
+     
         const janijToEdit = {
-            groupId: fields.groupId,
+            groupId: fields.group,
             name,
-            leadersCourse: fields.leadersCourse,
             familyId
         }
         if (JSON.stringify(janijToEdit) != JSON.stringify(notEditedFields)) {
-            await updateJanij(props.item.id, janijToEdit)
+            //await updateJanij(props.item.id, janijToEdit)
         }
         setIsUpdating(false)
         props.toggle()
@@ -118,11 +121,11 @@ function EditJanijBody(props: any) {
                 <Form>
                     <FormGroup>
                         <Label for="name">
-                            Nombre
+                            Nombre Y Apellido
                         </Label>
                         <Input
                             id="name"
-                            disabled={!(loaded && viewData && viewData["families"] && viewData["groups"] && viewData["janijData"]) || isUpdating || !firstLoad}
+                            disabled={!(loaded && viewData && viewData["groups"] && viewData["janijData"]) || isUpdating || !firstLoad}
                             name="name"
                             onChange={editHandleChange}
                             autoComplete="off"
@@ -130,7 +133,7 @@ function EditJanijBody(props: any) {
                             value={viewData["janijData"] && fields.name}
                         />
                     </FormGroup>
-                    <FormGroup>
+                    {/* <FormGroup>
                         <Label for="familyId">
                             Apellido
                         </Label>
@@ -146,41 +149,26 @@ function EditJanijBody(props: any) {
                             placeholder={(loaded && viewData && viewData["families"]) ? fields.familySurname : "Cargando..."}
                             value={viewData["janijData"] && fields.familyId}
                         />
-                    </FormGroup>
+                    </FormGroup> */}
                     <FormGroup>
                         <Label for="group">Grupo</Label>
                         <Input
                             id="group"
-                            name="groupId"
+                            name="group"
                             className="mb-3"
                             type="select"
                             onChange={editHandleChange}
                             disabled={!(loaded && viewData && viewData["groups"]) || isUpdating || !firstLoad}
-                            value={viewData["janijData"] && fields.groupId}
+                            value={viewData["janijData"] && fields.group}
                         >
-                            {(!(loaded && viewData && viewData["families"] && viewData["groups"])) &&
+                            {(!(loaded && viewData && viewData["groups"])) &&
                                 <option disabled selected>Cargando...</option>
                             }
 
-                            {loaded && viewData && viewData["groups"].map((group: GroupDTO) => (
-                                <option key={group.id} value={group.id}>{group.name}</option>
+                            {loaded && viewData && viewData["groups"].map((group: GroupDTO,index:number) => (
+                                <option key={index} value={group.name}>{group.name.split(" ")[1]}</option>
                             ))}
                         </Input>
-                    </FormGroup>
-                    <FormGroup check>
-                        <Input
-                            type="checkbox"
-                            id="leadersCourse"
-                            name="leadersCourse"
-                            disabled={!(loaded && viewData && viewData["groups"] && viewData["janijData"]) || isUpdating || !firstLoad}
-                            data-val="true"
-                            value="true"
-                            onChange={editHandleChange}
-                            checked={viewData["janijData"] && fields.leadersCourse}
-                        />
-                        <Label for="leadersCourse" check>
-                            Curso de Madrijim
-                        </Label>
                     </FormGroup>
                     <ModalFooter>
                         <Button
