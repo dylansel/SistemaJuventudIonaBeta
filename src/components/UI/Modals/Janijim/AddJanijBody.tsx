@@ -17,6 +17,10 @@ function AddJanijBody(props: any) {
         birthday: "",
         nationalId: 0,
         address: "",
+        email: "",
+        cellphone: "",
+        school: "",
+        notes: "",
         mother: {
           name: "",
           cellphone: "",
