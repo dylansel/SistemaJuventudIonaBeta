@@ -16,14 +16,24 @@ export const getJanijById = async (name: string): Promise<JanijDTO> => {
     return data
 }
 
-export const addJanij = async (janijToAdd: JanijDTO) => {
-    const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}?action=add&name=${janijToAdd.name}&group=${janijToAdd.group}&${process.env.REACT_APP_BACKEND_AUTH}`)
+export const addJanij = async (janijToAdd: JanijDTO[]) => {
+    const response = await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_BACKEND_DOMAIN}?action=add&${process.env.REACT_APP_BACKEND_AUTH}`,
+        data: janijToAdd,
+      });
     const data = await response.data.content
     return data
 }
 
-export const updateJanij = async (id: number, janijToUpdate: JanijRequestDTO) => {
-    return update("janij", id, janijToUpdate)
+export const updateJanij = async (janijToUpdate: JanijDTO[]) => {
+    const response = await axios({
+        method: 'post',
+        url: `${process.env.REACT_APP_BACKEND_DOMAIN}?action=setData&${process.env.REACT_APP_BACKEND_AUTH}`,
+        data: JSON.stringify(janijToUpdate),
+      });
+    const data = await response.data.content
+    return data
 }
 
 export const switchActiveJanij = async (id: number, active: boolean) => {

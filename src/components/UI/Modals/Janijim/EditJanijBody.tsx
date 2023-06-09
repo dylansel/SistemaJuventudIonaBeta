@@ -8,12 +8,13 @@ import { updateJanij } from '../../../../services/janijService';
 import GroupDTO from "../../../../dtos/GroupDTO";
 import { fileURLToPath } from "url";
 import JanijDTO from "../../../../dtos/JanijDTO";
+import {compareObjects} from "../../../../utils/dnd/dnd-functions"
 
 function EditJanijBody(props: any) {
 
     const [loaded, setLoaded] = useState(false)
     const [isUpdating, setIsUpdating] = useState(false)
-    const [notEditedFields, setNotEditedFields] = useState<any>()
+    const [notEditedFields, setNotEditedFields] = useState<JanijDTO>()
     const [firstLoad, setFirstLoad] = useState(false)
     const [error, setError] = useState(false)
     const [viewData, setViewData] = useState<any>([null])
@@ -52,6 +53,8 @@ function EditJanijBody(props: any) {
       };
 
     const [fields, setFields] = useState(initialFieldsState)
+
+    
 
     if (loaded && !firstLoad) {
 
@@ -104,7 +107,6 @@ function EditJanijBody(props: any) {
         }))  
         }
         
-        console.log(fields)
     }
 
     const toggleCancelEditModal = () => {
@@ -127,8 +129,18 @@ function EditJanijBody(props: any) {
             name,
             familyId
         }
-        if (JSON.stringify(janijToEdit) != JSON.stringify(notEditedFields)) {
-            //await updateJanij(props.item.id, janijToEdit)
+
+        const editedFields =  compareObjects(notEditedFields,fields);
+        const janijUpdated = {
+            ...editedFields,
+            name: notEditedFields?.name,
+            newName:editedFields.name
+        }
+        
+        if (editedFields.length > 0) {
+            
+            console.log("EDITOADO:",janijUpdated)
+            //await updateJanij(janijUpdated)
         }
         setIsUpdating(false)
         props.toggle()

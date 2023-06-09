@@ -6,6 +6,18 @@ export const reorder = (list: any, startIndex: any, endIndex: any) => {
     return result;
 };
 
+export const compareObjects = (initialState:any, updatedState:any) => {
+    const editedFields:any = {};
+
+    for (const key in initialState) {
+      if (initialState[key] !== updatedState[key]) {
+        editedFields[key] = updatedState[key];
+      }
+    }
+
+    return editedFields;
+  };
+
 export const move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
     const sourceClone = Array.from(source);
     const destClone = Array.from(destination);
