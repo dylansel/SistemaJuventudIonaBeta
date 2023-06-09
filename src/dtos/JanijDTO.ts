@@ -3,7 +3,7 @@ export default interface JanijDTO {
   group: string,
   fullName: string,
   birthday: string,
-  nationalId: number,
+  nationalId: string,
   address: string,
   email: string
   cellphone: string,

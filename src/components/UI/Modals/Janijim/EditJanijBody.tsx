@@ -34,7 +34,7 @@ function EditJanijBody(props: any) {
         group: "",
         fullName: "",
         birthday: "",
-        nationalId: 0,
+        nationalId: "",
         address: "",
         email: "",
         cellphone: "",
@@ -131,16 +131,14 @@ function EditJanijBody(props: any) {
         }
 
         const editedFields =  compareObjects(notEditedFields,fields);
-        const janijUpdated = {
+        let janijUpdated = {
             ...editedFields,
             name: notEditedFields?.name,
-            newName:editedFields.name
         }
-        
-        if (editedFields.length > 0) {
-            
-            console.log("EDITOADO:",janijUpdated)
-            //await updateJanij(janijUpdated)
+
+        if (editedFields.name){janijUpdated.newName  = editedFields.name};
+        if (Object.keys(editedFields).length > 0) {
+            await updateJanij(janijUpdated)
         }
         setIsUpdating(false)
         props.toggle()
@@ -339,7 +337,7 @@ function EditJanijBody(props: any) {
                                     />
                                     </FormGroup>   
                                     <FormGroup>
-                                    <Label for="father.name">
+                                    <Label for="father.email">
                                         Email
                                     </Label>
                                     <Input
