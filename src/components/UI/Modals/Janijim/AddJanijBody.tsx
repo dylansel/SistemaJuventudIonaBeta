@@ -32,42 +32,96 @@ function AddJanijBody(props: any) {
           email: "",
         },
       };
-    const [fields, setFields] = useState(initialFieldsState)
+    const [fields, setFields] = useState<JanijDTO[]>([initialFieldsState])
     const [loaded, setLoaded] = useState(false)
     const [error, setError] = useState(false)
     const [isAdding, setIsAdding] = useState(false)
     const [viewData, setViewData] = useState<any>([null])
+    const [actualView,setActualView] = useState(0)
+
     async function fetchData() {
         setLoaded(false)
         setViewData(await getAddJanijData())
         setLoaded(true)
     }
-   
-    const addHandleChange = (e: any) => {
-        setError(false)
-        let { name, value } = e.target
-       
-        setFields(prevState => ({
-            ...prevState,
-            [name]: value
-        }))
+    const agregarHandleChange = (e: any) => {
+        const newFields = ()=>{
+            setFields((prevState) => {
+                const newFields = [...prevState, initialFieldsState];
+                return newFields;
+              });
+        }
 
+
+        if(e.target.name == 'nuevo'){
+            newFields()
+            setActualView(actualView+1)
+        }
+        
+        if(e.target.name == 'anterior'){ 
+            if(actualView>0){setActualView(actualView-1)};
+        }
+        if(e.target.name == 'siguiente'){
+            if(fields.length < actualView+2){newFields()};
+            setActualView(actualView+1);
+        }
     }
+    const addHandleChange = (e: any) => {
+        setError(false);
+        const { name, value } = e.target;
+        const [actualV, fieldName, subFieldName] = name.split('.');
+      
+        if (subFieldName) {
+          setFields((prevState) => {
+            const updatedFields = [...prevState];
+            updatedFields[actualV] = {
+              ...updatedFields[actualV],
+              [fieldName]: {
+                ...(updatedFields[actualV] as any)[fieldName],
+                [subFieldName]: value,
+              },
+            };
+            return updatedFields;
+          });
+        } else {
+          setFields((prevState) => {
+            const updatedFields = [...prevState];
+            updatedFields[actualV] = {
+              ...updatedFields[actualV],
+              [fieldName]: value,
+            };
+            return updatedFields;
+          });
+        }
+      };
 
+      const addJanijInBackground = async () => {
+        try {
+          await addJanij(fields);
+          alert("Se agrego correctamente")
+          props.refresh();
+        } catch (error) {
+          console.error(error);
+          alert("no se pudo crear el/los janij/m")
+          
+        }
+      };
+      
     const postRequest = async () => {
         setError(false)
-        if (isEmptyOrSpaces(fields.name) && fields.group === ""){
+        if (isEmptyOrSpaces(fields[0].name) && fields[0].group === ""){
             setError(true)
             return
         }
         setIsAdding(true)
-        const name = capitalizeAllWords(fields.name)
-       
-        const janijToAdd = fields
-        await addJanij(janijToAdd)
+        addJanijInBackground();
+        setIsAdding(false);
+        // const janijToAdd = fields
+        // console.log("R",janijToAdd)
+        // await addJanij(janijToAdd)
         props.toggle()
-        setIsAdding(false)
-        props.refresh()
+        // setIsAdding(false)
+        // props.refresh()
     }
 
     const toggleCancelAddModal = () => {
@@ -81,32 +135,34 @@ function AddJanijBody(props: any) {
     return (
         <>
             <ModalHeader toggle={toggleCancelAddModal} charcode="close">
-                {props.title} Janij
+                {props.title} Janij {(fields.length == 1)?"":` | ${actualView+1}`}
             </ModalHeader>
             <ModalBody>
                 {error && <Alert color="danger">Error! Datos incorrectos</Alert>}
                 <Form>
                     <FormGroup>
-                        <Label for="name">
+                    <Label for={`${actualView}.name`}>
                             Nombre y Apellido
                         </Label>
                         <Input
-                            id="name"
+                            id={`${actualView}.name`}
                             disabled={!(loaded && viewData &&  viewData["groups"]) || isAdding}
-                            name="name"
+                            name={`${actualView}.name`}
                             onChange={addHandleChange}
+                            value={fields[actualView].name}
                             autoComplete="off"
                             placeholder={(!(loaded && viewData &&  viewData["groups"])) ? "Cargando..." : ""}
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="group">Grupo</Label>
+                        <Label for={`${actualView}.group`}>Grupo</Label>
                         <Input
-                            id="group"
-                            name="group"
+                            id={`${actualView}.group`}
+                            name={`${actualView}.group`}
                             className="mb-3"
                             type="select"
                             onChange={addHandleChange}
+                            value={fields[actualView].group ? fields[actualView].group : "-1"}                            
                             disabled={!(loaded && viewData && viewData["groups"]) || isAdding}
                         >
                             {(!(loaded && viewData && viewData["groups"])) &&
@@ -120,7 +176,55 @@ function AddJanijBody(props: any) {
                             ))}
                         </Input>
                     </FormGroup>
+                    {/* DATOS ADICIONALES 
+                    <FormGroup>
+                        <Label for={`${actualView}.group`}>
+                            Nombre y apellido COMPLETOS
+                        </Label>
+                        <Input
+                            id="fullName"
+                            disabled={!(loaded && viewData &&  viewData["groups"]) || isAdding}
+                            name="fullName"
+                            onChange={addHandleChange}
+                            autoComplete="off"
+                            placeholder={(!(loaded && viewData &&  viewData["groups"])) ? "Cargando..." : ""}
+                        />
+                    </FormGroup>
+*/}
+
                     <ModalFooter>
+                        {(fields.length == 1)?
+                            <Button
+                            color="primary"
+                            name="nuevo"
+                            onClick={agregarHandleChange}
+                            disabled={isAdding}
+                            >
+                            Agregar mas 
+                            </Button>
+                            :
+                            < >
+                                <Button
+                                color="primary"
+                                name="anterior"
+                                onClick={agregarHandleChange}
+                                disabled={isAdding}
+                                >
+                                anterior 
+                                </Button>
+                                <h3>{actualView+1}</h3>
+                                <Button
+                                color="primary"
+                                name="siguiente"
+                                onClick={agregarHandleChange}
+                                disabled={isAdding}
+                                > 
+                                siguiente
+                                </Button>
+                            
+                            </>
+                        }
+                        
                         <Button
                             onClick={toggleCancelAddModal}
                             disabled={isAdding}
