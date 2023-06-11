@@ -1,18 +1,23 @@
 export default interface JanijDTO {
-    id: number,
-    active: boolean,
+  name: string,
+  group: string,
+  fullName: string,
+  birthday: string,
+  nationalId: string,
+  address: string,
+  email: string
+  cellphone: string,
+  school: string,
+  notes: string,
+  mother: {
     name: string,
-    leadersCourse: boolean,
-    family: FamilyDTO,
-    group: GroupDTO
+    cellphone: string,
+    email: string
+  },
+  father: {
+    name: string,
+    cellphone: string,
+    email: string
+  }
 }
 
-interface FamilyDTO {
-    id: number,
-    surname: string
-}
-
-interface GroupDTO {
-    id: number,
-    name: string
-}

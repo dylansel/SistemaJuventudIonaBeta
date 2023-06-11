@@ -6,24 +6,20 @@ import { getJanijById } from './janijService';
 export const getAddJanijData = async () => {
     try {
         const groups = await getAllGroups("sort=ordinal,asc")
-        const families = await getAllFamiliesWithChildren("sort=surname,asc")
         return {
-            groups,
-            families
+            groups
         }
     } catch (error: any) {
         throw error
     }
 }
 
-export const getEditJanijData = async (id: number) => {
+export const getEditJanijData = async (name: string) => {
     try {
         const groups = await getAllGroups("sort=ordinal,asc")
-        const families = await getAllFamiliesWithChildren("sort=surname,asc")
-        const janijData = await getJanijById(id)
+        const janijData = await getJanijById(name)
         return {
             groups,
-            families,
             janijData
         }
     } catch (error: any) {
