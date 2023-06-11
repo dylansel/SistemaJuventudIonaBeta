@@ -148,104 +148,104 @@ function AttendanceSelectArea() {
     // }, []);
 
     return (
-        <h1>a</h1>
-        // <main>
-        //     <div className="align-items-center justify-content-center mx-2">
-        //         {loaded && <>
-        //             <div className="d-flex justify-content-center mb-4">
-        //                 <button type="button" title='Volver' className="btn btn-danger mx-5" onClick={() => history(-1)}><i className=" fas fa-arrow-left"></i></button>
-        //                 <h4>{loaded && dateToEsString(activityData?.date!)} </h4>
-        //             </div>
-        //             <div className="d-flex col-12 justify-content-center text-center align-middle mt-3">
-        //                 <Label for='janij'>Buscar Janij:</Label>
-        //                 <FormGroup>
-        //                     <Input
-        //                         id="janij"
-        //                         name="janij"
-        //                         type="text"
-        //                         autoComplete='off'
-        //                         onChange={handleChange}
-        //                         value={searchValue}
-        //                     >
-        //                     </Input>
-        //                 </FormGroup>
-        //             </div>
-        //         </>}
-        //     </div>
+      <h1>a</h1>
+      // <main>
+      //     <div className="align-items-center justify-content-center mx-2">
+      //         {loaded && <>
+      //             <div className="d-flex justify-content-center mb-4">
+      //                 <button type="button" title='Volver' className="btn btn-danger mx-5" onClick={() => history(-1)}><i className=" fas fa-arrow-left"></i></button>
+      //                 <h4>{loaded && dateToEsString(activityData?.date!)} </h4>
+      //             </div>
+      //             <div className="d-flex col-12 justify-content-center text-center align-middle mt-3">
+      //                 <Label for='janij'>Buscar Janij:</Label>
+      //                 <FormGroup>
+      //                     <Input
+      //                         id="janij"
+      //                         name="janij"
+      //                         type="text"
+      //                         autoComplete='off'
+      //                         onChange={handleChange}
+      //                         value={searchValue}
+      //                     >
+      //                     </Input>
+      //                 </FormGroup>
+      //             </div>
+      //         </>}
+      //     </div>
 
-        //     {loaded ?
-        //         <div className="justify-content-center text-center">
-        //             {findJanij(searchValue).length > 0 &&
-        //                 <div>
-        //                     <table className="table table-hover table-responsive mx-3 mb-4">
-        //                         <thead>
-        //                             <tr>
-        //                                 <th scope="col">Nombre y Apellido</th>
-        //                                 <th scope="col">Grupo</th>
-        //                                 <th scope="col">Presente</th>
-        //                                 <th scope="col">Prueba</th>
-        //                             </tr>
-        //                         </thead>
-        //                         <tbody>
-        //                             {findJanij(searchValue).map((janij: JanijDTO) => (
-        //                                 <tr key={janij.id}>
-        //                                     <td>{`${janij.name} ${janij.family.surname}`}</td>
-        //                                     <td>{janij.group.name}</td>
-        //                                     <td>
-        //                                         <Input
-        //                                             type='checkbox'
-        //                                             name='present'
-        //                                             onChange={() => handlePresent(janij.id)}
-        //                                             disabled={isSaving}
-        //                                             checked={getDataById(janij.id)?.present}
-        //                                         />
-        //                                     </td>
-        //                                     <td>
-        //                                         <Input
-        //                                             type='checkbox'
-        //                                             name='trial'
-        //                                             onChange={() => handleTrial(janij.id)}
-        //                                             disabled={isSaving || !getDataById(janij.id)?.present}
-        //                                             checked={getDataById(janij.id)?.trial}
-        //                                         />
-        //                                     </td>
-        //                                 </tr>
-        //                             ))}
-        //                         </tbody>
-        //                     </table>
-        //                     <Button
-        //                         onClick={handleSaveAttendance}
-        //                         className='my-3'
-        //                         color={isSaving ? 'success' : 'secondary'}
-        //                         disabled={isSaving}
-        //                         type='button'
-        //                     >
-        //                         {isSaving ? <>Grabando...<Spinner animation="border" variant="light" size="sm" /></> : 'Grabar Asistencias'}                            </Button>
-        //                 </div>
-        //             }
-        //             {!isEmptyOrSpaces(searchValue) && findJanij(searchValue).length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
+      //     {loaded ?
+      //         <div className="justify-content-center text-center">
+      //             {findJanij(searchValue).length > 0 &&
+      //                 <div>
+      //                     <table className="table table-hover table-responsive mx-3 mb-4">
+      //                         <thead>
+      //                             <tr>
+      //                                 <th scope="col">Nombre y Apellido</th>
+      //                                 <th scope="col">Grupo</th>
+      //                                 <th scope="col">Presente</th>
+      //                                 <th scope="col">Prueba</th>
+      //                             </tr>
+      //                         </thead>
+      //                         <tbody>
+      //                             {findJanij(searchValue).map((janij: JanijDTO) => (
+      //                                 <tr key={janij.id}>
+      //                                     <td>{`${janij.name} ${janij.family.surname}`}</td>
+      //                                     <td>{janij.group.name}</td>
+      //                                     <td>
+      //                                         <Input
+      //                                             type='checkbox'
+      //                                             name='present'
+      //                                             onChange={() => handlePresent(janij.id)}
+      //                                             disabled={isSaving}
+      //                                             checked={getDataById(janij.id)?.present}
+      //                                         />
+      //                                     </td>
+      //                                     <td>
+      //                                         <Input
+      //                                             type='checkbox'
+      //                                             name='trial'
+      //                                             onChange={() => handleTrial(janij.id)}
+      //                                             disabled={isSaving || !getDataById(janij.id)?.present}
+      //                                             checked={getDataById(janij.id)?.trial}
+      //                                         />
+      //                                     </td>
+      //                                 </tr>
+      //                             ))}
+      //                         </tbody>
+      //                     </table>
+      //                     <Button
+      //                         onClick={handleSaveAttendance}
+      //                         className='my-3'
+      //                         color={isSaving ? 'success' : 'secondary'}
+      //                         disabled={isSaving}
+      //                         type='button'
+      //                     >
+      //                         {isSaving ? <>Grabando...<Spinner animation="border" variant="light" size="sm" /></> : 'Grabar Asistencias'}                            </Button>
+      //                 </div>
+      //             }
+      //             {!isEmptyOrSpaces(searchValue) && findJanij(searchValue).length === 0 && <p>No hay janijim activos con el nombre "{searchValue}"</p>}
 
-        //             {areas &&
-        //                 <div className='mt-3 inline-grid'>
-        //                     {areas?.filter((area: AreaDTO) => area.active)
-        //                         .map((area: AreaDTO) =>
-        //                             <Button key={area.id} color="danger" size='lg' className="mx-5" title={area.name} onClick={() => loadAttendance(activityData?.id!, area.id)}>{area.name}</Button>
-        //                         )}
-        //                 </div>
-        //             }
-        //         </div>
-        //         :
-        //         <Loading />
-        //     }
-        //     <DialogBox
-        //         title='Alerta'
-        //         text='¿Estás seguro que deseas salir? Hay cambios sin guardar.'
-        //         showDialog={showPrompt}
-        //         confirmNavigation={confirmNavigation}
-        //         cancelNavigation={cancelNavigation}
-        //     />
-        //     <Scroll showBelow={250} />
-        // </main >
+      //             {areas &&
+      //                 <div className='mt-3 inline-grid'>
+      //                     {areas?.filter((area: AreaDTO) => area.active)
+      //                         .map((area: AreaDTO) =>
+      //                             <Button key={area.id} color="danger" size='lg' className="mx-5" title={area.name} onClick={() => loadAttendance(activityData?.id!, area.id)}>{area.name}</Button>
+      //                         )}
+      //                 </div>
+      //             }
+      //         </div>
+      //         :
+      //         <Loading />
+      //     }
+      //     <DialogBox
+      //         title='Alerta'
+      //         text='¿Estás seguro que deseas salir? Hay cambios sin guardar.'
+      //         showDialog={showPrompt}
+      //         confirmNavigation={confirmNavigation}
+      //         cancelNavigation={cancelNavigation}
+      //     />
+      //     <Scroll showBelow={250} />
+      // </main >
     );
 }
 

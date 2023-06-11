@@ -23,7 +23,7 @@ function Janijim() {
     const [itemSelected, setItemSelected] = useState({
         name: "",
     })
-    const [avisoAlert, setAvisoAlert] = useState({show:false,message:"",status:"warning"})
+    const [avisoAlert, setAvisoAlert] = useState({show:false,message:"",status:"warning",extraMessage:null})
 
     const toggleAddModal = () => setAddModal(!addModal)
     const toggleEditModal = (item?: any) => {
@@ -34,10 +34,6 @@ function Janijim() {
         setAvisoAlert({...avisoAlert,...props})
     }
 
-    const handleActive = async (item: any) => {
-        await switchActiveJanij(item.id, item.active)
-        refresh()
-    }
 
     const toggleDeleteModal = () => setDeleteModal(!deleteModal)
 
@@ -47,21 +43,36 @@ function Janijim() {
     }
 
     const [tableFilter, setTableFilter] = useState("Activos")
+    const [searchFilter, setSearchFilter] = useState("")
     const handleTableFilter = (e: any) => {
-        setTableFilter(e.target.value)
+        if (e.target.name === "viewFilter") {
+            setTableFilter(e.target.value);
+        }  
+        if (e.target.name === "searchFilter") {
+            setSearchFilter(e.target.value);
+        }
+
     }
-    const handleAlertDismiss = (e: any) => {
-        setAvisoAlert({show:false,message:"",status:"warning"})
-    }
+    const findJanij = (janijInput: string) => {
+        if (janijInput === "") return janijim;
+      
+        return janijim.filter((janij: JanijListDTO) => (
+          janij.name.split(" ")[0]?.toLowerCase().startsWith(janijInput.toLowerCase()) ||
+          janij.name.split(" ")[1]?.toLowerCase().startsWith(janijInput.toLowerCase()) ||
+          `${janij.name.split(" ")[0]?.toLowerCase()} ${janij.name.split(" ")[1]?.toLowerCase()}`.startsWith(janijInput.toLowerCase()) || 
+          janij.group.split(" ")[1]?.toLowerCase().startsWith(janijInput.toLowerCase()) 
+        ));
+      };
 
     const refresh = () => {
         fetchData()
     }
     async function fetchData() {
         setError("")
+        setSearchFilter("")
         setLoaded(false)
         try {
-            const janijim = await getAllJanijim((tableFilter=="Activos"))
+            const janijim = await getAllJanijim(tableFilter=="Activos")
             setJanijim(janijim)
         }
         catch (error: any) {
@@ -77,7 +88,21 @@ function Janijim() {
     return (
         <main>
             
-            <div className="filters d-flex mx-4 align-items-center justify-content-end">
+            <div className="filters d-flex mx-2 align-items-center justify-content-end">
+                <FormGroup className="viewFilter">
+                <Input
+                id="searchFilter"
+                name="searchFilter"
+                placeholder='Buscar Janij'
+                type="text"
+                disabled={!loaded}
+                hidden={!loaded}
+                width={"20%"}
+                autoComplete='off'
+                onChange={handleTableFilter}
+                value={searchFilter}
+                />
+                </FormGroup>
                 <FormGroup className="viewFilter">
                     <Input
                         id="viewFilter"
@@ -96,6 +121,7 @@ function Janijim() {
                         
                     </Input>
                 </FormGroup>
+                
                 <Button color='danger' title='Actualizar' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Janij</Button>
                 <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' toggle={toggleAddModal} refresh={refresh} avisoAlert={handleAvisoAlert}/></Modal>
@@ -120,7 +146,7 @@ function Janijim() {
                         <tbody>
                             {!loaded && <SkeletonRows rows={50} columns={4} />}
                             {loaded &&
-                                janijim
+                                findJanij(searchFilter)
                                     .map((janij: JanijListDTO, index: number) => (
                                         <tr key={index}>
                                             <td>{index + 1}</td>
@@ -149,11 +175,15 @@ function Janijim() {
             {(avisoAlert.show)?
             <Alert
             bsStyle="info"
-            onDismiss={handleAlertDismiss}
             className={`text-center position-fixed bottom-0 alert-${(avisoAlert.status)}`}
-            style={{ width: '40%', left: '50%', transform: 'translateX(-50%)',zIndex:"1000"}}
+            style={{  left: '50%', transform: 'translateX(-50%)',zIndex:"1000"}}
                 >
-                <p>{avisoAlert.message}</p>
+                {(avisoAlert.extraMessage)?
+                <>
+                <p>{avisoAlert.message} {avisoAlert.extraMessage}</p>
+                
+                </> 
+                :<p>{avisoAlert.message}</p>}
             </Alert>
             :""}
         </main>
