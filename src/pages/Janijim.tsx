@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, FormGroup, Input, Label, Modal, Spinner } from 'reactstrap';
+import { Alert, Button, FormGroup, Input, Label, Modal, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import AddJanijBody from "../components/UI/Modals/Janijim/AddJanijBody";
 import DeleteBody from '../components/UI/Modals/DeleteBody';
@@ -23,11 +23,15 @@ function Janijim() {
     const [itemSelected, setItemSelected] = useState({
         name: "",
     })
+    const [avisoAlert, setAvisoAlert] = useState({show:false,message:"",status:"warning"})
 
     const toggleAddModal = () => setAddModal(!addModal)
     const toggleEditModal = (item?: any) => {
         setItemSelected(item)
         setEditModal(!editModal)
+    }
+    const handleAvisoAlert = (props:any) =>{
+        setAvisoAlert({...avisoAlert,...props})
     }
 
     const handleActive = async (item: any) => {
@@ -45,6 +49,9 @@ function Janijim() {
     const [tableFilter, setTableFilter] = useState("Activos")
     const handleTableFilter = (e: any) => {
         setTableFilter(e.target.value)
+    }
+    const handleAlertDismiss = (e: any) => {
+        setAvisoAlert({show:false,message:"",status:"warning"})
     }
 
     const refresh = () => {
@@ -69,6 +76,7 @@ function Janijim() {
 
     return (
         <main>
+            
             <div className="filters d-flex mx-4 align-items-center justify-content-end">
                 <FormGroup className="viewFilter">
                     <Input
@@ -90,8 +98,12 @@ function Janijim() {
                 </FormGroup>
                 <Button color='danger' title='Actualizar' onClick={refresh} type='button' className="mx-3"><i className="fa fa-refresh"></i></Button>
                 <Button onClick={toggleAddModal} color='danger' type='button'>Agregar Janij</Button>
-                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' toggle={toggleAddModal} refresh={refresh} /></Modal>
+                <Modal isOpen={addModal} toggle={toggleAddModal} ><AddJanijBody title='Agregar' toggle={toggleAddModal} refresh={refresh} avisoAlert={handleAvisoAlert}/></Modal>
                 <Modal isOpen={editModal} toggle={toggleEditModal} ><EditJanijBody title='Editar' refresh={refresh} toggle={toggleEditModal} item={itemSelected} /></Modal>
+                
+                
+               
+
             </div>
             <div className="justify-content-center table-content mx-3 mt-4">
 
@@ -134,6 +146,16 @@ function Janijim() {
                 }
             </div>
             <Scroll showBelow={250} />
+            {(avisoAlert.show)?
+            <Alert
+            bsStyle="info"
+            onDismiss={handleAlertDismiss}
+            className={`text-center position-fixed bottom-0 alert-${(avisoAlert.status)}`}
+            style={{ width: '40%', left: '50%', transform: 'translateX(-50%)',zIndex:"1000"}}
+                >
+                <p>{avisoAlert.message}</p>
+            </Alert>
+            :""}
         </main>
     );
 }

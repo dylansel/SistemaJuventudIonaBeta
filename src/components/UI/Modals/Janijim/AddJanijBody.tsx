@@ -112,16 +112,21 @@ function AddJanijBody(props: any) {
     }
   };
 
+  
   const addJanijInBackground = async () => {
     try {
       await addJanij(fields);
-      alert("Se agrego correctamente");
+      props.avisoAlert({show:true,message:"Se agrego Correctamente",status:"succes"})
       props.refresh();
     } catch (error) {
       console.error(error);
-      alert("no se pudo crear el/los janij/m");
+      props.avisoAlert({show:true,message:"Error Al agregar",status:"danger"})
+    }finally{
+        setTimeout(() =>props.avisoAlert({show:false}),5000)
     }
   };
+
+  
 
   const postRequest = async () => {
     setError(false);
@@ -131,6 +136,7 @@ function AddJanijBody(props: any) {
     }
     setIsAdding(true);
     addJanijInBackground();
+    props.avisoAlert({show:true,message:"Agregando Janij",status:"warning"})
     setIsAdding(false);
     // const janijToAdd = fields
     // console.log("R",janijToAdd)
