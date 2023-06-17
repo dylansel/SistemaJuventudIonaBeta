@@ -1,5 +1,4 @@
 import React from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import './styles/App.css';
 import { Route, Routes } from "react-router-dom";
 import {
@@ -24,9 +23,10 @@ import {
 } from "./pages"
 import Navbar from './components/UI/Layout/HeaderNav';
 import SelectDate from './pages/misc/SelectDate';
+import useAuthJuventudIona from './auth/authUtils';
 
 function App() {
-  const { isLoading, isAuthenticated } = useAuth0()
+  const { isLoading, isAuthenticated,user } = useAuthJuventudIona();
 
   if (isLoading) {
     return <Loading />;
@@ -42,15 +42,15 @@ function App() {
               index
               element={isAuthenticated ? <Dashboard /> : <Login />}
             />
-            <Route path="janijim" element={<Janijim />} />
+            <Route path="janijim" element={!isAuthenticated?<Login />:<Janijim />} />
             {/* <Route path="areas" element={<Areas />} /> */}
-            <Route path="groups" element={<Groups />} />
-            <Route path="families" element={<Families />} />
+            {/* <Route path="groups" element={!isAuthenticated?<Login />:<Groups />} /> */}
+            {/* <Route path="families" element={!isAuthenticated?<Login />:<Families />} /> */}
             {/* <Route path="activities" element={<Activities />} /> */}
-            <Route path="attendance" element={<Attendance />} />
-            <Route path="attendance/:activityId" element={<AttendanceSelectArea />} />
-            <Route path="attendance/:activityId/:areaId" element={<AttendanceSelectGroup />} />
-            <Route path="attendance/:activityId/:areaId/:groupId" element={<AttendanceList />} />
+            <Route path="attendance" element={!isAuthenticated?<Login />:<Attendance />} />
+            <Route path="attendance/:activityId" element={!isAuthenticated?<Login />:<AttendanceSelectArea />} />
+            <Route path="attendance/:activityId/:areaId" element={!isAuthenticated?<Login />:<AttendanceSelectGroup />} />
+            <Route path="attendance/:activityId/:areaId/:groupId" element={!isAuthenticated?<Login />:<AttendanceList />} />
             {/* <Route path="prices" element={<SelectDate name="Precios" goTo="prices"/>} /> */}
             {/* <Route path="prices/:month" element={<Prices />} /> */}
             {/* <Route path="payments" element={<Payments />} /> */}

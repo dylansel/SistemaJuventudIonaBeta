@@ -13,7 +13,8 @@ import { filterActive } from '../utils/misc/filter';
 import JanijListDTO from '../dtos/JanijListDTO';
 
 
-function Janijim() {
+export default function Janijim() {
+
     const [janijim, setJanijim] = useState<JanijListDTO[]>([])
     const [error, setError] = useState("")
     const [loaded, setLoaded] = useState(false)
@@ -53,7 +54,7 @@ function Janijim() {
         }
 
     }
-    const findJanij = (janijInput: string) => {
+    const findJanij = (janijInput: string)=> {
         if (janijInput === "") return janijim;
       
         return janijim.filter((janij: JanijListDTO) => (
@@ -190,6 +191,4 @@ function Janijim() {
     );
 }
 
-export default withAuthenticationRequired(Janijim, {
-    onRedirecting: () => <Loading />,
-});
+

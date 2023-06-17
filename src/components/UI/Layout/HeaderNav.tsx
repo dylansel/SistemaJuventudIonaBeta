@@ -56,8 +56,8 @@ function HeaderNav() {
                             </DropdownToggle>
                             <DropdownMenu right>
                                 <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/janijim" onClick={handleToggle}>Janijim</NavLink>
-                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/families" onClick={handleToggle}>Familias</NavLink>
-                                <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/groups" onClick={handleToggle}>Grupos</NavLink>
+                                {/* <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/families" onClick={handleToggle}>Familias</NavLink> */}
+                                {/* <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/groups" onClick={handleToggle}>Grupos</NavLink> */}
                                 {/* <NavLink className={(navData) => `dropdown-item ${(navData.isActive ? 'active' : '')}`} to="/areas" onClick={handleToggle}>Shijvot</NavLink> */}
                             </DropdownMenu>
                         </UncontrolledDropdown>

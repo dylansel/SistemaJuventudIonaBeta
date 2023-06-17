@@ -18,7 +18,7 @@ import { JanijAttendanceRequestDTO } from '../dtos/JanijAttendanceRequestDTO';
 import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
 import DialogBox from '../components/UI/Modals/DialogBox';
 
-function AttendanceSelectArea() {
+export default function AttendanceSelectArea() {
     // const history = useNavigate();
     // let { activityId } = useParams();
 
@@ -248,7 +248,3 @@ function AttendanceSelectArea() {
       // </main >
     );
 }
-
-export default withAuthenticationRequired(AttendanceSelectArea, {
-    onRedirecting: () => <Loading />,
-});

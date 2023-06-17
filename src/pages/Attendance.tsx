@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { dateToEsString } from '../utils/misc/dates';
 
 
-function Attendance() {
+export default function Attendance() {
     const history = useNavigate();
     const [activities, setActivities] = useState<ActivityDTO[]>([])
     const [loaded, setLoaded] = useState(false)
@@ -105,6 +105,3 @@ function Attendance() {
     );
 }
 
-export default withAuthenticationRequired(Attendance, {
-    onRedirecting: () => <Loading />,
-});
