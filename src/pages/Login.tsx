@@ -11,13 +11,13 @@ import { setAuthSesion } from '../auth/authUtils';
 
 export default function Login() {
     const [user, setUser] = useState({user:"",password:""})
-    const [error, setError] = useState(false)
+    const [error, setError] = useState({err:false,msg:""})
     const [showPass, setShowPass] = useState(false)
     const [isRedirecting, setIsRedirecting] = useState(false)
     const navigate = useNavigate();
 
     const handleChange = (e: any) => {
-        setError(false)
+        setError({err:false,msg:""})
         let { name, value } = e.target
         setUser(prevState => ({
             ...prevState,
@@ -25,20 +25,28 @@ export default function Login() {
         }))
     }
     const handleClick = async () => {
+        setError({err:false,msg:""})
         if(isEmptyOrSpaces(user.user) || isEmptyOrSpaces(user.password)){
-            return setError(true);
+            return setError({err:true,msg:"Campos incompletos"});
         }
-        setIsRedirecting(true)
-        const response = await login(user.user,user.password);
         
-        if(response){
+        try {
+            setIsRedirecting(true)
+            const response = await login(user.user,user.password);
+            if(response){
             setAuthSesion(user.user,user.password);
             navigate('/');// Redirecciona a la página de Dashboard
             window.location.reload();
-        }else{
-            setError(true);
+            }else{
+                setError({err:true,msg:"Usuario o contraseña incorrectos"});
+            }
+            setIsRedirecting(false)
+        } catch (error) {
+            setError({err:true,msg:"Error de conexion"});
+        }finally{
+            setIsRedirecting(false)
         }
-        setIsRedirecting(false)
+        
     }
     
     return (
@@ -48,7 +56,7 @@ export default function Login() {
                     <img className="img-fluid mb-3" src={logo} alt="logo" />
                 </div>
                 <div className="justify-content-center text-center col-12 col-md-4 col-lg-3">
-            {error && <Alert color="danger" className="text-center">Error! Datos incorrectos</Alert>}
+            {error.err && <Alert color="danger" className="text-center">{error.msg}</Alert>}
                 <Form>
                     <FormGroup>
                         <Label for="user">

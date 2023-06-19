@@ -9,6 +9,6 @@ export const login = async (user: string, password: string): Promise<boolean> =>
     const data = response.data.content;
     return data.loggedIn;
   } catch (error) {
-    return false
+    throw error;
   }
 };
