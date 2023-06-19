@@ -3,7 +3,7 @@ import logo from '../assets/logo/logo-horizontal.png';
 import { getProfile } from '../services/profileService';
 import Loading from './misc/Loading';
 
-function Dashboard() {
+export default function Dashboard() {
     const { getAccessTokenSilently } = useAuth0()
 
     const handleProfile = async() => {
@@ -40,6 +40,3 @@ function Dashboard() {
     );
 }
 
-export default withAuthenticationRequired(Dashboard, {
-    onRedirecting: () => <Loading />,
-});

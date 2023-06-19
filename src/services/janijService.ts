@@ -3,12 +3,14 @@ import JanijDTO from "../dtos/JanijDTO";
 import JanijListDTO from "../dtos/JanijListDTO";
 import JanijRequestDTO from "../dtos/JanijRequestDTO";
 import { add, deleteOne, get, switchActive, update } from "./crudService";
+import { getCredentials } from "../auth/authUtils";
 
+const credentials = getCredentials();
 export const getAllJanijim = async (
   restricted: boolean = true
 ): Promise<JanijListDTO[]> => {
   const response = await axios(
-    `${process.env.REACT_APP_BACKEND_DOMAIN}?action=list&restricted=${restricted}&${process.env.REACT_APP_BACKEND_AUTH}`
+    `${process.env.REACT_APP_BACKEND_DOMAIN}?action=list&restricted=${restricted}&${credentials}`
   );
   const data = await response.data.content;
   return data;
@@ -16,7 +18,7 @@ export const getAllJanijim = async (
 
 export const getJanijById = async (name: string): Promise<JanijDTO> => {
   const response = await axios(
-    `${process.env.REACT_APP_BACKEND_DOMAIN}?action=data&name=${name}&${process.env.REACT_APP_BACKEND_AUTH}`
+    `${process.env.REACT_APP_BACKEND_DOMAIN}?action=data&name=${name}&${credentials}`
   );
   const data = await response.data.content;
   return data;
@@ -25,7 +27,7 @@ export const getJanijById = async (name: string): Promise<JanijDTO> => {
 export const addJanij = async (janijToAdd: JanijDTO[]) => {
   const response = await axios({
     method: "post",
-    url: `${process.env.REACT_APP_BACKEND_DOMAIN}?action=addWithData&${process.env.REACT_APP_BACKEND_AUTH}`,
+    url: `${process.env.REACT_APP_BACKEND_DOMAIN}?action=addWithData&${credentials}`,
     data: JSON.stringify(janijToAdd),
   });
   const data = await response.data.content;
@@ -36,7 +38,7 @@ export const addJanij = async (janijToAdd: JanijDTO[]) => {
 export const updateJanij = async (janijToUpdate: any) => {
   const response = await axios({
     method: "post",
-    url: `${process.env.REACT_APP_BACKEND_DOMAIN}?action=setData&${process.env.REACT_APP_BACKEND_AUTH}`,
+    url: `${process.env.REACT_APP_BACKEND_DOMAIN}?action=setData&${credentials}`,
     data: JSON.stringify([janijToUpdate]),
   });
   const data = await response.data.content;
@@ -53,7 +55,7 @@ export const deleteJanij = async (name: string) => {
       `${
         process.env.REACT_APP_BACKEND_DOMAIN
       }?action=delete&name=${name?.replace(" ", "%20")}&${
-        process.env.REACT_APP_BACKEND_AUTH
+        credentials
       }`
     );
     const data = await response.data;

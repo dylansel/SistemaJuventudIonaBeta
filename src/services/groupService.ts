@@ -2,9 +2,11 @@ import GroupDTO from '../dtos/GroupDTO';
 import GroupRequestDTO from '../dtos/GroupRequestDTO';
 import axios from 'axios'
 import { add, deleteOne, get, getAll, switchActive, update } from './crudService';
+import { getCredentials } from '../auth/authUtils';
+const credentials = getCredentials();
 
 export const getAllGroups = async (orderBy?: string): Promise<any[]> => {
-    const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}?action=groups&${process.env.REACT_APP_BACKEND_AUTH}`)
+    const response = await axios(`${process.env.REACT_APP_BACKEND_DOMAIN}?action=groups&${credentials}`)
     const data = await response.data.content
     return data
     

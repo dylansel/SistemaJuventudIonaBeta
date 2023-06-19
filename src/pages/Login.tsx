@@ -1,31 +1,110 @@
-import { useAuth0 } from '@auth0/auth0-react';
 import { useState } from 'react';
-import { Button, } from 'reactstrap';
 import logo from '../assets/logo/logo-horizontal.png';
 import { Colors } from '../constants/colors';
+import { Button, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input, Label, Alert, Spinner } from 'reactstrap';
+import { isEmptyOrSpaces } from '../utils/misc/strings';
+import { login } from '../services/authService';
+import { useNavigate  } from 'react-router-dom';
+import { setAuthSesion } from '../auth/authUtils';
+
+
 
 export default function Login() {
-    const { loginWithRedirect } = useAuth0()
+    const [user, setUser] = useState({user:"",password:""})
+    const [error, setError] = useState({err:false,msg:""})
+    const [showPass, setShowPass] = useState(false)
     const [isRedirecting, setIsRedirecting] = useState(false)
-    const handleClick = () => {
-        setIsRedirecting(true)
-        loginWithRedirect()
-    }
+    const navigate = useNavigate();
 
+    const handleChange = (e: any) => {
+        setError({err:false,msg:""})
+        let { name, value } = e.target
+        setUser(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+    const handleClick = async () => {
+        setError({err:false,msg:""})
+        if(isEmptyOrSpaces(user.user) || isEmptyOrSpaces(user.password)){
+            return setError({err:true,msg:"Campos incompletos"});
+        }
+        
+        try {
+            setIsRedirecting(true)
+            const response = await login(user.user,user.password);
+            if(response){
+            setAuthSesion(user.user,user.password);
+            navigate('/');// Redirecciona a la página de Dashboard
+            window.location.reload();
+            }else{
+                setError({err:true,msg:"Usuario o contraseña incorrectos"});
+            }
+            setIsRedirecting(false)
+        } catch (error) {
+            setError({err:true,msg:"Error de conexion"});
+        }finally{
+            setIsRedirecting(false)
+        }
+        
+    }
+    
     return (
         <main>
             <div className="row mx-5 justify-content-center align-items-center  ">
-                <div className="logo-container text-center col-12 mb-3">
+                <div className="logo-container text-center col-12 col-md-6  col-lg-6 mb-3">
                     <img className="img-fluid mb-3" src={logo} alt="logo" />
                 </div>
-                <div className="justify-content-center text-center col-12 col-md-4">
-                    <Button
-                        onClick={handleClick}
-                        disabled={isRedirecting}
-                        style={{ backgroundColor: Colors.primary }}
-                    >
-                        {!isRedirecting ? "Iniciar Sesión" : "Redireccionando..."}
-                    </Button>
+                <div className="justify-content-center text-center col-12 col-md-4 col-lg-3">
+            {error.err && <Alert color="danger" className="text-center">{error.msg}</Alert>}
+                <Form>
+                    <FormGroup>
+                        <Label for="user">
+                            Usuario
+                        </Label>
+                        <Input
+                            id="user"
+                            disabled={isRedirecting}
+                            name="user"
+                            value={user.user}
+                            onChange={handleChange}
+                            autoComplete="off"
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="password">
+                            Contraseña
+                        </Label>
+                        <Input
+                            id="password"
+                            disabled={isRedirecting}
+                            name="password"
+                            type={showPass?"text":"password"}
+                            value={user.password}
+                            onChange={handleChange}
+                            autoComplete="off"
+                        />
+                        <Input
+                            id="check"
+                            disabled={isRedirecting}
+                            name="check"
+                            type="checkbox"
+                            onChange={()=>setShowPass(!showPass)}
+                            autoComplete="off"
+                        />
+                        <Label for="check" className="mx-2"> Mostrar contraseña</Label>
+                    </FormGroup>
+
+                        <Button
+                            color={isRedirecting ? "success" : "danger"}
+                            disabled={isRedirecting}
+                            onClick={handleClick}
+                        >
+                            {isRedirecting ? <div>Iniciando Sesion... <Spinner animation="border" variant="light" size="sm" /></div> : "Login"}
+                        </Button>
+                    
+                </Form>
+                    
                 </div>
             </div>
         </main>
