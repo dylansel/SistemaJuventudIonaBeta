@@ -1,4 +1,5 @@
 export interface AttendanceDTO {
-    name: String,
+    name: string,
+    group: string,
     attended: boolean,
 }

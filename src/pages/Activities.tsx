@@ -44,7 +44,7 @@ function Activities() {
     }
     async function fetchData() {
         setLoaded(false)
-        setActivity(await getAllActivities("sort=date,desc"))
+        setActivity(await getAllActivities())
         setLoaded(true)
     }
 
