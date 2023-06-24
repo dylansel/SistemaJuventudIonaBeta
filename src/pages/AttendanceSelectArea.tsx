@@ -96,8 +96,9 @@ export default function AttendanceSelectArea() {
       
   }
 
-    const refresh = () => {
-        fetchData()
+    const refresh = async  () => {
+        await fetchData()
+        setShowDialog(getChanges().length > 0)
     }
 
     const getAreas = async () => {
@@ -146,7 +147,7 @@ export default function AttendanceSelectArea() {
 
     useEffect(() => {
         setShowDialog(getChanges().length > 0)
-    }, [changes]);
+    }, [changes,janijimPresents,getChanges]);
 
     useEffect(() => {
         fetchData()

@@ -24,7 +24,7 @@ export default function Attendance() {
 
     const checkToday = () => {
         const todayDate = new Date().toISOString().split('T')[0]
-        return activities.find((activity: ActivityDTO) => todayDate === activity.date)
+        return activities.find((activity: any) => todayDate === activity)
     }
 
     const refresh = () => {

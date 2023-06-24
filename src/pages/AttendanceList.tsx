@@ -103,7 +103,7 @@ export default function AttendanceList() {
 
     useEffect(() => {
         setShowDialog(getChanges().length > 0)
-    }, [janijimPresents]);
+    }, [changes,janijimPresents,getChanges]);
 
     useEffect(() => {
         refresh()
