@@ -48,9 +48,9 @@ function App() {
             {/* <Route path="families" element={!isAuthenticated?<Login />:<Families />} /> */}
             {/* <Route path="activities" element={<Activities />} /> */}
             <Route path="attendance" element={!isAuthenticated?<Login />:<Attendance />} />
-            <Route path="attendance/:activityId" element={!isAuthenticated?<Login />:<AttendanceSelectArea />} />
-            <Route path="attendance/:activityId/:areaId" element={!isAuthenticated?<Login />:<AttendanceSelectGroup />} />
-            <Route path="attendance/:activityId/:areaId/:groupId" element={!isAuthenticated?<Login />:<AttendanceList />} />
+            <Route path="attendance/:date" element={!isAuthenticated?<Login />:<AttendanceSelectArea />} />
+            <Route path="attendance/:date/:area" element={!isAuthenticated?<Login />:<AttendanceSelectGroup />} />
+            <Route path="attendance/:date/:area/:group" element={!isAuthenticated?<Login />:<AttendanceList />} />
             {/* <Route path="prices" element={<SelectDate name="Precios" goTo="prices"/>} /> */}
             {/* <Route path="prices/:month" element={<Prices />} /> */}
             {/* <Route path="payments" element={<Payments />} /> */}

@@ -3,10 +3,24 @@ import ActivityDTO from '../dtos/ActivityDTO';
 import ActivityRequestDTO from '../dtos/ActivityRequestDTO';
 import MultipleActivitiesRequestDTO from '../dtos/MultipleActivitiesRequestDTO';
 import { add, deleteOne, get, getAll, update } from './crudService';
+import { getCredentials } from "../auth/authUtils";
 
-export const getAllActivities = async (orderBy?: string): Promise<ActivityDTO[]> => {
-    return getAll("activity", orderBy)
-}
+const credentials = getCredentials();
+
+export const getAllActivities = async (sort = true): Promise<any[]> => {
+  try {
+    const response = await axios(
+      `${process.env.REACT_APP_BACKEND_DOMAIN}?action=activities&${credentials}`
+    );
+    let data = await response.data.content;
+    if(sort)data =  data.sort((a:any, b:any) => new Date(b).getTime() - new Date(a).getTime())
+    return data;
+  } catch (error: any) {
+    console.log(error);
+    throw error;
+  }
+};
+
 
 export const getActivityById = async (id: number): Promise<ActivityDTO> => {
     return get("activity", id)

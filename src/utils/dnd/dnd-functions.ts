@@ -18,6 +18,31 @@ export const compareObjects = (initialState:any, updatedState:any) => {
     return editedFields;
   };
 
+  export const compareArrayObjects = (initialArray: any[], updatedArray: any[]): any[] => {
+    const editedElements: any[] = [];
+    
+    for (let i = 0; i < initialArray.length; i++) {
+      const initialElement = initialArray[i];
+      const updatedElement = updatedArray[i];
+  
+      let hasChanges = false;
+  
+      for (const key in initialElement) {
+        if (initialElement[key] !== updatedElement[key]) {
+          hasChanges = true;
+          break;
+        }
+      }
+  
+      if (hasChanges) {
+        editedElements.push(updatedElement);
+      }
+    }
+    
+    return editedElements;
+  };
+  
+
 export const move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
     const sourceClone = Array.from(source);
     const destClone = Array.from(destination);

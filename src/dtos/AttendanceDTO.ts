@@ -1,4 +1,5 @@
 export interface AttendanceDTO {
-    janijId: number,
-    trial: boolean
+    name: string,
+    group: string,
+    attended: boolean,
 }

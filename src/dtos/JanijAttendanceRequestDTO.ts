@@ -1,5 +1,8 @@
 export interface JanijAttendanceRequestDTO {
-    janijId: number,
-    present: boolean,
-    trial: boolean
+    name: String,
+    attended: boolean,
+    year: number,
+    month: number,
+    day: number,
+    
 }

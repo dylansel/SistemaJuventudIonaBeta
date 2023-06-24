@@ -5,211 +5,187 @@ import { useEffect, useState } from 'react';
 import JanijDTO from '../dtos/JanijDTO';
 import JanijListDTO from '../dtos/JanijListDTO';
 import { getAllJanijim } from '../services/janijService';
-import { Button, Input, Spinner } from 'reactstrap';
+import { Alert, Button, Input, Spinner } from 'reactstrap';
 import Scroll from '../components/UI/Layout/Scroll';
 import { JanijAttendanceRequestDTO } from '../dtos/JanijAttendanceRequestDTO';
 import ActivityDTO from '../dtos/ActivityDTO';
 import { getActivityById } from '../services/activityService';
-import { AttendanceDTO } from '../dtos/AttendanceDTO';
-import { getAttendanceByActivity, saveAttendance } from '../services/attendanceService';
+import { AttendanceListDTO } from '../dtos/AttendanceListDTO';
+import { getAttendanceByActivity, getAttendanceByGroup, saveAttendance } from '../services/attendanceService';
 import { dateToEsString } from '../utils/misc/dates';
 import GroupDTO from '../dtos/GroupDTO';
 import { getGroupById } from '../services/groupService';
 import { useCallbackPrompt } from '../customHooks/useCallbackPrompts';
 import DialogBox from '../components/UI/Modals/DialogBox';
+import { compareArrayObjects } from '../utils/dnd/dnd-functions';
+import { getErrorByMessage } from '../utils/misc/errors';
 
-function AttendanceList() {
-    // const history = useNavigate();
-    // let { activityId, groupId } = useParams();
-    // const [janijim, setJanijim] = useState<JanijListDTO[]>([])
-    // const [activityData, setActivityData] = useState<ActivityDTO>()
-    // const [groupData, setGroupData] = useState<GroupDTO>()
-    // const [janijimPresents, setJanijimPresents] = useState<JanijAttendanceRequestDTO[]>([])
-    // const [loaded, setLoaded] = useState(false)
-    // const [changes, setChanges] = useState<JanijAttendanceRequestDTO[]>([])
-    // const [isSaving, setIsSaving] = useState(false)
 
-    // const [showDialog, setShowDialog] = useState(false)
-    // const [showPrompt, confirmNavigation, cancelNavigation] =
-    //     useCallbackPrompt(showDialog)
+export default function AttendanceList() {
+    const history = useNavigate();
+    const { date, area ,group } = useParams();
+    const [janijimPresents, setJanijimPresents] = useState<AttendanceListDTO[]>([])
+    const [changes, setChanges] = useState<AttendanceListDTO[]>([])
+    const [loaded, setLoaded] = useState(false)
+    const [isSaving, setIsSaving] = useState(false)
+    const [showDialog, setShowDialog] = useState(false)
+    const [showPrompt, confirmNavigation, cancelNavigation] =useCallbackPrompt(showDialog);
+    const [errorAlert, setErrorAlert] = useState({err:false,msg:""})
+    const [error, setError] = useState("")
 
-    // const loadPresents = async () => {
-    //     let presents: JanijAttendanceRequestDTO[] = []
-    //     const janijim = await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc")
-    //     const attendanceLoaded = await getAttendanceByActivity(parseInt(activityId!))
-    //     const janijimFiltered = janijim
-    //         .filter((janij: JanijListDTO) => janij.active && janij.group.id === parseInt(groupId!))
-    //     janijimFiltered.forEach((janij: JanijListDTO) => {
-    //         const attendance = attendanceLoaded?.find((attendance: AttendanceDTO) => attendance.janijId === janij.id)
-    //         presents.push({
-    //             janijId: janij.id,
-    //             present: attendance ? true : false,
-    //             trial: attendance && attendance.trial ? true : false
-    //         })
-    //     })
-    //     return presents
-    // }
 
-    // const getDataById = (id: number) => {
-    //     if (changes) {
-    //         return changes.find((change: JanijAttendanceRequestDTO) => change.janijId === id)
-    //     }
-    // }
+    if(!date || !group){ history('/attendance')}
 
-    // const handlePresent = (id: number) => {
-    //     let newPresents: JanijAttendanceRequestDTO[] = [...changes]
-    //     const change = newPresents.find((change: AttendanceDTO) => change.janijId === id)
-    //     if (change) {
-    //         change.present = !change.present
-    //         if (!change.present) {
-    //             change.trial = false
-    //         }
-    //     }
-    //     setChanges(newPresents)
-    // }
+    const handlePresent = (name: string) => {
+        let newPresents: AttendanceListDTO[] = [...janijimPresents]
+        const change = newPresents.find((change: AttendanceListDTO) => change.name === name)
+        if (change) {
+            change.attended = !change.attended
+        }
+        setJanijimPresents(newPresents)
+    }
 
-    // const handleTrial = (id: number) => {
-    //     let newPresents: JanijAttendanceRequestDTO[] = [...changes]
-    //     const change = newPresents.find((change: AttendanceDTO) => change.janijId === id)
-    //     if (change) {
-    //         change.trial = !change.trial
-    //     }
-    //     setChanges(newPresents)
-    // }
 
-    // const getChanges = () => {
-    //     let request: JanijAttendanceRequestDTO[] = []
-    //     Object.values(changes).forEach((change: JanijAttendanceRequestDTO) => {
-    //         const dbObject = janijimPresents.find
-    //             ((present: JanijAttendanceRequestDTO) => present.janijId === change.janijId)
-    //         if (dbObject && (dbObject.present !== change.present || dbObject.trial !== change.trial)) {
-    //             request.push(change)
-    //         }
-    //     })
-    //     return request
-    // }
+    const getChanges = () =>  compareArrayObjects(changes,janijimPresents);
 
-    // const handleSaveAttendance = () => {
-    //     let request: JanijAttendanceRequestDTO[] = getChanges()
-    //     if (request.length > 0) {
-    //         setIsSaving(true)
-    //         setTimeout(() => {
-    //             saveAttendance(activityData?.id!, request)
-    //             setIsSaving(false)
-    //             refresh()
-    //         }, 3000);
-    //     }
-    // }
+    const handleSaveAttendance = async () => {
+        try {
+            let request: AttendanceListDTO[] = getChanges();
 
-    // const refresh = () => {
-    //     fetchData()
-    // }
-    // async function fetchData() {
-    //     setLoaded(false)
-    //     setJanijim(await getAllJanijim("sort=group.ordinal,asc;firstName,asc;family.surname,asc"))
-    //     setActivityData(await getActivityById(parseInt(activityId!)))
-    //     setGroupData(await getGroupById(parseInt(groupId!)))
-    //     setJanijimPresents(await loadPresents())
-    //     setChanges(await loadPresents())
-    //     setLoaded(true)
-    // }
+            if (request.length > 0) {
+                setIsSaving(true)
+                const day = date?.split("-")[2]
+                const month = date?.split("-")[1]
+                if(!day || !month){throw new Error("Error al guardar");}
+                await saveAttendance(day,month, request)
+                setIsSaving(false)
+                refresh()
+            }
+        } catch (error) {
+            setErrorAlert({err:false,msg:"Error al guardar"})
+            console.log(error)
+        }
+        
+    }
 
-    // useEffect(() => {
-    //     setShowDialog(getChanges().length > 0)
-    // }, [changes]);
+    const refresh = () => {
+            fetchData()
+    }
+    const formatAttendanceLoaded = (arr: any[]): any[] => {
+        let Attendance = arr.map((el: any) => ({
+          name: el.name,
+          attended: el.attended[0]
+        }));
+      
+        return Attendance;
+      };
+    async function fetchData() {
+        setLoaded(false)
+        setShowDialog(false)
+        setError("")
+        try {
+        const day = date?.split("-")[2]
+        const month = date?.split("-")[1]
+        if(!day || !month || !group){return history('/attendance')}
+        const attendanceLoaded:any = await getAttendanceByGroup(day, month, group, true);
+        if(!attendanceLoaded || attendanceLoaded.error)throw new Error("Request failed with status code 400")
+        const attendance = formatAttendanceLoaded(attendanceLoaded);
+        const copiedAttendance = attendance.map((item:any) => ({ ...item }));
+        setJanijimPresents(attendance)
+        setChanges(copiedAttendance)
+        setLoaded(true)
+        } catch (error:any) {
+            setLoaded(true)
+            console.error(error.message);
+            setError(error.message)
+        }
+    }
 
-    // useEffect(() => {
-    //     refresh()
-    // }, []);
+    useEffect(() => {
+        setShowDialog(getChanges().length > 0)
+    }, [changes,janijimPresents,getChanges]);
+
+    useEffect(() => {
+        refresh()
+    }, []);
 
     return (
-        <h2>a</h2>
-        // <main>
-        //     <div className="filters mx-4 align-items-center justify-content-center">
-        //         {loaded && <>
-        //             <div className="d-flex justify-content-center mb-4">
-        //                 <button type="button" title='Volver' className="btn btn-danger mx-5" onClick={() => history(-1)}><i className=" fas fa-arrow-left"></i></button>
-        //                 <h4>{loaded && dateToEsString(activityData?.date!)} </h4>
-        //             </div>
-        //             <div className="text-center">
-        //                 <h4>{groupData?.name}</h4>
-        //                 <p>{janijimPresents.filter((janij: JanijAttendanceRequestDTO) => janij.present).length} Presentes</p>
-        //             </div>
-        //         </>}
-        //     </div>
+        
+        <main>
+            <div className="filters mx-4 align-items-center justify-content-center">
+                {(loaded && error == "") && <>
+                    <div className="d-flex justify-content-center mb-4">
+                        <button type="button" title='Volver' className="btn btn-danger mx-5" onClick={() => history(-1)}><i className=" fas fa-arrow-left"></i></button>
+                        <h4>{loaded && dateToEsString(date!)} </h4>
+                    </div>
+                    <div className="text-center">
+                        <h4>{group?.split(" ")[1]}</h4>
+                        <p>{janijimPresents.filter((janij: AttendanceListDTO) => janij.attended).length} Presentes</p>
+                    </div>
+                </>}
+            </div>
 
-        //     <div className="justify-content-center table-content mx-3 mt-4 text-center">
-        //         {loaded ?
-        //             <div>
-        //                 <table className="table table-hover table-responsive">
-        //                     <thead>
-        //                         <tr>
-        //                             <th scope="col">#</th>
-        //                             <th scope="col">Nombre y Apellido</th>
-        //                             <th scope="col">Presente</th>
-        //                             <th scope="col">Prueba</th>
-        //                         </tr>
-        //                     </thead>
-        //                     <tbody>
-        //                         {janijim
-        //                             .filter((janij: JanijListDTO) => (
-        //                                 janij.active && janij.group.id === parseInt(groupId!)
-        //                             ))
-        //                             .map((janij: JanijListDTO, index: number) => (
-        //                                 <tr key={janij.id}>
-        //                                     <td>{index + 1}</td>
-        //                                     <td>{`${janij.name} ${janij.family.surname}`}</td>
-        //                                     <td>
-        //                                         <Input
-        //                                             type='checkbox'
-        //                                             name='present'
-        //                                             color='danger'
-        //                                             onChange={() => handlePresent(janij.id)}
-        //                                             disabled={isSaving}
-        //                                             checked={getDataById(janij.id)?.present}
-        //                                         />
-        //                                     </td>
-        //                                     <td>
-        //                                         <Input
-        //                                             type='checkbox'
-        //                                             name='trial'
-        //                                             onChange={() => handleTrial(janij.id)}
-        //                                             disabled={isSaving || !getDataById(janij.id)?.present}
-        //                                             checked={getDataById(janij.id)?.trial}
-        //                                         />
-        //                                     </td>
-        //                                 </tr>
-        //                             )
-        //                             )}
-        //                     </tbody>
-        //                 </table>
-        //                 <Button
-        //                     onClick={handleSaveAttendance}
-        //                     className='my-3'
-        //                     color={isSaving ? 'success' : 'danger'}
-        //                     disabled={isSaving}
-        //                     type='button'
-        //                 >
-        //                     {isSaving ? <>Grabando...<Spinner animation="border" variant="light" size="sm" /></> : 'Grabar Asistencias'}
-        //                 </Button>
-        //             </div>
-
-        //             :
-        //             <Loading />
-        //         }
-        //     </div>
-        //     <DialogBox
-        //         title='Alerta'
-        //         text='¿Estás seguro que deseas salir? Hay cambios sin guardar.'
-        //         showDialog={showPrompt}
-        //         confirmNavigation={confirmNavigation}
-        //         cancelNavigation={cancelNavigation}
-        //     />
-        //     <Scroll showBelow={250} />
-        // </main >
+            <div className="justify-content-center table-content mx-3 mt-4 text-center">
+            {errorAlert.err && <Alert color="danger" className="text-center">{errorAlert.msg}</Alert>}
+                {loaded ? 
+                error == ""?
+                    <div>
+                        <table className="table table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombre y Apellido</th>
+                                    <th scope="col">Presente</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {janijimPresents
+                                    .map((janij: AttendanceListDTO, index: number) => (
+                                        <tr key={index+1}>
+                                            <td>{index + 1}</td>
+                                            <td>{`${janij.name}`}</td>
+                                            <td>
+                                                <Input
+                                                    type='checkbox'
+                                                    name='present'
+                                                    color='danger'
+                                                   onChange={() => handlePresent(janij.name)}
+                                                    disabled={isSaving}
+                                                    checked={janij.attended}
+                                                />
+                                            </td>
+                                        </tr>
+                                    )
+                                    )}
+                            </tbody>
+                        </table>
+                        <Button
+                            onClick={handleSaveAttendance}
+                            className='my-3'
+                            color={isSaving ? 'success' : 'danger'}
+                            disabled={isSaving}
+                            type='button'
+                        >
+                            {isSaving ? <>Grabando...<Spinner animation="border" variant="light" size="sm" /></> : 'Grabar Asistencias'}
+                        </Button>
+                    </div>
+                    :
+                    <div className="text-center">
+                        <h3>{getErrorByMessage(error)}</h3>
+                    </div>
+                    :
+                    <Loading />
+                }
+            </div>
+            <DialogBox
+                title='Alerta'
+                text='¿Estás seguro que deseas salir? Hay cambios sin guardar.'
+                showDialog={showPrompt}
+                confirmNavigation={confirmNavigation}
+                cancelNavigation={cancelNavigation}
+            />
+            <Scroll showBelow={250} />
+        </main >
     );
 }
-
-export default withAuthenticationRequired(AttendanceList, {
-    onRedirecting: () => <Loading />,
-});
